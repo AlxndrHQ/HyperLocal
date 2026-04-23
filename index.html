@@ -178,6 +178,111 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .tab-content.active{display:flex}
 .slide-in{animation:slidefade .2s ease both}
 @keyframes slidefade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── THEME VARIABLES ── */
+[data-theme="light"] {
+  --bg0:#F0F4F8;--bg1:#FFFFFF;--bg2:#F8FAFC;--bg3:#EEF2F7;--bg4:#E2E8F0;
+  --border:rgba(0,0,0,0.09);--border-blue:rgba(0,71,255,0.3);
+  --text:#0A1628;--text-dim:#4A5568;--text-muted:#94A3B8;
+}
+[data-theme="light"] .topbar,[data-theme="light"] .tab-nav,[data-theme="light"] .news-panel,[data-theme="light"] .sidebar{background:var(--bg1) !important}
+[data-theme="light"] .hero-bg{background:linear-gradient(135deg,#E8F0FE 0%,#C7D9FF 40%,#EEF4FF 100%) !important}
+[data-theme="light"] .hero-title{color:#0A1628 !important}
+[data-theme="light"] .hero-sub{color:#4A5568 !important}
+[data-theme="light"] .hero-grid{background-image:linear-gradient(rgba(0,71,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.04) 1px,transparent 1px) !important}
+[data-theme="light"] .map-grid{background-image:linear-gradient(rgba(0,71,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.04) 1px,transparent 1px) !important}
+[data-theme="light"] .map-panel{background:var(--bg2) !important}
+[data-theme="light"] .map-dot-label{background:rgba(240,244,248,.92) !important;color:var(--text) !important}
+[data-theme="light"] .ticker-wrap{background:var(--bg0) !important}
+[data-theme="light"] .anchor-chip{background:rgba(0,71,255,.08) !important}
+[data-theme="light"] .hero-ctrls .ctrl{background:rgba(255,255,255,.8) !important}
+[data-theme="light"] .mm-map{background:var(--bg3) !important}
+[data-theme="light"] .mm-map-grid{background-image:linear-gradient(rgba(0,71,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.06) 1px,transparent 1px) !important}
+[data-theme="light"] .amz-sidebar,[data-theme="light"] .screener-panel{background:var(--bg1);border-color:var(--border-blue)}
+[data-theme="light"] .amz-product-card{background:var(--bg2);border-color:var(--border)}
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-btn{width:28px;height:28px;border-radius:2px;background:none;border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,color .15s;flex-shrink:0}
+.theme-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── PRO TOGGLE ── */
+.pro-toggle-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+.pro-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);transition:color .2s}
+.pro-label.active{color:var(--yellow)}
+.pro-track{width:32px;height:16px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);position:relative;transition:background .2s,border-color .2s;flex-shrink:0}
+.pro-track.on{background:rgba(250,204,21,.2);border-color:var(--yellow)}
+.pro-thumb{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--text-dim);transition:transform .2s,background .2s}
+.pro-track.on .pro-thumb{transform:translateX(16px);background:var(--yellow)}
+.pro-badge{font-family:var(--mono);font-size:7px;background:rgba(250,204,21,.15);color:var(--yellow);border:1px solid rgba(250,204,21,.35);padding:1px 4px;border-radius:1px;letter-spacing:.06em}
+
+/* ── SCREENER CARD (PRO MODE) ── */
+.screener-card{padding:8px 11px;border-bottom:1px solid var(--border);background:var(--bg2);transition:background .12s;position:relative;cursor:pointer}
+.screener-card:hover{background:var(--bg3)}
+.screener-header{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px}
+.screener-name{font-size:11px;font-weight:600;flex:1}
+.screener-price{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--yellow)}
+.screener-meta-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.org-badge{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:1px;letter-spacing:.05em}
+.org-corporate{background:rgba(0,71,255,.12);color:#7AABFF;border:1px solid rgba(0,71,255,.25)}
+.org-gov{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.22)}
+.org-smb{background:rgba(250,204,21,.1);color:var(--yellow);border:1px solid rgba(250,204,21,.22)}
+.org-npo{background:rgba(155,93,229,.1);color:#C084FC;border:1px solid rgba(155,93,229,.22)}
+.lead-signal{font-family:var(--mono);font-size:7px;background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.28);padding:1px 5px;border-radius:1px;letter-spacing:.05em;display:flex;align-items:center;gap:3px}
+.screener-data-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.screener-metric{display:flex;flex-direction:column;gap:1px}
+.sm-label{font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase}
+.sm-value{font-family:var(--mono);font-size:11px;font-weight:600}
+.sparkline-sm{display:flex;align-items:flex-end;gap:1px;height:18px}
+.sparkline-sm span{width:3px;border-radius:1px 1px 0 0;display:block;opacity:.8}
+.screener-insights{background:var(--bg0);border:1px solid var(--border);border-radius:2px;padding:5px 8px;margin-top:4px}
+.si-title{font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.si-item{font-size:9px;color:var(--text-dim);padding:1px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
+.si-item:last-child{border-bottom:none}
+.si-date{font-family:var(--mono);font-size:8px;color:var(--text-muted)}
+.screener-actions{display:flex;gap:5px;margin-top:6px}
+.screener-btn{flex:1;font-family:var(--mono);font-size:8px;font-weight:600;padding:4px 6px;border-radius:2px;cursor:pointer;text-align:center;text-decoration:none;letter-spacing:.04em;transition:background .15s}
+.screener-btn-primary{background:rgba(0,71,255,.15);border:1px solid rgba(0,71,255,.38);color:#7AABFF}
+.screener-btn-primary:hover{background:rgba(0,71,255,.3)}
+.screener-btn-lead{background:rgba(255,140,0,.12);border:1px solid rgba(255,140,0,.3);color:var(--orange)}
+.screener-btn-lead:hover{background:rgba(255,140,0,.25)}
+
+/* ── AMAZON SIDEBAR ── */
+.amz-sidebar{position:fixed;right:0;top:0;bottom:0;width:280px;background:var(--bg1);border-left:1px solid var(--border-blue);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;box-shadow:-4px 0 20px rgba(0,71,255,.15)}
+.amz-sidebar.open{transform:translateX(0)}
+.amz-hdr{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg0)}
+.amz-hdr-title{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text);letter-spacing:.08em}
+.amz-hdr-sub{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:2px}
+.amz-close{background:none;border:none;color:var(--text-dim);font-size:17px;cursor:pointer;line-height:1;padding:0}
+.amz-event-chip{margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:6px 10px}
+.amz-event-name{font-size:11px;font-weight:600;margin-bottom:2px}
+.amz-event-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim)}
+.amz-section-title{font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;padding:8px 14px 4px;border-top:1px solid var(--border)}
+.amz-products{flex:1;overflow-y:auto;padding:0 10px 10px}
+.amz-products::-webkit-scrollbar{width:2px}
+.amz-product-card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:10px;margin-bottom:8px;transition:border-color .15s}
+.amz-product-card:hover{border-color:var(--border-blue)}
+.amz-product-img{width:100%;height:80px;border-radius:2px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:28px;border:1px solid var(--border)}
+.amz-product-name{font-size:11px;font-weight:600;line-height:1.3;margin-bottom:3px}
+.amz-product-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.amz-product-price{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--yellow)}
+.amz-product-rating{font-family:var(--mono);font-size:9px;color:var(--orange)}
+.amz-prime-btn{width:100%;padding:6px;border-radius:2px;background:linear-gradient(135deg,#FF9900,#FF6600);border:none;color:#000;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .15s}
+.amz-prime-btn:hover{opacity:.88}
+.amz-prime-icon{font-size:11px}
+.amz-footer{padding:10px 14px;border-top:1px solid var(--border);flex-shrink:0}
+.amz-footer-note{font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center}
+.get-ready-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;font-weight:600;background:rgba(255,153,0,.12);border:1px solid rgba(255,153,0,.3);color:#FF9900;padding:2px 7px;border-radius:2px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.get-ready-btn:hover{background:rgba(255,153,0,.25)}
+
+/* ── LADDER SECTOR FILTER ── */
+.sector-filter-bar{padding:6px 10px;border-bottom:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;background:var(--bg1)}
+.sector-pill{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:10px;cursor:pointer;border:1px solid var(--border);color:var(--text-dim);background:none;transition:all .15s;letter-spacing:.04em}
+.sector-pill:hover{border-color:var(--blue);color:var(--blue)}
+.sector-pill.active{background:rgba(0,71,255,.15);border-color:var(--blue);color:var(--blue)}
+.sector-pill.active-green{background:rgba(0,230,118,.12);border-color:var(--green);color:var(--green)}
+.sector-pill.active-yellow{background:rgba(250,204,21,.12);border-color:var(--yellow);color:var(--yellow)}
+.sector-pill.active-orange{background:rgba(255,140,0,.12);border-color:var(--orange);color:var(--orange)}
+.sector-pill.active-purple{background:rgba(155,93,229,.12);border-color:#9B5DE5;color:#C084FC}
 </style>
 </head>
 <body>
@@ -197,6 +302,16 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
     </div>
   </div>
   <div class="tb-div"></div>
+  <div class="pro-toggle-wrap" onclick="togglePro()">
+    <span class="pro-label" id="pro-label">PRO</span>
+    <div class="pro-track" id="pro-track"><div class="pro-thumb"></div></div>
+    <span class="pro-badge">SCREENER</span>
+  </div>
+  <div class="tb-div"></div>
+  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+    <svg id="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
   <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim)">NY METRO</span>
   <div class="datetime" id="datetime"></div>
 </div>
@@ -322,7 +437,15 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
       </div>
     </div>
   </div>
-  <div class="sidebar"><div class="panel-hdr"><span class="panel-hdr-title">The Ladder</span><span class="panel-hdr-badge" id="ev-count-theladder">0</span></div><div class="ev-list" id="evlist-theladder"></div></div>
+  <div class="sidebar"><div class="sector-filter-bar" id="sector-filter-bar">
+    <button class="sector-pill active" onclick="setSector('all',this)">ALL</button>
+    <button class="sector-pill" onclick="setSector('tech',this)">TECH</button>
+    <button class="sector-pill" onclick="setSector('hospitality',this)">HOSPITALITY</button>
+    <button class="sector-pill" onclick="setSector('corporate',this)">CORP EVENTS</button>
+    <button class="sector-pill" onclick="setSector('medical',this)">MEDICAL</button>
+    <button class="sector-pill" onclick="setSector('energy',this)">ENERGY</button>
+  </div>
+  <div class="panel-hdr"><span class="panel-hdr-title">The Ladder</span><span class="panel-hdr-badge" id="ev-count-theladder">0</span></div><div class="ev-list" id="evlist-theladder"></div></div>
 </div>
 
 <div class="ticker-wrap">
@@ -331,18 +454,40 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 </div>
 </div>
 
+<!-- AMAZON SIDEBAR -->
+<div class="amz-sidebar" id="amz-sidebar">
+  <div class="amz-hdr">
+    <div><div class="amz-hdr-title">&#127297; GET READY</div><div class="amz-hdr-sub">Amazon picks for your event</div></div>
+    <button class="amz-close" onclick="closeAmzSidebar()">&#10005;</button>
+  </div>
+  <div class="amz-event-chip"><div class="amz-event-name" id="amz-event-name">Event</div><div class="amz-event-sub" id="amz-event-sub">Loading...</div></div>
+  <div class="amz-section-title">RECOMMENDED FOR THIS EVENT</div>
+  <div class="amz-products" id="amz-products"></div>
+  <div class="amz-footer"><div class="amz-footer-note">&#9733; Prime eligible &middot; Delivers before your event &middot; Affiliate links support HyperLocal</div></div>
+</div>
+<div id="amz-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.3)" onclick="closeAmzSidebar()"></div>
+
 <div class="modal-bg" id="modal-bg">
   <div class="mini-map-modal">
     <div class="mm-hdr"><div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Venue Location</div><div class="mm-title" id="mm-title"></div></div><button class="mm-close" id="mm-close">&#10005;</button></div>
     <div class="mm-map">
       <div class="mm-map-grid"></div>
-      <svg class="mm-streets" viewBox="0 0 380 200" preserveAspectRatio="none" style="position:absolute;inset:0;opacity:.18"><line x1="0" y1="100" x2="380" y2="100" stroke="#0047FF" stroke-width="2"/><line x1="0" y1="60" x2="380" y2="60" stroke="#0047FF" stroke-width="1"/><line x1="0" y1="140" x2="380" y2="140" stroke="#0047FF" stroke-width="1"/><line x1="190" y1="0" x2="190" y2="200" stroke="#0047FF" stroke-width="2"/><line x1="100" y1="0" x2="100" y2="200" stroke="#0047FF" stroke-width="1"/><line x1="280" y1="0" x2="280" y2="200" stroke="#0047FF" stroke-width="1"/><text x="10" y="95" fill="#0047FF" font-size="9" font-family="monospace" opacity="0.5">W 14TH ST</text><text x="10" y="55" fill="#0047FF" font-size="9" font-family="monospace" opacity="0.5">W 18TH ST</text><text x="185" y="20" fill="#0047FF" font-size="9" font-family="monospace" opacity="0.5" writing-mode="vertical-lr">10TH AVE</text></svg>
+      <svg class="mm-streets" viewBox="0 0 380 200" preserveAspectRatio="none" style="position:absolute;inset:0;opacity:.18"><line x1="0" y1="100" x2="380" y2="100" stroke="#0047FF" stroke-width="2"/><line x1="0" y1="60" x2="380" y2="60" stroke="#0047FF" stroke-width="1"/><line x1="0" y1="140" x2="380" y2="140" stroke="#0047FF" stroke-width="1"/><line x1="190" y1="0" x2="190" y2="200" stroke="#0047FF" stroke-width="2"/><line x1="100" y1="0" x2="100" y2="200" stroke="#0047FF" stroke-width="1"/><line x1="280" y1="0" x2="280" y2="200" stroke="#0047FF" stroke-width="1"/></svg>
       <div class="mm-pin"><div class="mm-pin-ring"></div><div class="mm-pin-dot"></div><div class="mm-pin-tail"></div></div>
       <div class="mm-label" id="mm-venue-label">Venue</div>
     </div>
     <div class="mm-body">
       <div class="mm-detail"><span class="mm-dl">ADDRESS</span><span class="mm-dv" id="mm-address">-</span></div>
       <div class="mm-detail"><span class="mm-dl">NEIGHBORHOOD</span><span class="mm-dv" id="mm-neighborhood">-</span></div>
+      <div class="mm-detail" style="border:none;padding:0;margin:0"><span class="mm-dl">DISTANCE</span><span class="mm-dv" id="mm-distance" style="color:var(--green)">-</span></div>
+      <div class="mm-btns">
+        <a class="mm-btn mm-btn-primary" id="mm-directions" href="#" target="_blank">GET DIRECTIONS &#8599;</a>
+        <button class="mm-btn mm-btn-secondary" id="mm-close-btn">CLOSE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mm-detail"><span class="mm-dl">NEIGHBORHOOD</span><span class="mm-dv" id="mm-neighborhood">-</span></div>
       <div class="mm-detail" style="border:none;padding:0;margin:0"><span class="mm-dl">DISTANCE</span><span class="mm-dv" id="mm-distance" style="color:var(--green)">-</span></div>
       <div class="mm-btns">
         <a class="mm-btn mm-btn-primary" id="mm-directions" href="#" target="_blank">GET DIRECTIONS &#8599;</a>
@@ -437,7 +582,7 @@ function getEvs(zip,tab,pulse){
 const SRC_CLS={posh:"src-posh",eventbrite:"src-eventbrite",luma:"src-luma"};
 function tagCls(t){if(["HOT","FEW LEFT","SOLD OUT SOON"].includes(t))return"ev-tag tag-r";if(["FREE","BENEFITS"].includes(t))return"ev-tag tag-g";if(["MICHELIN","3-STAR","OMAKASE"].includes(t))return"ev-tag tag-y";if(t.includes("25-MILE"))return"ev-tag tag-o";return"ev-tag tag-b";}
 function cardCls(ev){if(ev.vertical==="theladder")return"ev-card job-card";if(ev.vertical==="themenu")return"ev-card food-card";if(ev.trending)return"ev-card trending";if(ev.featured)return"ev-card featured";return"ev-card";}
-function spark(t){if(!t)return'<div style="width:20px"></div>';return'<div class="sparkline">'+[3,6,4,8,5,11,9,13,10,15].map(n=>`<span style="height:${n}px"></span>`).join("")+"</div>";}
+function spark(t){if(!t)return'<div style="width:20px"></div>';return'<div class="sparkline">'+[3,6,4,8,5,11,9,13,10,15].map(n=>`<span style="height:${n}px"></span>`).join("")+'</div>';}
 
 function renderCard(ev){
   const pct=ev.avail,ac=pct<20?"#FF3355":pct<50?"#FACC15":"#00E676",isJob=ev.vertical==="theladder";
@@ -445,52 +590,277 @@ function renderCard(ev){
     <span class="source-badge ${SRC_CLS[ev.source]||'src-posh'}">via ${ev.source}</span>
     <div class="ev-r1"><div class="ev-name">${ev.name}</div><div class="ev-price">${ev.price}</div></div>
     <div class="ev-r2"><span class="ev-venue">${ev.venue}</span><span class="ev-time">${ev.time}</span></div>
-    <div class="ev-tags">${ev.tags.map(t=>`<span class="${tagCls(t)}">${t}</span>`).join("")}${ev.trending?'<span class="ev-tag tag-y">HOT</span>':""}</div>
+    <div class="ev-tags">${ev.tags.map(t=>`<span class="${tagCls(t)}">${t}</span>`).join('')}${ev.trending?'<span class="ev-tag tag-y">HOT</span>':''}</div>
     <div class="ev-r3">${spark(ev.trending)}${isJob?'<div style="flex:1;font-family:var(--mono);font-size:8px;color:var(--text-muted)">APPLY ANYTIME</div>':
     `<div class="avail-bar"><div class="avail-fill" style="width:${pct}%;background:${ac}"></div></div><span class="avail-pct" style="color:${ac}">${pct}%</span>`}
     <button class="card-map-btn" onclick="openMap(event,${ev.id})"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>MAP</button></div>
-    <a class="ticket-btn" href="https://posh.vip/e/${encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,"-"))}" target="_blank">${isJob?"APPLY NOW":"BUY TICKET"} &#8594;</a>
+    <a class="ticket-btn" href="https://posh.vip/e/${encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))}" target="_blank">${isJob?'APPLY NOW':'BUY TICKET'} &#8594;</a>
   </div>`;
 }
 
 function renderEvList(tab,zip,pulse){
   const evs=getEvs(zip,tab,pulse);
-  const el=document.getElementById("evlist-"+tab);
-  if(el)el.innerHTML=evs.map(renderCard).join("");
-  const ct=document.getElementById("ev-count-"+tab);
-  if(ct)ct.textContent=evs.length+" FOUND";
-  const tc=document.getElementById("count-"+tab);
+  const el=document.getElementById('evlist-'+tab);
+  if(el)el.innerHTML=evs.map(renderCard).join('');
+  const ct=document.getElementById('ev-count-'+tab);
+  if(ct)ct.textContent=evs.length+' FOUND';
+  const tc=document.getElementById('count-'+tab);
   if(tc)tc.textContent=evs.length;
 }
-function renderNews(tab){const el=document.getElementById("news-"+tab);if(!el)return;const items=NEWS_DB[tab]||NEWS_DB.terminal;el.innerHTML=items.map(it=>`<div class="news-item"><div class="news-cat" style="color:${it.cc}">${it.cat}</div><div class="news-headline">${it.h}</div><div class="news-time">${it.t}</div></div>`).join("");}
-function renderWeather(tab,zip){const el=document.getElementById("weather-"+tab);if(!el)return;const w=WEATHER_DB[gk(zip)]||WEATHER_DB.default;el.innerHTML=`<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">LOCAL WEATHER</div><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="weather-temp">${w.temp}</div><div class="weather-cond">${w.cond}</div></div></div><div class="weather-detail">Wind: ${w.wind} &middot; Humidity: ${w.hum}</div>`;}
-function renderStats(tab){const el=document.getElementById("stats-"+tab);if(!el)return;const d=STATS_DB[tab]||STATS_DB.terminal;el.innerHTML=d.map(s=>`<div class="stat-c"><div class="stat-l">${s.l}</div><div class="stat-v ${s.c}">${s.v}</div><div class="stat-ch ${s.c}">${s.ch}</div></div>`).join("");}
-function renderMapDots(tab,pulse){const el=document.getElementById("map-dots-"+tab);if(!el)return;el.innerHTML="";(MAP_DOTS[tab]||MAP_DOTS.terminal).forEach(d=>{const dot=document.createElement("div");dot.className="map-dot";dot.style.cssText=`left:${d.x};top:${d.y};width:${d.r*2}px;height:${d.r*2}px;background:${d.color};opacity:.75;box-shadow:0 0 8px ${d.color}`;el.appendChild(dot);const lbl=document.createElement("div");lbl.className="map-dot-label";lbl.style.cssText=`left:calc(${d.x} + ${d.r+3}px);top:${d.y};transform:translateY(-50%)`;lbl.textContent=d.label;el.appendChild(lbl);});if(pulse){[{x:"12%",y:"18%",r:5,color:"#0047FF",label:"Hoboken NJ"},{x:"85%",y:"78%",r:5,color:"#0047FF",label:"Jersey City"}].forEach(d=>{const dot=document.createElement("div");dot.className="map-dot";dot.style.cssText=`left:${d.x};top:${d.y};width:${d.r*2}px;height:${d.r*2}px;background:${d.color};opacity:.45;box-shadow:0 0 6px ${d.color}`;el.appendChild(dot);const lbl=document.createElement("div");lbl.className="map-dot-label";lbl.style.cssText=`left:calc(${d.x} + ${d.r+3}px);top:${d.y};transform:translateY(-50%);color:#7AABFF`;lbl.textContent=d.label;el.appendChild(lbl);});}}
-function renderTicker(tab){const items=TICKER_DB[tab]||TICKER_DB.terminal;const d=[...items,...items];document.getElementById("ticker-track").innerHTML=d.map(t=>`<div class="ticker-item"><span class="tk">${t.k}</span><span class="tv ${t.c}">${t.v}</span></div>`).join("");const tags={terminal:"LIVE",afterdark:"AFTER DARK",themenu:"THE MENU",theladder:"THE LADDER"};document.getElementById("ticker-tag").textContent=tags[tab]||"LIVE";}
-function setPulseCircles(tab,on){const id="pc-"+tab;const el=document.getElementById(id);if(el){on?el.classList.add("active"):el.classList.remove("active");}}
+function renderNews(tab){const el=document.getElementById('news-'+tab);if(!el)return;const items=NEWS_DB[tab]||NEWS_DB.terminal;el.innerHTML=items.map(it=>`<div class="news-item"><div class="news-cat" style="color:${it.cc}">${it.cat}</div><div class="news-headline">${it.h}</div><div class="news-time">${it.t}</div></div>`).join('');}
+function renderWeather(tab,zip){const el=document.getElementById('weather-'+tab);if(!el)return;const w=WEATHER_DB[gk(zip)]||WEATHER_DB.default;el.innerHTML=`<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">LOCAL WEATHER</div><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="weather-temp">${w.temp}</div><div class="weather-cond">${w.cond}</div></div></div><div class="weather-detail">Wind: ${w.wind} &middot; Humidity: ${w.hum}</div>`;}
+function renderStats(tab){const el=document.getElementById('stats-'+tab);if(!el)return;const d=STATS_DB[tab]||STATS_DB.terminal;el.innerHTML=d.map(s=>`<div class="stat-c"><div class="stat-l">${s.l}</div><div class="stat-v ${s.c}">${s.v}</div><div class="stat-ch ${s.c}">${s.ch}</div></div>`).join('');}
+function renderMapDots(tab,pulse){const el=document.getElementById('map-dots-'+tab);if(!el)return;el.innerHTML='';(MAP_DOTS[tab]||MAP_DOTS.terminal).forEach(d=>{const dot=document.createElement('div');dot.className='map-dot';dot.style.cssText=`left:${d.x};top:${d.y};width:${d.r*2}px;height:${d.r*2}px;background:${d.color};opacity:.75;box-shadow:0 0 8px ${d.color}`;el.appendChild(dot);const lbl=document.createElement('div');lbl.className='map-dot-label';lbl.style.cssText=`left:calc(${d.x} + ${d.r+3}px);top:${d.y};transform:translateY(-50%)`;lbl.textContent=d.label;el.appendChild(lbl);});if(pulse){[{x:'12%',y:'18%',r:5,color:'#0047FF',label:'Hoboken NJ'},{x:'85%',y:'78%',r:5,color:'#0047FF',label:'Jersey City'}].forEach(d=>{const dot=document.createElement('div');dot.className='map-dot';dot.style.cssText=`left:${d.x};top:${d.y};width:${d.r*2}px;height:${d.r*2}px;background:${d.color};opacity:.45;box-shadow:0 0 6px ${d.color}`;el.appendChild(dot);const lbl=document.createElement('div');lbl.className='map-dot-label';lbl.style.cssText=`left:calc(${d.x} + ${d.r+3}px);top:${d.y};transform:translateY(-50%);color:#7AABFF`;lbl.textContent=d.label;el.appendChild(lbl);});}}
+function renderTicker(tab){const items=TICKER_DB[tab]||TICKER_DB.terminal;const d=[...items,...items];document.getElementById('ticker-track').innerHTML=d.map(t=>`<div class="ticker-item"><span class="tk">${t.k}</span><span class="tv ${t.c}">${t.v}</span></div>`).join('');const tags={terminal:'LIVE',afterdark:'AFTER DARK',themenu:'THE MENU',theladder:'THE LADDER'};document.getElementById('ticker-tag').textContent=tags[tab]||'LIVE';}
+function setPulseCircles(tab,on){const id='pc-'+tab;const el=document.getElementById(id);if(el){on?el.classList.add('active'):el.classList.remove('active');}}
 function renderAll(tab,zip,pulse){renderEvList(tab,zip,pulse);renderNews(tab);renderWeather(tab,zip);renderStats(tab);renderMapDots(tab,pulse);renderTicker(tab);setPulseCircles(tab,pulse);}
-function renderAllCounts(zip,pulse){TABS.forEach(t=>{const evs=getEvs(zip,t,pulse);const el=document.getElementById("count-"+t);if(el)el.textContent=evs.length;});}
+function renderAllCounts(zip,pulse){TABS.forEach(t=>{const evs=getEvs(zip,t,pulse);const el=document.getElementById('count-'+t);if(el)el.textContent=evs.length;});}
 
-function switchTab(tab,btn){document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));const tc=document.getElementById("tab-"+tab);if(tc){tc.classList.add("active");tc.classList.remove("slide-in");void tc.offsetWidth;tc.classList.add("slide-in");}currentTab=tab;renderAll(tab,currentZip,pulseOn);}
+function switchTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));const tc=document.getElementById('tab-'+tab);if(tc){tc.classList.add('active');tc.classList.remove('slide-in');void tc.offsetWidth;tc.classList.add('slide-in');}currentTab=tab;renderAll(tab,currentZip,pulseOn);}
 
-function togglePulse(){pulseOn=!pulseOn;document.getElementById("toggle-track").classList.toggle("on",pulseOn);document.getElementById("pulse-label").classList.toggle("active",pulseOn);document.getElementById("pulse-banner").classList.toggle("active",pulseOn);const pzd=document.getElementById("pulse-zip-display");if(pzd)pzd.textContent=currentZip;renderAll(currentTab,currentZip,pulseOn);renderAllCounts(currentZip,pulseOn);}
+function togglePulse(){pulseOn=!pulseOn;document.getElementById('toggle-track').classList.toggle('on',pulseOn);document.getElementById('pulse-label').classList.toggle('active',pulseOn);document.getElementById('pulse-banner').classList.toggle('active',pulseOn);const pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=currentZip;renderAll(currentTab,currentZip,pulseOn);renderAllCounts(currentZip,pulseOn);}
 
-function handleZip(zip){currentZip=zip;const mz=document.getElementById("map-zip");if(mz)mz.textContent=zip;const pzd=document.getElementById("pulse-zip-display");if(pzd)pzd.textContent=zip;renderAll(currentTab,zip,pulseOn);renderAllCounts(zip,pulseOn);}
-document.getElementById("zip-input").addEventListener("change",function(){if(this.value.trim().length>=3)handleZip(this.value.trim());});
-document.getElementById("zip-input").addEventListener("keydown",function(e){if(e.key==="Enter"&&this.value.trim().length>=3)handleZip(this.value.trim());});
+function handleZip(zip){currentZip=zip;const mz=document.getElementById('map-zip');if(mz)mz.textContent=zip;const pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=zip;renderAll(currentTab,zip,pulseOn);renderAllCounts(zip,pulseOn);}
+document.getElementById('zip-input').addEventListener('change',function(){if(this.value.trim().length>=3)handleZip(this.value.trim());});
+document.getElementById('zip-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim().length>=3)handleZip(this.value.trim());});
 
 const allEvFlat=()=>Object.values(ALL_EVENTS).flat().concat(PULSE_EXTRA);
-function openMap(e,id){e.stopPropagation();const ev=allEvFlat().find(x=>x.id===id);if(!ev)return;document.getElementById("mm-title").textContent=ev.name;document.getElementById("mm-venue-label").textContent=ev.venue;document.getElementById("mm-address").textContent=ev.addr||"—";document.getElementById("mm-neighborhood").textContent=ev.hood||"—";document.getElementById("mm-distance").textContent=ev.vertical==="theladder"?"Hiring Location":(Math.floor(Math.random()*28)+2)+" min away";document.getElementById("mm-directions").href="https://maps.google.com/?q="+encodeURIComponent((ev.addr||"")+" "+ev.venue);document.getElementById("modal-bg").classList.add("open");}
-function closeMap(){document.getElementById("modal-bg").classList.remove("open");}
-document.getElementById("modal-bg").addEventListener("click",function(e){if(e.target===this)closeMap();});
-document.getElementById("mm-close").addEventListener("click",closeMap);
-document.getElementById("mm-close-btn").addEventListener("click",closeMap);
+function openMap(e,id){e.stopPropagation();const ev=allEvFlat().find(x=>x.id===id);if(!ev)return;document.getElementById('mm-title').textContent=ev.name;document.getElementById('mm-venue-label').textContent=ev.venue;document.getElementById('mm-address').textContent=ev.addr||'--';document.getElementById('mm-neighborhood').textContent=ev.hood||'--';document.getElementById('mm-distance').textContent=ev.vertical==='theladder'?'Hiring Location':(Math.floor(Math.random()*28)+2)+' min away';document.getElementById('mm-directions').href='https://maps.google.com/?q='+encodeURIComponent((ev.addr||'')+' '+ev.venue);document.getElementById('modal-bg').classList.add('open');}
+function closeMap(){document.getElementById('modal-bg').classList.remove('open');}
+document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeMap();});
+document.getElementById('mm-close').addEventListener('click',closeMap);
+document.getElementById('mm-close-btn').addEventListener('click',closeMap);
 
-function clock(){const n=new Date(),D=["SUN","MON","TUE","WED","THU","FRI","SAT"],M=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],p=x=>String(x).padStart(2,"0");document.getElementById("datetime").textContent=D[n.getDay()]+" "+p(n.getDate())+" "+M[n.getMonth()]+" "+n.getFullYear()+" -- "+p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());}
+function clock(){const n=new Date(),D=['SUN','MON','TUE','WED','THU','FRI','SAT'],M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],p=x=>String(x).padStart(2,'0');document.getElementById('datetime').textContent=D[n.getDay()]+' '+p(n.getDate())+' '+M[n.getMonth()]+' '+n.getFullYear()+' -- '+p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
 
-TABS.forEach(t=>renderAll(t,"10001",false));
-renderAllCounts("10001",false);
+TABS.forEach(t=>renderAll(t,'10001',false));
+renderAllCounts('10001',false);
 setInterval(clock,1000);clock();
+
+// ══════════════════════════════════════════
+// THEME SYSTEM
+// ══════════════════════════════════════════
+let currentTheme = localStorage.getItem('hl-theme') ||
+  (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('hl-theme', theme);
+  const moon = document.getElementById('theme-icon-moon');
+  const sun = document.getElementById('theme-icon-sun');
+  if (theme === 'light') {
+    if(moon) moon.style.display = 'none';
+    if(sun) sun.style.display = 'block';
+  } else {
+    if(moon) moon.style.display = 'block';
+    if(sun) sun.style.display = 'none';
+  }
+}
+function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+applyTheme(currentTheme);
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+  if (!localStorage.getItem('hl-theme')) applyTheme(e.matches ? 'light' : 'dark');
+});
+
+// ══════════════════════════════════════════
+// PRO / SCREENER MODE
+// ══════════════════════════════════════════
+let proOn = false;
+let currentSector = 'all';
+
+const ORGANIZER_TYPES = {
+  afterdark: ['Corporate','SMB','SMB','Corporate','NPO','SMB'],
+  themenu:   ['Corporate','SMB','SMB','Corporate','SMB'],
+  theladder: ['Corporate','Corporate','SMB','SMB','Tech','Tech'],
+  terminal:  ['Corporate','SMB','NPO','Gov','Corporate','SMB','Tech'],
+};
+const ORG_CLASS = {Corporate:'org-corporate',Gov:'org-gov',SMB:'org-smb',NPO:'org-npo',Tech:'org-corporate'};
+
+const COMPANY_INSIGHTS = {
+  'Marquee NYC':    [{e:'Summer Bash 2025',d:'Jun 14'},{e:'Memorial Day Blowout',d:'May 26'},{e:'NYE Countdown 2024',d:'Dec 31'}],
+  'Output Brooklyn':[{e:'Techno Sundays',d:'Apr 6'},{e:'Deep Cuts Vol.8',d:'Mar 22'},{e:'Warehouse Rave',d:'Mar 1'}],
+  'Gramercy Tavern':[{e:'Fall Harvest Dinner',d:'Oct 12'},{e:'NYC Restaurant Week',d:'Jan 21'},{e:'Chef Collab Series',d:'Dec 5'}],
+  'Eleven Madison':  [{e:'New Years Tasting',d:'Dec 31'},{e:'Spring Menu Launch',d:'Mar 15'},{e:'James Beard Dinner',d:'Apr 22'}],
+  'HyperLocal HQ':  [{e:'Q1 All Hands',d:'Jan 10'},{e:'Product Launch',d:'Feb 28'},{e:'Hackathon 2025',d:'Mar 8'}],
+};
+const SPARKDATA = [3,5,4,7,6,9,8,11,10,13];
+
+function getOrgType(tab, idx) {
+  const arr = ORGANIZER_TYPES[tab] || ORGANIZER_TYPES.terminal;
+  return arr[idx % arr.length];
+}
+
+function screenerCard(ev, idx, tab) {
+  const orgType = getOrgType(tab, idx);
+  const orgCls = ORG_CLASS[orgType] || 'org-smb';
+  const hasLead = ev.cap > 20 || ev.vertical === 'theladder';
+  const insights = COMPANY_INSIGHTS[ev.venue] || null;
+  const isJob = ev.vertical === 'theladder';
+  const pct = ev.avail;
+  const ac = pct<20?'#FF3355':pct<50?'#FACC15':'#00E676';
+  const growth = ['+12%','+8%','+22%','+5%','+31%','+18%','+9%'][idx % 7];
+  const evCount = [3,7,2,12,5,8,4][idx % 7];
+  const sparkHTML = SPARKDATA.map(h=>`<span style="height:${h}px;background:${isJob?'var(--green)':'var(--blue)'}"></span>`).join('');
+  return `<div class="screener-card">
+    <span class="source-badge ${SRC_CLS[ev.source]||'src-posh'}">via ${ev.source}</span>
+    <div class="screener-header"><div class="screener-name">${ev.name}</div><div class="screener-price">${ev.price}</div></div>
+    <div class="screener-meta-row">
+      <span class="org-badge ${orgCls}">${orgType}</span>
+      ${hasLead?'<span class="lead-signal">&#9672; CATERING / VENDOR OPP</span>':''}
+    </div>
+    <div class="screener-data-row">
+      <div class="screener-metric"><span class="sm-label">VENUE</span><span class="sm-value" style="font-size:9px;color:var(--text-dim)">${ev.venue.substring(0,14)}</span></div>
+      <div style="flex:1"></div>
+      <div class="screener-metric"><span class="sm-label">CAP</span><span class="sm-value" style="color:${ac}">${ev.cap}</span></div>
+      <div class="screener-metric" style="margin-left:8px"><span class="sm-label">EVENTS</span><span class="sm-value">${evCount}</span></div>
+      <div class="screener-metric" style="margin-left:8px"><span class="sm-label">GROWTH</span><span class="sm-value" style="color:var(--green)">${growth}</span></div>
+      <div style="margin-left:8px"><div class="sm-label" style="margin-bottom:2px">TREND</div><div class="sparkline-sm">${sparkHTML}</div></div>
+    </div>
+    ${insights?`<div class="screener-insights"><div class="si-title">RECENT BY ${ev.venue.toUpperCase().substring(0,16)}</div>${insights.map(i=>`<div class="si-item"><span>${i.e}</span><span class="si-date">${i.d}</span></div>`).join('')}</div>`:''}
+    <div class="screener-actions">
+      <a class="screener-btn screener-btn-primary" href="https://posh.vip/e/${encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))}" target="_blank">${isJob?'APPLY':'TICKET'} &#8594;</a>
+      ${hasLead?'<button class="screener-btn screener-btn-lead" onclick="alert(\"Vendor inquiry sent!\")"'>VENDOR &#9672;</button>':''}
+    </div>
+  </div>`;
+}
+
+function togglePro() {
+  proOn = !proOn;
+  document.getElementById('pro-track').classList.toggle('on', proOn);
+  document.getElementById('pro-label').classList.toggle('active', proOn);
+  renderAll(currentTab, currentZip, pulseOn);
+}
+
+// Patch renderEvList to use screener cards when proOn
+const _baseRenderEvList = renderEvList;
+renderEvList = function(tab, zip, pulse) {
+  const evs = getEvs(zip, tab, pulse);
+  const filtered = tab === 'theladder' && currentSector !== 'all'
+    ? evs.filter(e => sectorMatch(e, currentSector)) : evs;
+  const el = document.getElementById('evlist-' + tab);
+  if (el) el.innerHTML = filtered.map((ev, i) => proOn ? screenerCard(ev, i, tab) : renderCard(ev)).join('');
+  const ct = document.getElementById('ev-count-' + tab);
+  if (ct) ct.textContent = filtered.length + ' FOUND';
+  const tc = document.getElementById('count-' + tab);
+  if (tc) tc.textContent = filtered.length;
+};
+
+// ══════════════════════════════════════════
+// SECTOR FILTER
+// ══════════════════════════════════════════
+const SECTOR_MAP = {
+  tech:       ['TECH','REMOTE-OK','SOFTWARE','DIGITAL','CREATIVE'],
+  hospitality:['TIPS','FULL-TIME','PART-TIME','KITCHEN','MIXOLOGY','NIGHTS'],
+  corporate:  ['BENEFITS','CORPORATE','ENTERTAINMENT','BLACK TIE'],
+  medical:    ['MEDICAL','HEALTH','BENEFITS'],
+  energy:     ['ENERGY','INFRASTRUCTURE'],
+};
+function sectorMatch(ev, sector) {
+  if (sector === 'all') return true;
+  const kws = SECTOR_MAP[sector] || [];
+  const tags = (ev.tags || []).map(t=>t.toUpperCase());
+  const genre = (ev.genre || '').toUpperCase();
+  return kws.some(k => tags.includes(k) || genre.includes(k)) ||
+    (sector === 'hospitality' && ['Hospitality','Food & Bev'].includes(ev.genre)) ||
+    (sector === 'tech' && ev.genre === 'Marketing');
+}
+function setSector(sector, btn) {
+  currentSector = sector;
+  document.querySelectorAll('.sector-pill').forEach(b => b.classList.remove('active','active-green','active-yellow','active-orange','active-purple'));
+  btn.classList.add('active');
+  renderEvList('theladder', currentZip, pulseOn);
+}
+
+// ══════════════════════════════════════════
+// AMAZON SIDEBAR
+// ══════════════════════════════════════════
+const AMZ_PRODUCTS = {
+  afterdark: {
+    default: [
+      {emoji:'&#128092;',name:'Clear Stadium Bag — Transparent PVC Tote',price:'$12.99',rating:'4.7 &#9733; (3.2k)',tags:'Venue compliant'},
+      {emoji:'&#128137;',name:'Portable Hand Sanitizer Spray 3-Pack',price:'$8.49',rating:'4.8 &#9733; (8.1k)',tags:'Quick dry formula'},
+      {emoji:'&#128266;',name:'Foam Earplugs 50-Pair Box NRR 33',price:'$9.99',rating:'4.6 &#9733; (12k)',tags:'Protect your ears'},
+    ],
+    jazz: [
+      {emoji:'&#127929;',name:'Wine Tumbler — 12oz Stainless Stemless',price:'$16.99',rating:'4.8 &#9733; (5.4k)',tags:'Venue approved'},
+      {emoji:'&#128083;',name:'Leather Card Wallet — RFID Blocking',price:'$19.99',rating:'4.7 &#9733; (2.8k)',tags:'Night out essential'},
+      {emoji:'&#128149;',name:'Jazz Playlist Gift Card — Spotify',price:'$4.99',rating:'4.9 &#9733; (891)',tags:'Perfect gift'},
+    ],
+    rooftop: [
+      {emoji:'&#9728;',name:'SPF 50 Reef-Safe Sunscreen — 3oz TSA',price:'$11.99',rating:'4.6 &#9733; (7.2k)',tags:'Rooftop essential'},
+      {emoji:'&#129333;',name:'Windproof Lighter — USB Rechargeable',price:'$13.99',rating:'4.7 &#9733; (4.1k)',tags:'Outdoor events'},
+      {emoji:'&#127748;',name:'Compact Foldable Fan — Battery',price:'$14.99',rating:'4.5 &#9733; (3.3k)',tags:'Summer rooftop heat'},
+    ],
+  },
+  themenu: {
+    default: [
+      {emoji:'&#127759;',name:'Food Photography Ring Light — Clip-On',price:'$18.99',rating:'4.6 &#9733; (2.1k)',tags:'For the gram'},
+      {emoji:'&#129507;',name:'Wine Key Corkscrew — Sommelier Style',price:'$11.99',rating:'4.8 &#9733; (9.3k)',tags:'Dinner party ready'},
+      {emoji:'&#129380;',name:'Breath Freshening Strips — 3-Pack',price:'$6.99',rating:'4.7 &#9733; (15k)',tags:'Post-dinner essential'},
+    ],
+    tasting: [
+      {emoji:'&#127863;',name:'Wine Glass Markers — Set of 12 Charms',price:'$7.99',rating:'4.7 &#9733; (6.1k)',tags:'Wine nights'},
+      {emoji:'&#128221;',name:'Tasting Notes Pocket Journal — 120p',price:'$9.99',rating:'4.9 &#9733; (1.4k)',tags:'Sommelier pick'},
+      {emoji:'&#127848;',name:'Palate Cleanser Crackers — Artisan 8oz',price:'$13.99',rating:'4.6 &#9733; (3.2k)',tags:'Tasting essential'},
+    ],
+    brunch: [
+      {emoji:'&#127864;',name:'Mimosa Kit — Champagne Flutes 4-Pack',price:'$22.99',rating:'4.8 &#9733; (4.7k)',tags:'Brunch staple'},
+      {emoji:'&#9728;',name:'Polarized Sunglasses — UV400',price:'$24.99',rating:'4.5 &#9733; (8.2k)',tags:'Sunday funday'},
+      {emoji:'&#128246;',name:'Portable Charger 10000mAh — Fast',price:'$27.99',rating:'4.7 &#9733; (22k)',tags:'Never die at brunch'},
+    ],
+  }
+};
+
+function getAmzProducts(ev) {
+  const cat = ev.vertical === 'afterdark' ? AMZ_PRODUCTS.afterdark : AMZ_PRODUCTS.themenu;
+  if (!cat) return AMZ_PRODUCTS.afterdark.default;
+  const tags = (ev.tags||[]).map(t=>t.toLowerCase());
+  const name = (ev.name||'').toLowerCase();
+  if (tags.some(t=>['jazz','blues','seated'].includes(t))||name.includes('jazz')) return cat.jazz||cat.default;
+  if (tags.some(t=>['rooftop','festival','outdoor'].includes(t))||name.includes('rooftop')) return cat.rooftop||cat.default;
+  if (tags.some(t=>['tasting','wine','omakase','michelin'].includes(t))) return cat.tasting||cat.default;
+  if (tags.some(t=>['brunch','dj'].includes(t))||name.includes('brunch')) return cat.brunch||cat.default;
+  return cat.default;
+}
+
+function openAmzSidebar(evId) {
+  const ev = allEvFlat().find(x => x.id === evId);
+  if (!ev) return;
+  document.getElementById('amz-event-name').textContent = ev.name;
+  document.getElementById('amz-event-sub').textContent = ev.venue + ' · ' + ev.time;
+  const products = getAmzProducts(ev);
+  document.getElementById('amz-products').innerHTML = products.map(p => `
+    <div class="amz-product-card">
+      <div class="amz-product-img">${p.emoji}</div>
+      <div class="amz-product-name">${p.name}</div>
+      <div class="amz-product-meta"><span class="amz-product-price">${p.price}</span><span class="amz-product-rating">${p.rating}</span></div>
+      <div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-bottom:6px">${p.tags}</div>
+      <button class="amz-prime-btn"><span class="amz-prime-icon">&#9650;</span> ADD TO CART &mdash; PRIME</button>
+    </div>
+  `).join('');
+  document.getElementById('amz-sidebar').classList.add('open');
+  document.getElementById('amz-overlay').style.display = 'block';
+}
+function closeAmzSidebar() {
+  document.getElementById('amz-sidebar').classList.remove('open');
+  document.getElementById('amz-overlay').style.display = 'none';
+}
+
+// Patch renderCard to add Get Ready button
+const _baseRC = renderCard;
+renderCard = function(ev) {
+  if (proOn) return screenerCard(ev, 0, currentTab);
+  let html = _baseRC(ev);
+  if (ev.vertical === 'afterdark' || ev.vertical === 'themenu') {
+    const insertAfter = 'BUY TICKET &#8594;</a>';
+    html = html.replace(insertAfter, insertAfter + `<button class="get-ready-btn" onclick="openAmzSidebar(${ev.id})" style="margin-top:4px;width:100%;justify-content:center">&#127297; GET READY FOR THIS EVENT</button>`);
+  }
+  return html;
+};
+
+// Re-render with all patches applied
+setTimeout(() => { renderAll(currentTab, currentZip, pulseOn); }, 50);
 </script>
 </body>
 </html>
