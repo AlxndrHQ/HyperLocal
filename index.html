@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HyperLocal &mdash; Local Nightlife Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#0047FF;--yellow:#FACC15;--bg0:#060A10;--bg1:#0C1220;--bg2:#111827;--bg3:#1A2333;--border:rgba(255,255,255,0.08);--border-blue:rgba(0,71,255,0.4);--text:#E8EAF0;--text-dim:#7A8399;--text-muted:#4A5568;--mono:'Roboto Mono',monospace;--sans:'Space Grotesk',sans-serif;--red:#FF3B3B;--green:#00E676}
+html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-family:var(--sans);overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;width:100%}
+.topbar{display:flex;align-items:center;gap:12px;padding:0 16px;height:44px;background:var(--bg0);border-bottom:1px solid var(--border);flex-shrink:0;z-index:10}
+.brand{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.brand-dot{width:8px;height:8px;background:var(--yellow);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+.divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.live-badge{background:var(--red);color:#fff;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 7px;letter-spacing:.12em;border-radius:2px;flex-shrink:0;display:flex;align-items:center;gap:5px;animation:livepulse 1.4s infinite}
+@keyframes livepulse{0%,100%{opacity:1}50%{opacity:.7}}
+.live-dot{width:5px;height:5px;background:#fff;border-radius:50%}
+.datetime{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-left:auto;letter-spacing:.04em;white-space:nowrap}
+.zip-wrapper{display:flex;align-items:center;gap:6px}
+.zip-label{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase}
+.zip-input{background:var(--bg3);border:1px solid var(--border-blue);color:var(--blue);font-family:var(--mono);font-size:12px;font-weight:600;width:72px;padding:3px 8px;border-radius:2px;outline:none;letter-spacing:.12em;text-align:center;transition:border-color .2s}
+.zip-input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(0,71,255,.2)}
+.main-body{display:flex;flex:1;overflow:hidden}
+.center-stage{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.hero-video-wrap{position:relative;background:var(--bg1);border-bottom:2px solid var(--blue);overflow:hidden}
+.hero-aspect{aspect-ratio:16/9;max-height:340px;position:relative}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#060A10 0%,#0C1835 40%,#040C1A 100%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,71,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.07) 1px,transparent 1px);background-size:32px 32px}
+.hero-scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(0,71,255,.03) 50%,transparent 100%);animation:scan 4s linear infinite}
+@keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:20px 24px;background:linear-gradient(to top,rgba(6,10,16,.95) 0%,transparent 60%)}
+.anchor-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(0,71,255,.15);border:1px solid rgba(0,71,255,.5);padding:4px 12px;border-radius:2px;margin-bottom:10px;width:fit-content}
+.anchor-name{font-family:var(--mono);font-size:11px;color:var(--blue);letter-spacing:.08em}
+.hero-title{font-size:22px;font-weight:700;line-height:1.2;color:#fff}
+.hero-sub{font-size:12px;color:var(--text-dim);margin-top:4px;font-family:var(--mono)}
+.hero-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.ctrl-btn{width:30px;height:30px;border-radius:2px;background:rgba(0,0,0,.6);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,color .15s}
+.ctrl-btn:hover{border-color:var(--blue);color:var(--blue)}
+.vol-bar{display:flex;align-items:flex-end;gap:3px}
+.vol-seg{width:3px;border-radius:1px;background:var(--blue)}
+.stats-row{display:flex;border-bottom:1px solid var(--border);background:var(--bg1);flex-shrink:0;overflow-x:auto}
+.stat-cell{flex:1;min-width:100px;padding:8px 14px;border-right:1px solid var(--border)}
+.stat-cell:last-child{border-right:none}
+.stat-label{font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.stat-value{font-family:var(--mono);font-size:16px;font-weight:600}
+.stat-change{font-family:var(--mono);font-size:10px;margin-top:1px}
+.up{color:var(--green)}.down{color:var(--red)}.yellow{color:var(--yellow)}.blue{color:var(--blue)}
+.panels-row{flex:1;display:flex;overflow:hidden}
+.news-panel{width:260px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-header{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-title{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase}
+.panel-badge{font-family:var(--mono);font-size:9px;color:var(--yellow);border:1px solid rgba(250,204,21,.3);padding:1px 5px;border-radius:1px}
+.news-scroll{flex:1;overflow-y:auto;padding:4px 0}
+.news-scroll::-webkit-scrollbar{width:2px}
+.news-scroll::-webkit-scrollbar-thumb{background:var(--bg3)}
+.news-item{padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;display:flex;flex-direction:column;gap:3px}
+.news-item:hover{background:var(--bg3)}
+.news-cat{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.news-headline{font-size:12px;font-weight:500;line-height:1.35;color:var(--text)}
+.news-time{font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+.weather-mini{padding:10px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0}
+.weather-temp{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--yellow)}
+.weather-label{font-size:11px;color:var(--text-dim);margin-top:1px}
+.weather-details{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:6px}
+.map-panel{flex:1;background:var(--bg2);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.map-inner{flex:1;position:relative;overflow:hidden}
+.map-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,71,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.05) 1px,transparent 1px);background-size:24px 24px}
+.map-dots{position:absolute;inset:0}
+.map-dot{position:absolute;border-radius:50%}
+.map-label{position:absolute;font-family:var(--mono);font-size:9px;white-space:nowrap;padding:2px 5px;background:rgba(6,10,16,.85);border:1px solid var(--border);border-radius:2px;color:var(--text)}
+.ad-panel{padding:8px 10px;border-top:1px solid var(--border);background:var(--bg1);flex-shrink:0}
+.ad-inner{background:linear-gradient(135deg,rgba(0,71,255,.12),rgba(250,204,21,.06));border:1px solid rgba(0,71,255,.3);border-radius:2px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.ad-text{font-family:var(--mono);font-size:10px;color:var(--text-dim)}
+.ad-cta{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--yellow);background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.3);padding:4px 10px;border-radius:2px;cursor:pointer;text-decoration:none}
+.sidebar{width:240px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.events-list{flex:1;overflow-y:auto;padding:4px 0}
+.events-list::-webkit-scrollbar{width:2px}
+.events-list::-webkit-scrollbar-thumb{background:var(--bg3)}
+.event-card{padding:9px 12px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:background .15s}
+.event-card:hover{background:var(--bg3)}
+.event-card.trending{border-left:2px solid var(--yellow)}
+.event-card.featured{border-left:2px solid var(--blue)}
+.event-row1{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
+.event-name{font-size:12px;font-weight:600;line-height:1.3;flex:1}
+.event-price{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--yellow);white-space:nowrap;flex-shrink:0}
+.event-row2{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.event-venue{font-size:10px;color:var(--text-dim)}
+.event-time{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-left:auto}
+.event-tags{display:flex;gap:4px;flex-wrap:wrap}
+.event-tag{font-size:9px;font-family:var(--mono);padding:1px 5px;border-radius:1px;letter-spacing:.06em}
+.tag-blue{background:rgba(0,71,255,.15);color:#6B9FFF;border:1px solid rgba(0,71,255,.25)}
+.tag-yellow{background:rgba(250,204,21,.12);color:var(--yellow);border:1px solid rgba(250,204,21,.25)}
+.tag-red{background:rgba(255,59,59,.1);color:var(--red);border:1px solid rgba(255,59,59,.2)}
+.event-row3{display:flex;align-items:center;gap:6px;margin-top:2px}
+.ticket-btn{font-family:var(--mono);font-size:10px;font-weight:600;background:rgba(0,71,255,.15);border:1px solid rgba(0,71,255,.45);color:#7AABFF;padding:3px 10px;border-radius:2px;cursor:pointer;flex:1;text-align:center;transition:background .15s,border-color .15s;text-decoration:none;display:block}
+.ticket-btn:hover{background:rgba(0,71,255,.3);border-color:var(--blue);color:#fff}
+.sparkline{display:flex;align-items:flex-end;gap:1.5px;height:16px}
+.sparkline span{width:3px;border-radius:1px 1px 0 0;background:var(--yellow);display:block;opacity:.8}
+.avail-bar{flex:1;height:3px;border-radius:1px;background:var(--bg3);overflow:hidden}
+.avail-fill{height:100%;border-radius:1px;transition:width .5s}
+.ticker-wrap{background:var(--bg0);border-top:1px solid rgba(0,71,255,.4);height:32px;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
+.ticker-label{background:var(--blue);color:#fff;font-family:var(--mono);font-size:10px;font-weight:700;padding:0 12px;height:100%;display:flex;align-items:center;letter-spacing:.12em;flex-shrink:0;white-space:nowrap}
+.ticker-track{display:flex;align-items:center;white-space:nowrap;animation:ticker-scroll 45s linear infinite}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{display:inline-flex;align-items:center;gap:6px;padding:0 20px;height:32px;border-right:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text)}
+.ticker-key{color:var(--text-muted);font-size:10px;margin-right:2px}
+.ticker-val{font-weight:600}
+.t-up{color:var(--green)}.t-down{color:var(--red)}.t-yellow{color:var(--yellow)}.t-blue{color:#7AABFF}
+.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(6,10,16,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border-blue);width:360px;border-radius:3px;overflow:hidden;transform:translateY(16px);transition:transform .2s}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-top{background:var(--bg1);padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:600}
+.modal-close{background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;line-height:1;padding:0}
+.modal-body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.modal-detail{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px}
+.modal-dlabel{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+.modal-dval{font-family:var(--mono);font-size:13px;font-weight:600}
+.modal-cta{display:block;text-align:center;text-decoration:none;background:var(--blue);color:#fff;font-family:var(--mono);font-size:12px;font-weight:700;padding:10px;border-radius:2px;letter-spacing:.06em}
+.zip-changed{animation:zipanim .4s ease}
+@keyframes zipanim{0%{opacity:.3;transform:translateY(4px)}100%{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="topbar">
+  <div class="brand"><span class="brand-dot"></span>Hyper<span style="color:var(--yellow)">Local</span></div>
+  <div class="divider"></div>
+  <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+  <div class="divider"></div>
+  <div class="zip-wrapper"><span class="zip-label">ZIP</span><input class="zip-input" id="zip-input" value="10001" maxlength="5" type="text"/></div>
+  <div class="divider"></div>
+  <span style="font-family:var(--mono);font-size:10px;color:var(--text-dim)">NEW YORK METRO</span>
+  <div class="datetime" id="datetime"></div>
+</div>
+<div class="main-body">
+  <div class="news-panel">
+    <div class="panel-header"><span class="panel-title">Headlines</span><span class="panel-badge">BREAKING</span></div>
+    <div class="news-scroll" id="news-scroll"></div>
+    <div class="weather-mini" id="weather-mini"></div>
+  </div>
+  <div class="center-stage">
+    <div class="hero-video-wrap">
+      <div class="hero-aspect">
+        <div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.15" viewBox="0 0 800 300" preserveAspectRatio="none">
+          <polyline fill="none" stroke="#0047FF" stroke-width="1.5" points="0,200 30,180 60,220 90,160 120,200 150,140 180,210 210,170 240,195 270,155 300,175 330,195 360,145 390,185 420,165 450,200 480,150 510,175 540,195 570,150 600,170 630,185 660,160 690,195 720,175 750,195 780,165 800,180"/>
+          <polyline fill="none" stroke="#FACC15" stroke-width="1" points="0,250 40,235 80,255 120,230 160,248 200,240 240,252 280,235 320,245 360,255 400,240 440,248 480,252 520,238 560,255 600,242 640,250 680,238 720,252 760,245 800,250"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="width:56px;height:56px;border-radius:50%;border:2px solid rgba(0,71,255,.6);display:flex;align-items:center;justify-content:center;background:rgba(0,71,255,.15)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#0047FF"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+        <div class="hero-content">
+          <div class="anchor-chip"><span class="live-badge"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE &mdash; ANCHOR: MAYA CHEN</span></div>
+          <div class="hero-title">Tonight's HyperLocal Nightlife Rundown: 12 Venues Selling Fast</div>
+          <div class="hero-sub">BROADCAST &mdash; APR 23 2026 &middot; SEGMENT 3 OF 7</div>
+        </div>
+        <div class="hero-controls">
+          <div class="ctrl-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></div>
+          <div class="ctrl-btn"><div class="vol-bar"><div class="vol-seg" style="height:6px"></div><div class="vol-seg" style="height:10px"></div><div class="vol-seg" style="height:14px"></div><div class="vol-seg" style="height:10px"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="stats-row" id="stats-row"></div>
+    <div class="panels-row">
+      <div class="map-panel">
+        <div class="panel-header"><span class="panel-title">Venue Density Map &mdash; <span id="map-zip" style="color:var(--blue)">10001</span></span><span class="panel-badge" id="map-count">14 ACTIVE</span></div>
+        <div class="map-inner"><div class="map-grid-bg"></div><div class="map-dots" id="map-dots"></div></div>
+        <div class="ad-panel"><div class="ad-inner"><div><div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase">Powered by Supabase</div><div class="ad-text">Posh VIP &mdash; Skip every line tonight</div></div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="panel-header"><span class="panel-title">Events Tonight</span><span class="panel-badge" id="event-count-badge">0 FOUND</span></div>
+    <div class="events-list" id="events-list"></div>
+  </div>
+</div>
+<div class="ticker-wrap"><div class="ticker-label">LIVE FEED</div><div style="overflow:hidden;flex:1"><div class="ticker-track" id="ticker-track"></div></div></div>
+</div>
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-top"><div><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Event Details</div><div class="modal-title" id="modal-title"></div></div><button class="modal-close" onclick="closeModal()">&#10005;</button></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+<script>
+const SUPA_URL='YOUR_SUPABASE_URL';
+const SUPA_KEY='YOUR_SUPABASE_ANON_KEY';
+async function fetchEventsFromSupabase(zip){
+  try{
+    const res=await fetch(SUPA_URL+'/rest/v1/events?zip=eq.'+zip+'&select=*',{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+    if(res.ok){const data=await res.json();if(data.length>0)return data;}
+  }catch(e){console.log('Supabase not configured, using local data');}
+  return null;
+}
+const EVENTS_DB={"10001":[{name:"INDUSTRY TAKEOVER",venue:"Marquee NYC",time:"10:00 PM",price:"$45",avail:12,trending:true,featured:false,tags:["EDM","OPEN BAR"],genre:"Electronic",cap:800},{name:"Jazz & Cocktails",venue:"Village Vanguard",time:"8:30 PM",price:"$28",avail:65,trending:false,featured:true,tags:["JAZZ","SEATED"],genre:"Jazz",cap:120},{name:"Rooftop Sessions Vol.11",venue:"230 Fifth",time:"9:00 PM",price:"$35",avail:33,trending:true,featured:false,tags:["ROOFTOP","DJ SET"],genre:"House",cap:500},{name:"Comedy Night Unplugged",venue:"Comedy Cellar",time:"7:30 PM",price:"$22",avail:78,trending:false,featured:false,tags:["COMEDY","21+"],genre:"Comedy",cap:180},{name:"NEON DREAMS",venue:"Output Brooklyn",time:"11:00 PM",price:"$55",avail:5,trending:true,featured:true,tags:["TECHNO","SOLD OUT SOON"],genre:"Techno",cap:600},{name:"Hip-Hop Thursdays",venue:"SOBs",time:"9:30 PM",price:"$20",avail:90,trending:false,featured:false,tags:["HIP-HOP","LIVE"],genre:"Hip-Hop",cap:300},{name:"Wine and Canvas",venue:"Dream Hotel",time:"7:00 PM",price:"$65",avail:20,trending:false,featured:true,tags:["WINE","ART"],genre:"Social",cap:60}],"90210":[{name:"Sunset Sessions",venue:"Mondrian Rooftop",time:"8:00 PM",price:"$60",avail:30,trending:true,featured:true,tags:["POOL","DJ"],genre:"House",cap:400},{name:"Beverly Hills Gala",venue:"The Beverly Hilton",time:"7:30 PM",price:"$220",avail:15,trending:false,featured:true,tags:["BLACK TIE","CHARITY"],genre:"Gala",cap:500},{name:"Latin Night Live",venue:"La Scala",time:"9:00 PM",price:"$30",avail:60,trending:true,featured:false,tags:["SALSA","LIVE BAND"],genre:"Latin",cap:250},{name:"Tech Mixer 2026",venue:"The Garage LA",time:"6:00 PM",price:"FREE",avail:100,trending:false,featured:false,tags:["NETWORKING","OPEN BAR"],genre:"Social",cap:200}],"60601":[{name:"Deep House Night",venue:"Smart Bar",time:"10:30 PM",price:"$25",avail:45,trending:true,featured:false,tags:["HOUSE","18+"],genre:"House",cap:400},{name:"Chicago Blues Jam",venue:"Buddy Guys Legends",time:"8:00 PM",price:"$18",avail:80,trending:false,featured:true,tags:["BLUES","LIVE"],genre:"Blues",cap:150},{name:"R&B Saturdays",venue:"East Room",time:"9:00 PM",price:"$30",avail:22,trending:true,featured:false,tags:["RNB","VIP TABLE"],genre:"R&B",cap:350}],"default":[{name:"Open Night",venue:"Local Venue",time:"9:00 PM",price:"$20",avail:50,trending:false,featured:false,tags:["MUSIC"],genre:"Mixed",cap:200},{name:"Weekend Warmup",venue:"Downtown Lounge",time:"8:00 PM",price:"$15",avail:70,trending:false,featured:true,tags:["DJ SET"],genre:"Electronic",cap:250}]};
+const NEWS_DB={"10001":[{cat:"JOBS",cc:"#00E676",h:"DoorDash hiring 200 NYC delivery partners at $22/hr",t:"2m ago"},{cat:"TRENDING",cc:"#FACC15",h:"Marquee sellout alert: fewer than 50 tickets remain",t:"5m ago"},{cat:"ALERT",cc:"#FF3B3B",h:"MTA L train delays: 20-min gaps thru midnight",t:"12m ago"},{cat:"JOBS",cc:"#00E676",h:"5 bartender openings at rooftop venues via HyperLocal",t:"18m ago"},{cat:"CITY",cc:"#7AABFF",h:"Mayor announces Times Square noise ordinance pilot",t:"34m ago"},{cat:"WEATHER",cc:"#0047FF",h:"Clear skies through 2AM, ideal for rooftop events",t:"1h ago"}],"90210":[{cat:"TRENDING",cc:"#FACC15",h:"Beverly Hills Gala raises record $4.2M, sold out",t:"8m ago"},{cat:"JOBS",cc:"#00E676",h:"Luxury hotel seeking valet and concierge at $28/hr",t:"22m ago"},{cat:"CITY",cc:"#7AABFF",h:"Rodeo Drive Art Walk extended through midnight",t:"1h ago"}],"60601":[{cat:"JOBS",cc:"#00E676",h:"Chicago loop venues hiring 80+ staff for spring",t:"15m ago"},{cat:"ALERT",cc:"#FF3B3B",h:"Red Line delays near Wrigley, allow extra 25 min",t:"30m ago"},{cat:"TRENDING",cc:"#FACC15",h:"Smart Bar named Resident Advisor top pick",t:"2h ago"}],"default":[{cat:"LOCAL",cc:"#7AABFF",h:"Update your ZIP code to see local events",t:"just now"}]};
+const WEATHER={"10001":{temp:"62F",cond:"Clear, Ideal",wind:"W 7mph",hum:"48%"},"90210":{temp:"74F",cond:"Partly Cloudy",wind:"SW 4mph",hum:"32%"},"60601":{temp:"55F",cond:"Overcast",wind:"N 12mph",hum:"61%"},"default":{temp:"65F",cond:"Checking...",wind:"--",hum:"--"}};
+const TICKER=[{key:"TICKETS SOLD",val:"1,247",c:"t-up"},{key:"NYC TEMP",val:"62F",c:"t-yellow"},{key:"MARQUEE",val:"48 LEFT",c:"t-down"},{key:"JOBS",val:"23 OPEN",c:"t-up"},{key:"OUTPUT BK",val:"5 SEATS",c:"t-down"},{key:"MTA L",val:"DELAYED",c:"t-down"},{key:"POSH VIP",val:"4 NEW",c:"t-blue"},{key:"WEATHER",val:"CLEAR 2AM",c:"t-blue"},{key:"BTC",val:"$94,210 -1.2%",c:"t-down"},{key:"HYPERLOCAL",val:"LIVE SEG 3",c:"t-blue"}];
+const STATS=[{l:"TICKETS SOLD",v:"1,247",ch:"+89 today",c:"up"},{l:"EVENTS LIVE",v:"34",ch:"+7 vs yesterday",c:"up"},{l:"JOB LISTINGS",v:"23",ch:"6 new",c:"yellow"},{l:"AVG TICKET",v:"$38.50",ch:"up $2.10",c:"up"},{l:"POSH VIP DEALS",v:"4",ch:"expires midnight",c:"blue"}];
+const MAPDOTS=[{x:"28%",y:"35%",r:8,color:"#00E676",label:"Output BK"},{x:"55%",y:"42%",r:12,color:"#FACC15",label:"Marquee"},{x:"40%",y:"55%",r:6,color:"#7AABFF",label:"Village V."},{x:"65%",y:"30%",r:10,color:"#FF3B3B",label:"230 Fifth"},{x:"72%",y:"60%",r:7,color:"#00E676",label:"SOBs"},{x:"33%",y:"68%",r:5,color:"#FACC15",label:"Comedy Cellar"},{x:"50%",y:"25%",r:9,color:"#7AABFF",label:"Dream Hotel"}];
+function gk(z){return EVENTS_DB[z]?z:"default";}
+function sparkline(t){if(!t)return'<div style="width:24px"></div>';return'<div class="sparkline">'+[4,7,5,9,6,12,10,14,11,16].map(n=>'<span style="height:'+n+'px"></span>').join('')+'</div>';}
+function renderEvents(zip){
+  const evs=EVENTS_DB[gk(zip)],list=document.getElementById("events-list");
+  document.getElementById("event-count-badge").textContent=evs.length+" FOUND";
+  list.innerHTML="";
+  evs.forEach((ev,i)=>{
+    const pct=ev.avail,ac=pct<20?"#FF3B3B":pct<50?"#FACC15":"#00E676";
+    const d=document.createElement("div");
+    d.className="event-card"+(ev.trending?" trending":ev.featured?" featured":"");
+    d.innerHTML='<div class="event-row1"><div class="event-name">'+ev.name+'</div><div class="event-price">'+ev.price+'</div></div>'
+      +'<div class="event-row2"><span class="event-venue">'+ev.venue+'</span><span class="event-time">'+ev.time+'</span></div>'
+      +'<div class="event-tags">'+ev.tags.map(t=>'<span class="event-tag tag-blue">'+t+'</span>').join('')+(ev.trending?'<span class="event-tag tag-yellow">HOT</span>':'')+(pct<20?'<span class="event-tag tag-red">FEW LEFT</span>':'')+'</div>'
+      +'<div class="event-row3">'+sparkline(ev.trending)+'<div class="avail-bar"><div class="avail-fill" style="width:'+pct+'%;background:'+ac+'"></div></div><span style="font-family:var(--mono);font-size:9px;color:'+ac+'">'+pct+'%</span></div>'
+      +'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank" onclick="openModal(event,'+i+',\''+zip+'\')">BUY TICKET</a>';
+    list.appendChild(d);
+  });
+}
+function openModal(e,idx,zip){
+  e.preventDefault();
+  const ev=EVENTS_DB[gk(zip)][idx];if(!ev)return;
+  document.getElementById("modal-title").textContent=ev.name;
+  const pct=ev.avail,ac=pct<20?"#FF3B3B":"#00E676";
+  document.getElementById("modal-body").innerHTML='<div class="modal-detail"><span class="modal-dlabel">VENUE</span><span class="modal-dval">'+ev.venue+'</span></div>'
+    +'<div class="modal-detail"><span class="modal-dlabel">TIME</span><span class="modal-dval" style="color:#FACC15">'+ev.time+'</span></div>'
+    +'<div class="modal-detail"><span class="modal-dlabel">TICKET PRICE</span><span class="modal-dval" style="color:#FACC15">'+ev.price+'</span></div>'
+    +'<div class="modal-detail"><span class="modal-dlabel">AVAILABILITY</span><span class="modal-dval" style="color:'+ac+'">'+pct+'% remaining</span></div>'
+    +'<div class="modal-detail"><span class="modal-dlabel">GENRE</span><span class="modal-dval">'+ev.genre+'</span></div>'
+    +'<div class="modal-detail"><span class="modal-dlabel">CAPACITY</span><span class="modal-dval">'+ev.cap+' guests</span></div>'
+    +'<a class="modal-cta" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank">SECURE YOUR TICKET ON POSH.VIP</a>';
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal(){document.getElementById("modal-overlay").classList.remove("open");}
+document.getElementById("modal-overlay").addEventListener("click",function(e){if(e.target===this)closeModal();});
+function renderNews(zip){
+  const items=NEWS_DB[gk(zip)]||NEWS_DB["default"],el=document.getElementById("news-scroll");
+  el.innerHTML="";items.forEach(item=>{const d=document.createElement("div");d.className="news-item";d.innerHTML='<div class="news-cat" style="color:'+item.cc+'">'+item.cat+'</div><div class="news-headline">'+item.h+'</div><div class="news-time">'+item.t+'</div>';el.appendChild(d);});
+}
+function renderWeather(zip){
+  const w=WEATHER[gk(zip)]||WEATHER["default"];
+  document.getElementById("weather-mini").innerHTML='<div style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">LOCAL WEATHER</div><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="weather-temp">'+w.temp+'</div><div class="weather-label">'+w.cond+'</div></div></div><div class="weather-details">Wind: '+w.wind+' &middot; Humidity: '+w.hum+'</div>';
+}
+function renderStats(){
+  document.getElementById("stats-row").innerHTML=STATS.map(s=>'<div class="stat-cell"><div class="stat-label">'+s.l+'</div><div class="stat-value '+s.c+'">'+s.v+'</div><div class="stat-change '+s.c+'">'+s.ch+'</div></div>').join('');
+}
+function renderTicker(){
+  const items=[...TICKER,...TICKER];
+  document.getElementById("ticker-track").innerHTML=items.map(t=>'<div class="ticker-item"><span class="ticker-key">'+t.key+'</span><span class="ticker-val '+t.c+'">'+t.val+'</span></div>').join('');
+}
+function renderMapDots(zip){
+  const el=document.getElementById("map-dots");el.innerHTML="";
+  MAPDOTS.forEach(d=>{
+    const dot=document.createElement("div");dot.className="map-dot";
+    dot.style.cssText="left:"+d.x+";top:"+d.y+";width:"+(d.r*2)+"px;height:"+(d.r*2)+"px;background:"+d.color+";opacity:.7;transform:translate(-50%,-50%);box-shadow:0 0 8px "+d.color;
+    el.appendChild(dot);
+    const lbl=document.createElement("div");lbl.className="map-label";
+    lbl.style.cssText="left:calc("+d.x+" + "+(d.r+4)+"px);top:"+d.y+";transform:translateY(-50%)";
+    lbl.textContent=d.label;el.appendChild(lbl);
+  });
+  document.getElementById("map-zip").textContent=zip;
+  document.getElementById("map-count").textContent=(EVENTS_DB[gk(zip)]||EVENTS_DB["default"]).length+" ACTIVE";
+}
+function updateDateTime(){
+  const n=new Date(),days=["SUN","MON","TUE","WED","THU","FRI","SAT"],months=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],p=x=>String(x).padStart(2,"0");
+  document.getElementById("datetime").textContent=days[n.getDay()]+" "+p(n.getDate())+" "+months[n.getMonth()]+" "+n.getFullYear()+" -- "+p(n.getHours())+":"+p(n.getMinutes())+":"+p(n.getSeconds());
+}
+function handleZip(zip){
+  renderEvents(zip);renderNews(zip);renderWeather(zip);renderMapDots(zip);
+  const el=document.getElementById("events-list");el.classList.remove("zip-changed");void el.offsetWidth;el.classList.add("zip-changed");
+}
+document.getElementById("zip-input").addEventListener("change",function(){if(this.value.trim().length>=3)handleZip(this.value.trim());});
+document.getElementById("zip-input").addEventListener("keydown",function(e){if(e.key==="Enter"&&this.value.trim().length>=3)handleZip(this.value.trim());});
+renderStats();renderTicker();handleZip("10001");setInterval(updateDateTime,1000);updateDateTime();
+</script>
+</body>
+</html>
