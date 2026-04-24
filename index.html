@@ -329,12 +329,15 @@ body.pub-mode .hero-wrap{display:none}
 @media(max-width:767px){.topbar{flex-wrap:wrap;height:auto;padding:0;position:sticky;top:0;z-index:30}
 .topbar-row1{display:flex!important;align-items:center;gap:8px;padding:7px 12px;width:100%;border-bottom:1px solid var(--border)}
 .topbar-row2{display:flex!important;align-items:center;gap:6px;padding:5px 12px;width:100%;min-height:36px}
-.topbar>.tb-div,.topbar>.brand,.topbar>.live-pill,.topbar>.theme-btn,.topbar>.datetime,.topbar>.zip-pulse-group,.topbar>.pro-toggle-wrap,#tbar-extra-btns{display:none!important}
+.topbar>.tb-div,.topbar>.brand,.topbar>.live-pill,.topbar>.theme-btn,.topbar>.datetime,.topbar>.zip-pulse-group,.topbar>.pro-toggle-wrap,.topbar>.terminal-mode-btn,#tbar-extra-btns{display:none!important}
 .tab-nav{overflow-x:auto;padding:0 4px;-webkit-overflow-scrolling:touch}
 .tab-btn{padding:0 10px;font-size:9px;min-height:44px;min-width:44px}
 .main-body{flex-direction:column;height:calc(100dvh - 120px - 58px)}
 .news-panel{display:none}
-.center-stage{height:42dvh;flex-shrink:0;order:-1}
+.center-stage{height:72px!important;max-height:72px!important;min-height:0!important;flex-shrink:0!important;order:-1;cursor:pointer;position:relative;overflow:hidden}
+.center-stage .hero-wrap,.center-stage .hero-aspect{height:72px!important;max-height:72px!important;min-height:0!important;flex-shrink:0!important;aspect-ratio:unset!important;padding-top:0!important}
+.center-stage .hero-overlay{padding:6px 10px!important}
+.center-stage .ev-detail-modal,.center-stage .shop-modal{display:none!important}
 .hero-wrap{display:none}
 .stats-bar{display:none}
 .map-panel{flex:1;height:100%}
@@ -510,7 +513,7 @@ body.pub-mode .hero-wrap{display:none}
 .map-pulse-ring{position:absolute;border-radius:50%;border:1px solid currentColor;top:50%;left:50%;transform:translate(-50%,-50%) scale(.4);animation:mapring 2.5s ease-out infinite;pointer-events:none}
 @keyframes mapring{0%{transform:translate(-50%,-50%) scale(.4);opacity:.7}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
 .metro-label{font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
-@media(max-width:767px){.ticker-wrap{display:flex}.ticker-track{animation-duration:25s}.msb-segment:last-child{display:none}}
+@media(max-width:767px){.ticker-wrap{display:none}.ticker-track{animation-duration:25s}.msb-segment:last-child{display:none}}
 
 /* ════ SPRINT 14.1: UI Sync & Bug Squash ════ */
 /* Bottom nav always visible, highest z-index */
@@ -565,7 +568,7 @@ body.pub-mode .hero-wrap{display:none}
   .stream-panel { bottom: 58px !important; z-index: 180 !important; }
 }
 
-/* ════ SPRINT 15: Privacy Vault, Data Ingestion, White-Label ════ */
+/* ════ SPRINT 15+16: Privacy, Curator, Mobile Bottom Bar ════ */
 .ghost-mode-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg2);cursor:pointer;user-select:none}
 .ghost-mode-bar.active{background:rgba(155,93,229,.08)}
 .ghost-icon{font-size:13px;flex-shrink:0}
@@ -588,31 +591,341 @@ body.pub-mode .hero-wrap{display:none}
 .wipe-btn{width:100%;padding:10px;background:rgba(255,51,85,.1);border:1px solid rgba(255,51,85,.35);color:var(--red);font-family:var(--mono);font-size:9px;font-weight:700;border-radius:2px;cursor:pointer;letter-spacing:.06em;margin-top:10px;transition:background .15s}
 .wipe-btn:hover{background:rgba(255,51,85,.2)}
 .wipe-btn.confirm{background:var(--red);color:#fff}
-.privacy-badge{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.12);color:var(--blue);border:1px solid rgba(0,71,255,.25);padding:1px 5px;border-radius:1px;letter-spacing:.06em}
 .curator-badge{display:none;position:fixed;top:0;left:0;right:0;z-index:31;background:linear-gradient(90deg,rgba(155,93,229,.18),rgba(0,71,255,.12));border-bottom:1px solid rgba(155,93,229,.35);padding:4px 14px;align-items:center;gap:10px;font-family:var(--mono);font-size:9px}
 .curator-badge.active{display:flex}
 .curator-avatar{width:20px;height:20px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;border:1px solid rgba(155,93,229,.5)}
 .curator-name{color:#C084FC;font-weight:700;letter-spacing:.08em}
 .curator-hl{color:var(--text-dim)}
 .curator-pill{font-family:var(--mono);font-size:7px;background:rgba(155,93,229,.18);color:#C084FC;border:1px solid rgba(155,93,229,.3);padding:1px 5px;border-radius:1px;letter-spacing:.06em;margin-left:auto}
-.bnav-hl-logo.curator-mode{background:linear-gradient(135deg,var(--yellow),#FF9900)!important;color:#000!important;font-size:7px!important;letter-spacing:-.3px!important}
+.bnav-hl-logo.curator-mode{background:linear-gradient(135deg,var(--yellow),#FF9900)!important;color:#000!important;font-size:14px!important;letter-spacing:0!important}
 .webhook-status{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:7px;padding:1px 5px;border-radius:1px;letter-spacing:.06em}
 .webhook-status.live{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.25)}
 .webhook-status.pending{background:rgba(250,204,21,.1);color:var(--yellow);border:1px solid rgba(250,204,21,.25)}
 .webhook-status-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink .9s infinite}
-.src-ingested{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.22)}
-.map-blur-ring{position:absolute;border-radius:50%;border:1px dashed rgba(155,93,229,.4);pointer-events:none;transform:translate(-50%,-50%)}
+/* Mobile bottom bar: weather square + live ticker tape */
+.mobile-bottom-bar{display:none;position:fixed;bottom:58px;left:0;right:0;height:28px;z-index:190;background:var(--bg0);border-top:1px solid rgba(0,71,255,.5);flex-direction:row;align-items:stretch}
+@media(max-width:767px){.center-stage .hero-wrap{display:none!important}.center-stage .map-dots-layer,.center-stage .pulse-overlay{display:block!important}.center-stage{background:var(--bg2)}}
+@media(max-width:767px){.mobile-bottom-bar{display:flex!important}.mobile-status-bar{display:none!important}#app{padding-bottom:86px!important}#tab-terminal .news-panel{display:none!important}#tab-terminal .weather-box{display:none!important}}
+.mobile-temp-cell{flex-shrink:0;width:54px;background:var(--bg1);border-right:1px solid rgba(0,71,255,.35);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--yellow);letter-spacing:.04em}
+.mobile-ticker-cell{flex:1;overflow:hidden;display:flex;align-items:center;gap:0}
+.mobile-ticker-live-tag{font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:var(--blue);padding:0 10px;flex-shrink:0;letter-spacing:.06em;white-space:nowrap;display:flex;align-items:center;height:100%}
+.mobile-ticker-scroll{flex:1;overflow:hidden}
+.mobile-ticker-track{white-space:nowrap;display:inline-block;animation:tickscroll 25s linear infinite;animation-play-state:running!important;font-family:var(--mono);font-size:8px;color:var(--text-dim);padding-left:12px}
+/* Sprint 16 home grid */
+.hl-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 13px 4px;border-bottom:1px solid var(--border);background:var(--bg1);position:sticky;top:0;z-index:2}
+.hl-section-title{font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:.12em}
+.hl-section-count{font-family:var(--mono);font-size:7px;color:var(--text-muted)}
+.hl-headline-card{padding:9px 13px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
+.hl-headline-card:hover{background:var(--bg2)}
+.hl-headline-card.featured{border-left:2px solid var(--blue);background:rgba(0,71,255,.04)}
+.hl-hc-label{font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.hl-hc-title{font-size:12px;font-weight:600;line-height:1.35;color:var(--text);margin-bottom:3px}
+.hl-hc-meta{font-family:var(--mono);font-size:8px;color:var(--text-muted);display:flex;gap:8px;flex-wrap:wrap}
+.hl-hc-price{color:var(--yellow);font-weight:700}
+.hl-hc-avail{color:var(--green)}
+.hl-hc-avail.low{color:var(--red)}
+@media(min-width:768px){#tab-terminal .news-panel{display:flex!important;width:340px;flex-shrink:0}#tab-terminal .center-stage{display:none}#tab-terminal .sidebar{width:300px}}
+
+/* ════ SPRINT 17: Geospatial Logic & Friend Mapping ════ */
+
+/* Metro label transitions smoothly on zip change */
+.metro-label { transition: color .3s, opacity .3s; }
+.metro-label.switching { opacity: 0; }
+
+/* Friend pins on map */
+.friend-map-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 8;
+  cursor: pointer;
+}
+.friend-pin-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--purple);
+  border: 2px solid #C084FC;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(155,93,229,.5);
+  position: relative;
+  z-index: 2;
+}
+.friend-pin-avatar.ghost {
+  opacity: .35;
+  border-color: rgba(255,255,255,.2);
+  filter: grayscale(1);
+}
+.friend-pin-blur-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(155,93,229,.4);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  animation: pulsering 2s ease-out infinite;
+}
+.friend-pin-label {
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 7px;
+  color: #C084FC;
+  white-space: nowrap;
+  background: rgba(4,8,16,.8);
+  padding: 1px 4px;
+  border-radius: 1px;
+  border: 1px solid rgba(155,93,229,.3);
+}
+.friend-pin-label.ghost { color: var(--text-muted); }
+
+/* Google Maps container — replaces blank map grid */
+.gmap-container {
+  position: absolute;
+  inset: 0;
+  background: var(--bg2);
+}
+.gmap-container iframe,
+.gmap-container #gmap-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}
+/* API key prompt overlay */
+.gmap-key-prompt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg2);
+  z-index: 4;
+}
+.gmap-key-badge {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: .1em;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.gmap-key-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: .08em;
+}
+.gmap-key-sub {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 240px;
+  line-height: 1.5;
+}
+.gmap-key-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.gmap-key-input {
+  background: var(--bg3);
+  border: 1px solid var(--border-blue);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 5px 8px;
+  border-radius: 2px;
+  width: 220px;
+  outline: none;
+}
+.gmap-key-btn {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  letter-spacing: .06em;
+}
+
+/* Metro-specific accent colors */
+body.metro-dc    { --metro-color: #00B4D8; }
+body.metro-chi   { --metro-color: #FF6B35; }
+body.metro-nyc   { --metro-color: #0047FF; }
+body.metro-la    { --metro-color: #9B5DE5; }
+body.metro-miami { --metro-color: #00E676; }
+
+/* ════ SPRINT 18: Smart Itinerary & Following Feed ════ */
+
+/* Itinerary tab bar */
+.itin-tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg1);
+}
+.itin-tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  border: none;
+  background: none;
+  cursor: pointer;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.itin-tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+.itin-tab-btn.active.friends-tab { color: #C084FC; border-bottom-color: #C084FC; }
+.itin-tab-btn.active.following-tab { color: var(--yellow); border-bottom-color: var(--yellow); }
+.itin-tab-count {
+  font-family: var(--mono);
+  font-size: 7px;
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 0 5px;
+  min-width: 16px;
+  text-align: center;
+}
+.itin-tab-btn.active .itin-tab-count { background: rgba(0,71,255,.2); color: var(--blue); }
+.itin-tab-btn.active.friends-tab .itin-tab-count { background: rgba(155,93,229,.2); color: #C084FC; }
+.itin-tab-btn.active.following-tab .itin-tab-count { background: rgba(250,204,21,.2); color: var(--yellow); }
+
+/* LIVE NOW badge — pulsing */
+.live-now-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--red);
+  padding: 2px 6px;
+  border-radius: 1px;
+  letter-spacing: .06em;
+  animation: blink .8s infinite;
+}
+.live-now-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* Overlap badge for friends tab */
+.itin-overlap-badge {
+  font-family: var(--mono);
+  font-size: 7px;
+  color: #C084FC;
+  background: rgba(155,93,229,.12);
+  border: 1px solid rgba(155,93,229,.3);
+  padding: 1px 5px;
+  border-radius: 1px;
+  margin-bottom: 3px;
+  display: inline-block;
+}
+
+/* Following feed */
+.following-item {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+}
+.following-item:hover { background: var(--bg2); }
+.following-hdr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+.following-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.following-handle {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: .04em;
+}
+.following-platform {
+  font-family: var(--mono);
+  font-size: 7px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+.following-ev-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.following-meta {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Stream source badges — extended */
+.src-instagram { background: rgba(225,48,108,.12); color: #F472B6; border: 1px solid rgba(225,48,108,.3); }
+.src-youtube   { background: rgba(255,0,0,.1);     color: #F87171; border: 1px solid rgba(255,0,0,.25); }
+.src-stream    { background: rgba(0,71,255,.12);   color: #7AABFF; border: 1px solid rgba(0,71,255,.25); }
+
+/* Stream card enhanced */
+.stream-source-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 0;
+}
+.stream-platform-icon {
+  font-size: 10px;
+}
+.stream-account-name {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  flex: 1;
+}
+.stream-ingested-time {
+  font-family: var(--mono);
+  font-size: 7px;
+  color: var(--text-muted);
+}
 </style>
 
 </head>
 <body>
-<!-- SPRINT 15: CURATOR WHITE-LABEL BADGE -->
-<div class="curator-badge" id="curator-badge">
-  <div class="curator-avatar" id="curator-avatar">&#127775;</div>
-  <span class="curator-name" id="curator-name">MAAL</span>
-  <span class="curator-hl">&nbsp;&times;&nbsp;HyperLocal</span>
-  <span class="curator-pill" id="curator-pill">&#9733; CURATOR PICKS</span>
-</div>
+<div class="curator-badge" id="curator-badge"><div class="curator-avatar" id="curator-avatar">&#127775;</div><span class="curator-name" id="curator-name">MAAL</span><span class="curator-hl">&nbsp;&times;&nbsp;HyperLocal</span><span class="curator-pill" id="curator-pill">&#9733; CURATOR PICKS</span></div>
 <div id="app">
 <div class="topbar">
   <div class="topbar-row1">
@@ -657,12 +970,13 @@ body.pub-mode .hero-wrap{display:none}
   <button class="tab-btn" onclick="switchTab('afterdark',this)">&#127769; SOCIAL <span class="tab-count" id="count-afterdark">0</span></button>
   <button class="tab-btn" onclick="switchTab('themenu',this)">&#127829; FOOD <span class="tab-count" id="count-themenu">0</span></button>
   <button class="tab-btn" onclick="switchTab('theladder',this)">&#9650; GIGS <span class="tab-count" id="count-theladder">0</span></button>
-  <button class="tab-btn" id="tab-btn-map" onclick="switchTab('mapview',this)">&#9673; MAP</button>
+  
+
 </div>
 <div class="pulse-cycle-bar" id="pulse-cycle-bar"><div class="pcb-seg inactive" id="pcb-0" style="background:#0047FF"></div><div class="pcb-seg inactive" id="pcb-1" style="background:#9B5DE5"></div><div class="pcb-seg inactive" id="pcb-2" style="background:#FF8C00"></div><div class="pcb-seg inactive" id="pcb-3" style="background:#00E676"></div></div>
 <div class="tab-content active slide-in" id="tab-terminal">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">All Events</span><span class="panel-hdr-badge">LIVE</span></div><div class="news-scroll" id="news-terminal"></div><div class="weather-box" id="weather-terminal"></div></div>
-  <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-terminal"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip"><span class="live-pill" style="font-size:8px;padding:1px 5px"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE</span></div><div class="hero-title">All Events &mdash; Live Now</div><div class="hero-sub">SOCIAL &middot; FOOD &middot; GIGS</div></div></div></div><div class="stats-bar" id="stats-terminal"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Venue Map &mdash; <span id="map-zip">10001</span></span><span class="panel-hdr-badge" id="map-count">0 ACTIVE</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-terminal"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-terminal"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Posh VIP &mdash; Skip every line</div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div></div></div></div>
+  <div class="center-stage" onclick="bnavGo('map',document.getElementById('bnav-markets'))" title="View full map"><div class="hero-wrap"><div class="hero-aspect" id="hero-terminal"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip"><span class="live-pill" style="font-size:8px;padding:1px 5px"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE</span></div><div class="hero-title">All Events &mdash; Live Now</div><div class="hero-sub">SOCIAL &middot; FOOD &middot; GIGS</div></div></div></div><div class="stats-bar" id="stats-terminal"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Venue Map &mdash; <span id="map-zip">10001</span></span><span class="panel-hdr-badge" id="map-count">0 ACTIVE</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-terminal"></div><div style="position:absolute;bottom:0;left:0;right:0;z-index:10;font-family:var(--mono);font-size:8px;font-weight:700;color:rgba(255,255,255,.75);background:linear-gradient(transparent,rgba(0,0,0,.7));padding:14px 10px 4px;letter-spacing:.08em;pointer-events:none;text-align:center">&#9673; TAP TO OPEN FULL MAP</div><div class="pulse-overlay"><div class="pulse-circles" id="pc-terminal"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Posh VIP &mdash; Skip every line</div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div></div></div></div>
   <div class="sidebar"><div class="panel-hdr"><span class="panel-hdr-title">All Events</span><span class="panel-hdr-badge" id="ev-count-terminal">0</span></div><div class="ev-list" id="evlist-terminal"></div></div>
 </div>
 <div class="tab-content slide-in" id="tab-afterdark">
@@ -693,6 +1007,8 @@ body.pub-mode .hero-wrap{display:none}
       <div style="flex:1;position:relative;overflow:hidden;background:var(--bg2)">
         <div class="map-page-grid" style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,71,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.04) 1px,transparent 1px);background-size:24px 24px"></div>
         <div id="desktop-map-dots" style="position:absolute;inset:0"></div>
+        <div id="gmap-desktop" class="gmap-container" style="display:none"></div>
+        <div id="friend-pins-desktop" style="position:absolute;inset:0;pointer-events:none;z-index:8"></div>
         <div class="pulse-overlay"><div class="pulse-circles" id="pc-mapview"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div>
         <div style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:8px;z-index:5">
           <span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.1em">&#9673; LIVE MAP</span>
@@ -710,26 +1026,37 @@ body.pub-mode .hero-wrap{display:none}
 <div class="ticker-wrap"><div class="ticker-tag" id="ticker-tag">LIVE</div><div class="ticker-scroller"><div class="ticker-track" id="ticker-track"></div></div></div>
 <div class="social-ticker-wrap"><div class="social-ticker-tag">&#9830; SOCIAL</div><div class="social-ticker-scroller"><div class="social-ticker-track" id="social-ticker-track"></div></div></div>
 </div>
-<div class="mobile-status-bar" id="mobile-status-bar"><div class="msb-segment"><span class="msb-label">TEMP</span><span class="msb-val yl" id="msb-temp">62F</span></div><div class="msb-segment" style="flex:3"><span class="msb-val" id="msb-headline" style="font-size:8px;color:var(--text-dim)">Loading...</span></div></div>
+<div class="mobile-status-bar" id="mobile-status-bar" style="display:none"><div class="msb-segment"><span class="msb-label">TEMP</span><span class="msb-val yl" id="msb-temp">--</span></div></div>
+<div class="mobile-bottom-bar" id="mobile-bottom-bar"><div class="mobile-temp-cell"><span id="mobile-temp-val">--</span></div><div class="mobile-ticker-cell"><span class="mobile-ticker-live-tag">LIVE</span><div style="flex:1;overflow:hidden"><div class="ticker-track" id="ticker-track-m" style="white-space:nowrap;animation:tickscroll 25s linear infinite;animation-play-state:running!important;display:inline-block;padding-left:8px;font-family:var(--mono);font-size:8px;color:var(--text-dim)"></div></div></div></div>
 <!-- SHOP MODAL -->
 <div class="shop-modal" id="shop-modal"><div class="shop-sidecar"><div class="shop-hdr"><div><div class="shop-title">&#128722; SHOP THE LOOK</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:2px" id="shop-event-sub">Select an event</div></div><button class="shop-close" onclick="closeShopModal()">&#10005;</button></div><div class="shop-event-chip"><div class="shop-event-name" id="shop-event-name">&mdash;</div><div id="shop-venue-sub" style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">&mdash;</div></div><div class="shop-tabs"><button class="shop-tab-btn active" id="shop-tab-look" onclick="setShopTab('look')">&#128252; THE LOOK</button><button class="shop-tab-btn" id="shop-tab-gear" onclick="setShopTab('gear')">&#127297; GET READY</button></div><div class="shop-scroll" id="shop-products"></div><div class="shop-footer">&#9733; Affiliate links support HyperLocal &middot; STRIPT &times; Amazon</div></div></div>
 <div id="shop-overlay" style="display:none;position:fixed;inset:0;z-index:249;background:rgba(0,0,0,.25)" onclick="closeShopModal()"></div>
 <!-- ITINERARY -->
-<div class="itinerary-panel" id="itinerary-panel"><div class="itin-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em" id="itin-title">&#9783; LIVE ITINERARY</div></div><button class="itin-close" onclick="closeItinerary()">&#10005;</button></div><div class="itin-scroll" id="itin-scroll"></div><div class="itin-footer"><button class="ics-btn" onclick="exportICS()">&#8645; SYNC TO CALENDAR (.ICS)</button></div></div>
+<div class="itinerary-panel" id="itinerary-panel">
+  <div class="itin-hdr">
+    <div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em" id="itin-title">&#9783; LIVE ITINERARY</div></div>
+    <button class="itin-close" onclick="closeItinerary()">&#10005;</button>
+  </div>
+  <div class="itin-tab-bar">
+    <button class="itin-tab-btn active" id="itin-tab-upcoming" onclick="setItinTab('upcoming',this)">
+      &#9789; UPCOMING <span class="itin-tab-count" id="itin-count-upcoming">0</span>
+    </button>
+    <button class="itin-tab-btn friends-tab" id="itin-tab-friends" onclick="setItinTab('friends',this)">
+      &#9899; FRIENDS <span class="itin-tab-count" id="itin-count-friends">0</span>
+    </button>
+    <button class="itin-tab-btn following-tab" id="itin-tab-following" onclick="setItinTab('following',this)">
+      &#9733; FOLLOWING <span class="itin-tab-count" id="itin-count-following">0</span>
+    </button>
+  </div>
+  <div class="itin-scroll" id="itin-scroll"></div>
+  <div class="itin-footer"><button class="ics-btn" onclick="exportICS()">&#8645; SYNC TO CALENDAR (.ICS)</button></div>
+</div>
 <div id="itin-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.3)" onclick="closeItinerary()"></div>
 <!-- PARTNER -->
 <div class="partner-panel" id="partner-panel"><div class="pp-hdr"><div class="pp-hdr-row"><div class="pp-hdr-title">$ PARTNER PORTAL</div><button class="pp-close" onclick="closePartner()">&#10005;</button></div><div class="rep-row"><div><div class="rep-num" id="rep-score">847</div><div class="rep-meta">REP SCORE</div></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7px;color:var(--text-muted);margin-bottom:2px"><span>PARTNER</span><span>1000=INFLUENCER</span></div><div class="rep-bar"><div class="rep-bar-fill" style="width:84.7%"></div></div></div></div></div><div class="pp-scroll"><div class="pp-section"><div class="pp-section-title">LIVE EARNINGS</div><div class="earn-total" id="earn-total">$1,247.50</div><div class="earn-split"><div class="earn-split-item"><div class="earn-split-label">AFFILIATE</div><div class="earn-split-val" id="earn-aff">$623.75</div></div><div class="earn-split-item"><div class="earn-split-label">TICKETS</div><div class="earn-split-val">$498.00</div></div><div class="earn-split-item"><div class="earn-split-label">MERCH</div><div class="earn-split-val">$125.75</div></div></div></div><div class="pp-section"><div class="pp-section-title">MILESTONES</div><div id="ms-list"></div></div><div class="pp-section"><div class="pp-section-title">AFFILIATE LINK</div><div class="aff-box"><span class="aff-text" id="aff-link">hyperlocal.app/ref=user123</span><button class="aff-copy" onclick="copyAff()">COPY</button></div></div><div class="pp-section"><div class="pp-section-title">CONVERSIONS</div><table class="dtable" id="conv-table"></table></div></div></div>
 <div id="pp-overlay" style="display:none;position:fixed;inset:0;z-index:219;background:rgba(0,0,0,.2)" onclick="closePartner()"></div>
 <!-- FRIENDS -->
-<div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><!-- SPRINT 15: GHOST MODE -->
-<div class="ghost-mode-bar" id="ghost-mode-bar" onclick="toggleGhostMode()">
-  <span class="ghost-icon">&#128123;</span>
-  <div style="flex:1">
-    <div class="ghost-label" id="ghost-label">GHOST MODE</div>
-    <div class="ghost-status" id="ghost-status">Location visible to friends</div>
-  </div>
-  <div class="ghost-track" id="ghost-track"><div class="ghost-thumb"></div></div>
-</div>
+<div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><div class="ghost-mode-bar" id="ghost-mode-bar" onclick="toggleGhostMode()"><span class="ghost-icon">&#128123;</span><div style="flex:1"><div class="ghost-label" id="ghost-label">GHOST MODE</div><div class="ghost-status" id="ghost-status">Location visible to friends</div></div><div class="ghost-track" id="ghost-track"><div class="ghost-thumb"></div></div></div>
 <div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span></div><div class="ft-scroll" id="friends-scroll"></div></div>
 <div id="ft-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.2)" onclick="closeFriends()"></div>
 <!-- LOOKBOOK -->
@@ -742,43 +1069,9 @@ body.pub-mode .hero-wrap{display:none}
 <!-- MAP MODAL -->
 <div class="modal-bg" id="modal-bg"><div class="mini-map-modal"><div class="mm-hdr"><div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Venue Location</div><div class="mm-title" id="mm-title"></div></div><button class="mm-close" id="mm-close">&#10005;</button></div><div class="mm-map"><div class="mm-map-grid"></div><div class="mm-pin"><div class="mm-pin-ring"></div><div class="mm-pin-dot"></div><div class="mm-pin-tail"></div></div><div class="mm-label" id="mm-venue-label">Venue</div></div><div class="mm-body"><div class="mm-detail"><span class="mm-dl">ADDRESS</span><span class="mm-dv" id="mm-address">-</span></div><div class="mm-detail"><span class="mm-dl">NEIGHBORHOOD</span><span class="mm-dv" id="mm-neighborhood">-</span></div><div class="mm-detail" style="border:none;padding:0;margin:0"><span class="mm-dl">DISTANCE</span><span class="mm-dv" id="mm-distance" style="color:var(--green)">-</span></div><div class="mm-btns"><a class="mm-btn mm-btn-primary" id="mm-directions" href="#" target="_blank">GET DIRECTIONS &#8599;</a><button class="mm-btn mm-btn-secondary" id="mm-close-btn">CLOSE</button></div></div></div></div>
 <!-- SPRINT 14: MAP PAGE -->
-<div class="map-page" id="map-page"><div class="map-page-hdr"><span class="map-page-title">&#9673; LIVE MAP</span><span class="map-page-count" id="map-page-count">0 VENUES</span><span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="map-page-zip">10001</span></div><div class="map-filter-bar"><button class="map-filter-pill active" onclick="setMapFilter('all',this)">ALL</button><button class="map-filter-pill" onclick="setMapFilter('afterdark',this)">&#127769; SOCIAL</button><button class="map-filter-pill" onclick="setMapFilter('themenu',this)">&#127829; FOOD</button><button class="map-filter-pill" onclick="setMapFilter('theladder',this)">&#9650; GIGS</button></div><div class="map-page-inner" id="map-page-inner"><div class="map-page-grid"></div><div id="map-page-dots"></div></div></div>
+<div class="map-page" id="map-page"><div class="map-page-hdr"><span class="map-page-title">&#9673; LIVE MAP</span><span class="map-page-count" id="map-page-count">0 VENUES</span><span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="map-page-zip">10001</span></div><div class="map-filter-bar"><button class="map-filter-pill active" onclick="setMapFilter('all',this)">ALL</button><button class="map-filter-pill" onclick="setMapFilter('afterdark',this)">&#127769; SOCIAL</button><button class="map-filter-pill" onclick="setMapFilter('themenu',this)">&#127829; FOOD</button><button class="map-filter-pill" onclick="setMapFilter('theladder',this)">&#9650; GIGS</button></div><div class="map-page-inner" id="map-page-inner"><div class="map-page-grid" id="map-page-grid-bg"></div><div id="map-page-dots"></div><div id="gmap-mobile" class="gmap-container" style="display:none"></div><div id="friend-pins-mobile" style="position:absolute;inset:0;pointer-events:none;z-index:8"></div></div></div>
 <!-- SPRINT 14: MENU HUB -->
-<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div>
-<!-- SPRINT 15: PRIVACY DASHBOARD -->
-<div class="privacy-section" id="privacy-section">
-  <div class="privacy-section-title">&#128274; Data Management</div>
-  <div class="privacy-stat-row"><span class="privacy-stat-label">Ghost Mode</span><span class="privacy-stat-val" id="priv-ghost-status">OFF</span></div>
-  <div class="privacy-stat-row"><span class="privacy-stat-label">Location Points Stored</span><span class="privacy-stat-val" id="priv-loc-count">12 pts</span></div>
-  <div class="privacy-stat-row"><span class="privacy-stat-label">Last Seen</span><span class="privacy-stat-val" id="priv-last-seen">Just now</span></div>
-  <div style="margin-top:8px;margin-bottom:4px;font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.08em">RECENT LOCATIONS</div>
-  <div id="priv-loc-history">
-    <div class="privacy-loc-item"><span>Marquee NYC · Chelsea</span><span>9:42 PM</span></div>
-    <div class="privacy-loc-item"><span>230 Fifth · Flatiron</span><span>8:15 PM</span></div>
-    <div class="privacy-loc-item"><span>Village Vanguard · W.Village</span><span>7:30 PM</span></div>
-  </div>
-  <button class="wipe-btn" id="wipe-btn" onclick="wipeMyData()">&#128465; WIPE MY DATA</button>
-</div>
-<!-- SPRINT 15: WEBHOOK INFRASTRUCTURE STATUS -->
-<div class="privacy-section">
-  <div class="privacy-section-title">&#9889; Data Sources</div>
-  <div style="display:flex;flex-direction:column;gap:7px" id="webhook-status-list">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Eventbrite <span style="color:var(--text-muted)">Org 73195697223</span></div>
-      <span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Posh <span style="color:var(--text-muted)">davis-pemberton-family-reunion</span></div>
-      <span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Supabase Edge <span style="color:var(--text-muted)">webhook-ingest</span></div>
-      <span class="webhook-status pending"><span class="webhook-status-dot"></span>CONFIGURED</span>
-    </div>
-  </div>
-  <div style="margin-top:8px;font-family:var(--mono);font-size:7px;color:var(--text-muted)">Last sync: <span id="last-sync-time">Just now</span> &middot; <span id="ingested-count">0</span> events ingested</div>
-</div>
-</div>
+<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="privacy-section" id="privacy-section"><div class="privacy-section-title">&#128274; Data Management</div><div class="privacy-stat-row"><span class="privacy-stat-label">Ghost Mode</span><span class="privacy-stat-val" id="priv-ghost-status">OFF</span></div><div class="privacy-stat-row"><span class="privacy-stat-label">Location Points Stored</span><span class="privacy-stat-val" id="priv-loc-count">0 pts</span></div><div id="priv-loc-history"></div><button class="wipe-btn" id="wipe-btn" onclick="wipeMyData()">&#128465; WIPE MY DATA</button></div><div class="privacy-section"><div class="privacy-section-title">&#9889; Data Sources</div><div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--mono);font-size:8px">Eventbrite <span style="color:var(--text-muted)">73195697223</span></span><span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span></div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--mono);font-size:8px">Posh <span style="color:var(--text-muted)">davis-pemberton</span></span><span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span></div></div><div style="margin-top:6px;font-family:var(--mono);font-size:7px;color:var(--text-muted)">Last sync: <span id="last-sync-time">Just now</span> &middot; <span id="ingested-count">0</span> events ingested</div></div></div>
 <!-- SPRINT 14: EVENT DETAIL MODAL -->
 <div class="ev-detail-modal" id="ev-detail-modal"><div class="ev-detail-card"><div class="ev-detail-hdr"><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">EVENT DETAILS</div><button class="ev-detail-close" onclick="closeEvDetail()">&#10005;</button></div><div class="ev-detail-img" id="ev-detail-img">&#9651;</div><div class="ev-detail-body"><div class="ev-detail-title" id="ev-detail-title">&mdash;</div><div class="ev-detail-venue" id="ev-detail-venue">&mdash;</div><div class="ev-detail-grid" id="ev-detail-grid"></div><div class="ev-tags" id="ev-detail-tags" style="margin-bottom:12px"></div><div class="ev-detail-actions" id="ev-detail-actions"></div></div></div></div>
 <!-- BLOOMBERG BOTTOM NAV (Sprint 14: HL logo + MAP icon) -->
@@ -1824,179 +2117,162 @@ s142_onReady(function() {
 });
 
 
-
 // ══════════════════════════════════════════════════════
-// SPRINT 15: Privacy Vault, Data Ingestion, White-Label
+// SPRINT 15+16: Privacy Vault, Ingestion, Curator, UI
 // ══════════════════════════════════════════════════════
 
-// ── 1. Ghost Mode ──
+// ── Override renderHomeHeadlines with Sprint 16 grid ──
+renderHomeHeadlines = function() {
+  var el = document.getElementById('news-terminal');
+  if (!el) return;
+  var allEvs    = getEvs(currentZip, 'terminal',  pulseOn);
+  var socialEvs = getEvs(currentZip, 'afterdark', pulseOn);
+  var foodEvs   = getEvs(currentZip, 'themenu',   pulseOn);
+  var gigEvs    = getEvs(currentZip, 'theladder', pulseOn);
+  var hdr = document.querySelector('#tab-terminal .news-panel .panel-hdr-title');
+  if (hdr) hdr.textContent = 'Live In Your City';
+  var badge = document.querySelector('#tab-terminal .news-panel .panel-hdr-badge');
+  if (badge) { badge.textContent = allEvs.length + ' EVENTS'; badge.style.color = 'var(--blue)'; }
+  var COLORS = {afterdark:'#C084FC',themenu:'var(--orange)',theladder:'var(--green)',terminal:'var(--blue)'};
+  var NAMES  = {afterdark:'SOCIAL',themenu:'FOOD',theladder:'GIGS',terminal:'ALL'};
+  function card(ev, feat) {
+    var vc = COLORS[ev.vertical] || 'var(--blue)';
+    var vn = NAMES[ev.vertical] || ev.vertical.toUpperCase();
+    var ac = ev.avail < 20 ? 'low' : '';
+    var isJob = ev.vertical === 'theladder';
+    var star = (ev.curatorPick && _curatorSlug) ? '<span style="color:#C084FC;margin-right:3px">&#9733;</span>' : '';
+    return '<div class="hl-headline-card'+(feat?' featured':'')+'" onclick="openEvDetailById('+ev.id+')">'
+      +'<div class="hl-hc-label" style="color:'+vc+'">'+vn+' &middot; '+ev.hood+'</div>'
+      +'<div class="hl-hc-title">'+star+ev.name+'</div>'
+      +'<div class="hl-hc-meta"><span>'+ev.venue+'</span><span>'+ev.time+'</span>'
+      +'<span class="hl-hc-price">'+ev.price+'</span>'
+      +(isJob ? '' : '<span class="hl-hc-avail '+ac+'">'+ev.avail+'% avail</span>')
+      +'</div></div>';
+  }
+  function secHdr(title, count, color) {
+    return '<div class="hl-section-hdr"><span class="hl-section-title" style="color:'+color+'">'+title+'</span>'
+      +'<span class="hl-section-count">'+count+' FOUND</span></div>';
+  }
+  var topEvs = allEvs.slice().sort(function(a,b){return((b.trending?2:0)+(b.featured?1:0))-((a.trending?2:0)+(a.featured?1:0));}).slice(0,6);
+  var popGigs = socialEvs.slice(0,4);
+  var localMkt = foodEvs.slice(0,3).concat(gigEvs.slice(0,2));
+  var html = secHdr('&#9650; TOP EVENTS', topEvs.length, 'var(--blue)');
+  html += topEvs.map(function(ev,i){return card(ev,i<2);}).join('');
+  if (popGigs.length) {
+    html += secHdr('&#127769; POPULAR GIGS', popGigs.length, '#C084FC');
+    html += popGigs.map(function(ev){return card(ev,false);}).join('');
+  }
+  if (localMkt.length) {
+    html += secHdr('&#9673; LOCAL MARKET', localMkt.length, 'var(--orange)');
+    html += localMkt.map(function(ev){return card(ev,false);}).join('');
+  }
+  el.innerHTML = html;
+};
+
+// ── Ghost Mode ──
 var _ghostMode = false;
 function toggleGhostMode() {
   _ghostMode = !_ghostMode;
   var track = document.getElementById('ghost-track');
   var label = document.getElementById('ghost-label');
   var status = document.getElementById('ghost-status');
-  var bar   = document.getElementById('ghost-mode-bar');
+  var bar = document.getElementById('ghost-mode-bar');
   if (track) track.classList.toggle('on', _ghostMode);
   if (label) { label.classList.toggle('active', _ghostMode); label.textContent = _ghostMode ? 'GHOST MODE ON' : 'GHOST MODE'; }
   if (status) { status.classList.toggle('on', _ghostMode); status.textContent = _ghostMode ? 'Hidden from friends' : 'Location visible to friends'; }
   if (bar) bar.classList.toggle('active', _ghostMode);
-  // Sync privacy dashboard status
   var pg = document.getElementById('priv-ghost-status');
   if (pg) { pg.textContent = _ghostMode ? 'ON' : 'OFF'; pg.style.color = _ghostMode ? '#C084FC' : 'var(--text)'; }
-  // Simulate writing is_visible: false to DB
-  console.log('[HyperLocal] Ghost mode:', _ghostMode ? 'is_visible=false' : 'is_visible=true');
 }
 
-// ── 2. Proximity Blur — jitter friend coordinates (50–100m radius) ──
+// ── Proximity Blur ──
 function proximityJitter(lat, lng) {
-  // 1 degree lat ≈ 111km, so 100m ≈ 0.0009 degrees
-  var maxJitter = 0.0009; // ~100m
-  var minJitter = 0.00045; // ~50m
-  var magnitude = minJitter + Math.random() * (maxJitter - minJitter);
+  var mag = 0.00045 + Math.random() * 0.00045;
   var angle = Math.random() * 2 * Math.PI;
-  return {
-    lat: lat + magnitude * Math.cos(angle),
-    lng: lng + magnitude * Math.sin(angle)
-  };
+  return { lat: lat + mag * Math.cos(angle), lng: lng + mag * Math.sin(angle) };
 }
 
-// Enhanced renderFriends with ghost mode + proximity blur indicators
-var _origRenderFriends = typeof renderFriends === 'function' ? renderFriends : null;
-renderFriends = function() {
-  var el = document.getElementById('friends-scroll');
-  if (!el) return;
-  // Show ghost banner if active
-  var ghostBanner = _ghostMode
-    ? '<div style="margin:6px 12px;padding:6px 10px;background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.3);border-radius:2px;font-family:var(--mono);font-size:8px;color:#C084FC;display:flex;align-items:center;gap:6px"><span>&#128123;</span> You are invisible to friends</div>'
-    : '';
-  el.innerHTML = ghostBanner + _friendsData.map(function(f) {
-    var blurNote = f.live ? '<span style="font-family:var(--mono);font-size:7px;color:rgba(155,93,229,.7);margin-left:4px">&#128280; ~±75m</span>' : '';
-    return '<div class="friend-row">'
-      + '<div class="friend-avatar' + (f.live ? ' golive' : '') + '">' + f.emoji + '</div>'
-      + '<div style="flex:1;min-width:0"><div class="friend-name">' + f.name + '</div>'
-      + '<div class="friend-status">' + f.status + blurNote + '</div></div>'
-      + (f.live ? '<span class="friend-live-tag">LIVE</span><button class="friend-join-btn">JOIN</button>' : '')
-      + '</div>';
-  }).join('');
-};
-
-// ── 3. Privacy Dashboard / Wipe My Data ──
+// ── Privacy Dashboard ──
 var _locationHistory = [
-  {place: 'Marquee NYC · Chelsea',    time: '9:42 PM'},
-  {place: '230 Fifth · Flatiron',     time: '8:15 PM'},
-  {place: 'Village Vanguard · W.Village', time: '7:30 PM'},
-  {place: 'Le Bain · Meatpacking',    time: '6:00 PM'},
-  {place: 'SOBs · SoHo',             time: '4:30 PM'}
+  {place:'Marquee NYC · Chelsea',        time:'9:42 PM'},
+  {place:'230 Fifth · Flatiron',         time:'8:15 PM'},
+  {place:'Village Vanguard · W.Village', time:'7:30 PM'}
 ];
-
 function renderPrivacyDashboard() {
-  var locEl = document.getElementById('priv-loc-history');
+  var locEl   = document.getElementById('priv-loc-history');
   var countEl = document.getElementById('priv-loc-count');
   var ghostEl = document.getElementById('priv-ghost-status');
   if (countEl) countEl.textContent = _locationHistory.length + ' pts';
-  if (ghostEl) { ghostEl.textContent = _ghostMode ? 'ON' : 'OFF'; ghostEl.style.color = _ghostMode ? '#C084FC' : 'var(--text)'; }
+  if (ghostEl) { ghostEl.textContent = _ghostMode ? 'ON' : 'OFF'; ghostEl.style.color = _ghostMode ? '#C084FC' : ''; }
   if (locEl) {
-    if (_locationHistory.length === 0) {
-      locEl.innerHTML = '<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);padding:8px 0">No location data stored.</div>';
-    } else {
-      locEl.innerHTML = _locationHistory.slice(0, 5).map(function(l) {
-        return '<div class="privacy-loc-item"><span>' + l.place + '</span><span>' + l.time + '</span></div>';
-      }).join('');
-    }
+    locEl.innerHTML = _locationHistory.length === 0
+      ? '<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);padding:8px 0">No location data stored.</div>'
+      : _locationHistory.slice(0,5).map(function(l){
+          return '<div class="privacy-loc-item"><span>'+l.place+'</span><span>'+l.time+'</span></div>';
+        }).join('');
   }
 }
-
 var _wipeConfirm = false;
 function wipeMyData() {
   var btn = document.getElementById('wipe-btn');
   if (!_wipeConfirm) {
     _wipeConfirm = true;
-    if (btn) { btn.textContent = '&#9888; CONFIRM — TAP AGAIN TO WIPE'; btn.classList.add('confirm'); }
-    setTimeout(function() {
-      _wipeConfirm = false;
-      if (btn) { btn.textContent = '&#128465; WIPE MY DATA'; btn.classList.remove('confirm'); }
-    }, 4000);
+    if (btn) { btn.textContent = '⚠ CONFIRM — TAP AGAIN TO WIPE'; btn.classList.add('confirm'); }
+    setTimeout(function() { _wipeConfirm = false; if (btn) { btn.textContent = '🗑 WIPE MY DATA'; btn.classList.remove('confirm'); } }, 4000);
     return;
   }
-  // Confirmed — wipe
-  _locationHistory = [];
-  _wipeConfirm = false;
+  _locationHistory = []; _wipeConfirm = false;
   renderPrivacyDashboard();
-  if (btn) { btn.textContent = '&#10003; DATA WIPED'; btn.style.color = 'var(--green)'; btn.style.borderColor = 'rgba(0,230,118,.35)'; }
-  setTimeout(function() {
-    if (btn) { btn.textContent = '&#128465; WIPE MY DATA'; btn.style.color = ''; btn.style.borderColor = ''; }
-  }, 2500);
-  console.log('[HyperLocal] User data wiped — location history cleared');
+  if (btn) { btn.textContent = '✓ DATA WIPED'; btn.style.color = 'var(--green)'; }
+  setTimeout(function() { if (btn) { btn.textContent = '🗑 WIPE MY DATA'; btn.style.color = ''; } }, 2500);
 }
 
-// ── 4. Webhook Infrastructure — Event Mapping Logic ──
+// ── Webhook Ingestion ──
 var WEBHOOK_CATEGORY_MAP = [
-  {keywords: ['dinner','brunch','omakase','tasting','prix fixe','lunch'],  vertical: 'themenu',   label: 'FOOD'},
-  {keywords: ['party','social','club','lounge','rooftop','rave','gala','bar hop'], vertical: 'afterdark', label: 'SOCIAL'},
-  {keywords: ['performance','show','concert','comedy','open mic','dj set','live music','drag'], vertical: 'afterdark', label: 'SOCIAL'},
-  {keywords: ['hiring','job','bartender','server','host','cook','freelance','gig'],  vertical: 'theladder', label: 'GIGS'}
+  {keywords:['dinner','brunch','omakase','tasting','lunch'],         vertical:'themenu'},
+  {keywords:['party','social','club','rooftop','rave','gala'],       vertical:'afterdark'},
+  {keywords:['performance','show','concert','dj set','live music'],  vertical:'afterdark'},
+  {keywords:['hiring','job','bartender','server','cook','freelance'],vertical:'theladder'}
 ];
-
-function categorizeWebhookEvent(eventName, eventTags) {
-  var combined = (eventName + ' ' + (eventTags || []).join(' ')).toLowerCase();
+function categorizeWebhookEvent(name, tags) {
+  var combined = (name + ' ' + (tags||[]).join(' ')).toLowerCase();
   for (var i = 0; i < WEBHOOK_CATEGORY_MAP.length; i++) {
     var rule = WEBHOOK_CATEGORY_MAP[i];
     for (var j = 0; j < rule.keywords.length; j++) {
-      if (combined.indexOf(rule.keywords[j]) !== -1) {
-        return {vertical: rule.vertical, label: rule.label};
-      }
+      if (combined.indexOf(rule.keywords[j]) !== -1) return rule.vertical;
     }
   }
-  return {vertical: 'terminal', label: 'ALL'};
+  return 'terminal';
 }
-
-// Simulated live-ingested events from Eventbrite org 73195697223 + Posh slug
 var _ingestedEvents = [
-  {id:500, name:"Davis Pemberton Family Reunion — Welcome Dinner", venue:"Carmine's Italian Restaurant", addr:"200 W 44th St", hood:"Midtown", time:"7:00 PM", price:"$0", avail:85, trending:false, featured:true,  tags:["DINNER","FAMILY","PRIVATE"], genre:"Fine Dining", cap:200, source:"eventbrite", ingested:true},
-  {id:501, name:"Davis Pemberton Reunion — Saturday Gala",         venue:"The Plaza Hotel Ballroom",  addr:"768 5th Ave",    hood:"Midtown", time:"7:30 PM", price:"$0", avail:90, trending:true,  featured:true,  tags:["PARTY","SOCIAL","FORMAL"],  genre:"Social",      cap:300, source:"posh",        ingested:true},
-  {id:502, name:"Davis Pemberton Reunion — Sunday Farewell Brunch",venue:"Sarabeth's Central Park S", addr:"40 Central Park S",hood:"Midtown",time:"10:30 AM",price:"$0", avail:80, trending:false, featured:false, tags:["BRUNCH","FAMILY"],           genre:"Brunch",      cap:150, source:"eventbrite", ingested:true}
+  {id:500,name:"Davis Pemberton Reunion — Welcome Dinner",venue:"Carmine's Italian",addr:"200 W 44th St",hood:"Midtown",time:"7:00 PM",price:"$0",avail:85,trending:false,featured:true,tags:["DINNER","FAMILY"],genre:"Fine Dining",cap:200,source:"eventbrite",ingested:true},
+  {id:501,name:"Davis Pemberton Reunion — Saturday Gala",venue:"The Plaza Hotel Ballroom",addr:"768 5th Ave",hood:"Midtown",time:"7:30 PM",price:"$0",avail:90,trending:true,featured:true,tags:["PARTY","FORMAL"],genre:"Social",cap:300,source:"posh",ingested:true},
+  {id:502,name:"Davis Pemberton Reunion — Farewell Brunch",venue:"Sarabeth's Central Park S",addr:"40 Central Park S",hood:"Midtown",time:"10:30 AM",price:"$0",avail:80,trending:false,featured:false,tags:["BRUNCH","FAMILY"],genre:"Brunch",cap:150,source:"eventbrite",ingested:true}
 ];
-
-// Auto-categorize ingested events
-_ingestedEvents.forEach(function(ev) {
-  var cat = categorizeWebhookEvent(ev.name, ev.tags);
-  ev.vertical = cat.vertical;
-});
-
-// Inject ingested events into the ALL_EVENTS pool
-(function injectWebhookEvents() {
+_ingestedEvents.forEach(function(ev){ ev.vertical = categorizeWebhookEvent(ev.name, ev.tags); });
+(function(){
   if (!ALL_EVENTS['10001']) ALL_EVENTS['10001'] = [];
-  _ingestedEvents.forEach(function(ev) {
-    var exists = ALL_EVENTS['10001'].some(function(e){ return e.id === ev.id; });
-    if (!exists) ALL_EVENTS['10001'].push(ev);
+  _ingestedEvents.forEach(function(ev){
+    if (!ALL_EVENTS['10001'].some(function(e){ return e.id === ev.id; })) ALL_EVENTS['10001'].push(ev);
   });
-  // Update ingested count display
   var el = document.getElementById('ingested-count');
   if (el) el.textContent = _ingestedEvents.length;
-  // Update last sync
-  var ls = document.getElementById('last-sync-time');
-  if (ls) ls.textContent = 'Just now';
 })();
 
-// ── 5. Curator ?curator= URL Parameter Logic ──
+// ── Curator Logic ──
 var _curatorSlug = null;
 var _curatorProfiles = {
-  'maal':     {name: 'MAAL',     emoji: '&#127775;', picks: [500, 501, 502, 1, 4, 7]},
-  'jade':     {name: 'JADE',     emoji: '&#128081;', picks: [3, 6, 2, 11]},
-  'marco':    {name: 'MARCO',    emoji: '&#127919;', picks: [4, 1, 5, 15]},
-  'hyperlocal':{name: 'HL STAFF', emoji: '&#9672;',  picks: [1,2,3,4,5,6,7,8]}
+  'maal':      {name:'MAAL',     emoji:'&#127775;', picks:[500,501,502,1,4,7]},
+  'jade':      {name:'JADE',     emoji:'&#128081;', picks:[3,6,2,11]},
+  'marco':     {name:'MARCO',    emoji:'&#127919;', picks:[4,1,5,15]},
+  'hyperlocal':{name:'HL STAFF', emoji:'&#9672;',   picks:[1,2,3,4,5]}
 };
-
 function initCurator() {
   var params = new URLSearchParams(window.location.search);
   _curatorSlug = params.get('curator');
   if (!_curatorSlug) return;
-
   var profile = _curatorProfiles[_curatorSlug.toLowerCase()];
   if (!profile) return;
-
-  // Show curator badge
   var badge = document.getElementById('curator-badge');
   var avatar = document.getElementById('curator-avatar');
   var nameEl = document.getElementById('curator-name');
@@ -2005,84 +2281,868 @@ function initCurator() {
   if (avatar) avatar.innerHTML = profile.emoji;
   if (nameEl) nameEl.textContent = profile.name;
   if (pillEl) pillEl.textContent = '&#9733; ' + profile.name + "'s PICKS";
-
-  // Offset app top by curator badge height
   var app = document.getElementById('app');
   if (app) app.style.paddingTop = '30px';
-
-  // Brand logo: swap to curator mode
-  document.querySelectorAll('.bnav-hl-logo').forEach(function(el) {
+  document.querySelectorAll('.bnav-hl-logo').forEach(function(el){
     el.classList.add('curator-mode');
-    el.innerHTML = profile.emoji.replace('&#','').replace(';','') ? profile.emoji : 'HL';
-    el.style.fontSize = '14px';
-    el.style.letterSpacing = '0';
+    el.innerHTML = profile.emoji;
   });
-
-  // Inject curator_picks flag onto events
   var evPool = ALL_EVENTS['10001'] || [];
-  evPool.forEach(function(ev) {
-    ev.curatorPick = profile.picks.indexOf(ev.id) !== -1;
-  });
-
-  // Re-render with curator sort (picks first)
+  evPool.forEach(function(ev){ ev.curatorPick = profile.picks.indexOf(ev.id) !== -1; });
   var origGetEvs = getEvs;
   window.getEvs = function(zip, tab, pulse) {
     var evs = origGetEvs(zip, tab, pulse);
-    // Sort curator picks to top
-    return evs.sort(function(a, b) {
-      return (b.curatorPick ? 1 : 0) - (a.curatorPick ? 1 : 0);
-    });
+    return evs.sort(function(a,b){ return (b.curatorPick?1:0)-(a.curatorPick?1:0); });
   };
-
-  // Update hero title to show curator
-  setTimeout(function() {
-    document.querySelectorAll('.hero-title').forEach(function(el) {
-      if (el.textContent.indexOf('Live Now') !== -1) {
-        el.innerHTML = profile.name + "'s Picks &mdash; Live Now";
-      }
+  setTimeout(function(){
+    document.querySelectorAll('.hero-title').forEach(function(el){
+      if (el.textContent.indexOf('Live Now') !== -1) el.innerHTML = profile.name + "'s Picks &mdash; Live Now";
     });
     renderAll(currentTab, currentZip, pulseOn);
-    renderAllCounts(currentZip, pulseOn);
   }, 600);
-
-  console.log('[HyperLocal] Curator mode:', _curatorSlug, '| Picks:', profile.picks);
 }
 
-// ── 6. Enhanced renderCard — show ingested badge + curator pick badge ──
-var _origRenderCard = typeof renderCard === 'function' ? renderCard.toString() : null;
+// ── Mobile bottom bar: sync ticker + live weather ──
+function syncMobileBottomBar() {
+  // Sync temp
+  var msbTemp = document.getElementById('msb-temp');
+  var mobileTemp = document.getElementById('mobile-temp-val');
+  if (msbTemp && mobileTemp && msbTemp.textContent) mobileTemp.textContent = msbTemp.textContent;
+  // Sync ticker content — always copy so it stays fresh
+  var mainTrack = document.getElementById('ticker-track');
+  var mobileTrack = document.getElementById('ticker-track-m');
+  if (mainTrack && mobileTrack && mainTrack.innerHTML) {
+    mobileTrack.innerHTML = mainTrack.innerHTML;
+    // Restart animation
+    mobileTrack.style.animation = 'none';
+    mobileTrack.offsetHeight; // reflow
+    mobileTrack.style.animation = 'tickscroll 25s linear infinite';
+    mobileTrack.style.animationPlayState = 'running';
+  }
+}
+
+// ── Live Weather via Open-Meteo (free, no API key) ──
+function fetchLiveWeather(zip) {
+  // Use zip to approximate lat/lng (NYC default), then fetch Open-Meteo
+  var lat = 40.7128, lng = -74.0060; // Default NYC 10001
+  if (zip === '90210') { lat = 34.0901; lng = -118.4065; }
+  else if (zip === '60601') { lat = 41.8858; lng = -87.6181; }
+  else if (zip === '77001') { lat = 29.7604; lng = -95.3698; }
+  else if (zip === '33101') { lat = 25.7617; lng = -80.1918; }
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lng+'&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph';
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data && data.current_weather) {
+        var temp = Math.round(data.current_weather.temperature);
+        var tempEl = document.getElementById('msb-temp');
+        var mobileEl = document.getElementById('mobile-temp-val');
+        if (tempEl) tempEl.textContent = temp + 'F';
+        if (mobileEl) mobileEl.textContent = temp + 'F';
+      }
+    })
+    .catch(function(){
+      // Silently fail - keep default
+    });
+}
+
+// ── Boot ──
+setTimeout(function() {
+  renderPrivacyDashboard();
+  initCurator();
+  syncMobileBottomBar();
+  fetchLiveWeather(currentZip);
+  // Keep temp in sync when it updates
+  var msb = document.getElementById('msb-temp');
+  if (msb && window.MutationObserver) {
+    new MutationObserver(syncMobileBottomBar).observe(msb, {childList:true,characterData:true,subtree:true});
+  }
+  // Sync ticker after it's rendered
+  setTimeout(syncMobileBottomBar, 2000);
+}, 500);
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 17: Geospatial Logic & Friend Mapping
+// ══════════════════════════════════════════════════════
+
+// ── 1. Metro Config — ZIP ranges → metro name + data set ──
+var METRO_CONFIG = {
+  // NYC: 10001–10299, 10301–10499, 11001–11999, 07xxx (NJ)
+  nyc: {
+    label: 'NY METRO',
+    zips: ['100','101','102','103','104','110','111','112','113','114','116'],
+    color: '#0047FF',
+    bodyClass: 'metro-nyc',
+    lat: 40.7128, lng: -74.0060,
+    dataKey: '10001'
+  },
+  // DC: 200xx–205xx
+  dc: {
+    label: 'DC METRO',
+    zips: ['200','201','202','203','204','205','206','207','208','209'],
+    color: '#00B4D8',
+    bodyClass: 'metro-dc',
+    lat: 38.9072, lng: -77.0369,
+    dataKey: '20001'
+  },
+  // Chicago: 606xx–608xx
+  chi: {
+    label: 'CHI METRO',
+    zips: ['606','607','608'],
+    color: '#FF6B35',
+    bodyClass: 'metro-chi',
+    lat: 41.8781, lng: -87.6298,
+    dataKey: '60601'
+  },
+  // LA: 900xx–902xx
+  la: {
+    label: 'LA METRO',
+    zips: ['900','901','902','903','904','905','906','907','908','909','910','911','912','913','914','915','916','917','918','919','920','921','922','923','924','925','926','927','928'],
+    color: '#9B5DE5',
+    bodyClass: 'metro-la',
+    lat: 34.0522, lng: -118.2437,
+    dataKey: '90210'
+  },
+  // Miami: 330xx–331xx
+  miami: {
+    label: 'MIA METRO',
+    zips: ['330','331','332','333','334'],
+    color: '#00E676',
+    bodyClass: 'metro-miami',
+    lat: 25.7617, lng: -80.1918,
+    dataKey: '33101'
+  },
+  // Houston: 770xx
+  houston: {
+    label: 'HTX METRO',
+    zips: ['770','771','772','773','774','775','776','777','778','779'],
+    color: '#FACC15',
+    bodyClass: 'metro-nyc',
+    lat: 29.7604, lng: -95.3698,
+    dataKey: '77001'
+  }
+};
+
+// Detect metro from zip prefix
+function detectMetro(zip) {
+  var prefix3 = zip.substring(0, 3);
+  var prefix2 = zip.substring(0, 2);
+  for (var key in METRO_CONFIG) {
+    var cfg = METRO_CONFIG[key];
+    for (var i = 0; i < cfg.zips.length; i++) {
+      if (cfg.zips[i] === prefix3 || cfg.zips[i] === prefix2) return key;
+    }
+  }
+  return 'nyc'; // default
+}
+
+var _currentMetro = 'nyc';
+
+function applyMetro(zip) {
+  var metroKey = detectMetro(zip);
+  var cfg = METRO_CONFIG[metroKey];
+  _currentMetro = metroKey;
+
+  // Update all metro-label elements
+  document.querySelectorAll('.metro-label').forEach(function(el) {
+    el.classList.add('switching');
+    setTimeout(function() {
+      el.textContent = cfg.label;
+      el.style.color = cfg.color;
+      el.classList.remove('switching');
+    }, 150);
+  });
+
+  // Update body class for metro theming
+  Object.values(METRO_CONFIG).forEach(function(c) {
+    document.body.classList.remove(c.bodyClass);
+  });
+  document.body.classList.add(cfg.bodyClass);
+
+  // Update topbar zip display
+  ['map-zip','map-page-zip','desktop-map-zip'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = zip;
+  });
+
+  // Update live weather for new location
+  if (typeof fetchLiveWeather === 'function') fetchLiveWeather(zip);
+
+  // Re-render friend pins for new metro
+  renderFriendPins();
+}
+
+// Hook into handleZip to trigger metro switch
+var _origHandleZip = typeof handleZip === 'function' ? handleZip : null;
+handleZip = function(val) {
+  if (_origHandleZip) _origHandleZip(val);
+  var z = val.trim();
+  if (z.length === 5 && !isNaN(z)) applyMetro(z);
+};
+
+// ── 2. Sample data for non-NYC metros ──
+// DC
+if (!ALL_EVENTS['20001']) ALL_EVENTS['20001'] = [
+  {id:600,name:"Rooftop at POV",venue:"W Washington Hotel",addr:"515 15th St NW",hood:"Downtown DC",time:"9:00 PM",price:"$40",avail:35,trending:true,featured:true,tags:["ROOFTOP","DC"],genre:"Social",cap:300,vertical:"afterdark",source:"posh"},
+  {id:601,name:"Jazz Night at Blues Alley",venue:"Blues Alley",addr:"1073 Wisconsin Ave NW",hood:"Georgetown",time:"8:30 PM",price:"$25",avail:60,trending:false,featured:true,tags:["JAZZ","LIVE"],genre:"Jazz",cap:130,vertical:"afterdark",source:"eventbrite"},
+  {id:602,name:"Georgetown Brunch Crawl",venue:"Martin's Tavern",addr:"1264 Wisconsin Ave NW",hood:"Georgetown",time:"11:00 AM",price:"$35",avail:50,trending:true,featured:false,tags:["BRUNCH","CRAWL"],genre:"Brunch",cap:200,vertical:"themenu",source:"luma"},
+  {id:603,name:"Ben's Chili Bowl Experience",venue:"Ben's Chili Bowl",addr:"1213 U St NW",hood:"U Street",time:"7:00 PM",price:"$18",avail:80,trending:true,featured:false,tags:["LOCAL","ICONIC"],genre:"Casual",cap:100,vertical:"themenu",source:"eventbrite"},
+  {id:604,name:"U Street DJ Night",venue:"Echostage",addr:"2135 Queens Chapel Rd NE",hood:"Northeast DC",time:"10:00 PM",price:"$30",avail:20,trending:true,featured:false,tags:["DJ","DANCE"],genre:"Electronic",cap:2500,vertical:"afterdark",source:"posh"},
+  {id:605,name:"Event Staff",venue:"Convention Center",addr:"801 Mt Vernon Pl NW",hood:"Shaw",time:"WEEKENDS",price:"$22/hr",avail:100,trending:false,featured:false,tags:["PART-TIME","EVENTS"],genre:"Hospitality",cap:1,vertical:"theladder",source:"eventbrite"}
+];
+// Chicago
+if (!ALL_EVENTS['60601']) ALL_EVENTS['60601'] = [
+  {id:620,name:"Millennium Park Summer Fest",venue:"Jay Pritzker Pavilion",addr:"201 E Randolph St",hood:"The Loop",time:"7:00 PM",price:"Free",avail:95,trending:true,featured:true,tags:["OUTDOOR","FREE"],genre:"Music",cap:10000,vertical:"afterdark",source:"eventbrite"},
+  {id:621,name:"Chicago Deep Dish Pop-Up",venue:"Lou Malnati's Pizzeria",addr:"439 N Wells St",hood:"River North",time:"6:30 PM",price:"$22",avail:70,trending:true,featured:false,tags:["DEEP DISH","ICONIC"],genre:"Casual",cap:150,vertical:"themenu",source:"posh"},
+  {id:622,name:"Rooftop at Cindy's",venue:"Chicago Athletic Association",addr:"12 S Michigan Ave",hood:"The Loop",time:"9:00 PM",price:"$50",avail:25,trending:true,featured:true,tags:["ROOFTOP","COCKTAILS"],genre:"Social",cap:200,vertical:"afterdark",source:"luma"},
+  {id:623,name:"Wicker Park Jazz Crawl",venue:"Green Mill Cocktail Lounge",addr:"4802 N Broadway",hood:"Uptown",time:"8:00 PM",price:"$15",avail:55,trending:false,featured:true,tags:["JAZZ","HISTORIC"],genre:"Jazz",cap:200,vertical:"afterdark",source:"eventbrite"},
+  {id:624,name:"Bar Manager",venue:"The Violet Hour",addr:"1520 N Damen Ave",hood:"Wicker Park",time:"FULL TIME",price:"$32/hr",avail:100,trending:false,featured:false,tags:["MANAGEMENT","CRAFT"],genre:"Hospitality",cap:1,vertical:"theladder",source:"posh"}
+];
+
+// ── 3. Friend Map Pins — geospatial with proximity blur ──
+var FRIEND_MAP_POSITIONS = {
+  nyc: [
+    {name:'Alex',  emoji:'🏃', x:'38%', y:'35%', live:true},
+    {name:'Jordan',emoji:'🎵', x:'62%', y:'55%', live:false},
+    {name:'Sam',   emoji:'🌙', x:'28%', y:'62%', live:true},
+    {name:'Casey', emoji:'🎉', x:'72%', y:'30%', live:false}
+  ],
+  dc: [
+    {name:'Morgan',emoji:'🏛', x:'45%', y:'40%', live:true},
+    {name:'Riley', emoji:'🎷', x:'30%', y:'60%', live:false}
+  ],
+  chi: [
+    {name:'Taylor',emoji:'🎸', x:'50%', y:'45%', live:true},
+    {name:'Quinn', emoji:'🍕', x:'65%', y:'35%', live:false}
+  ],
+  la:    [{name:'Blake',emoji:'🌴', x:'40%', y:'50%', live:true}],
+  miami: [{name:'Drew', emoji:'🌊', x:'55%', y:'55%', live:true}],
+  houston:[{name:'Avery',emoji:'🤠', x:'48%', y:'48%', live:false}]
+};
+
+// Apply proximity jitter to percentage positions
+function jitterPct(pct) {
+  var val = parseFloat(pct);
+  // ~2–4% shift simulates 50–100m at map scale
+  var jitter = (2 + Math.random() * 2) * (Math.random() > 0.5 ? 1 : -1);
+  return Math.max(5, Math.min(95, val + jitter)) + '%';
+}
+
+function renderFriendPins() {
+  ['friend-pins-mobile','friend-pins-desktop'].forEach(function(containerId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    var friends = FRIEND_MAP_POSITIONS[_currentMetro] || FRIEND_MAP_POSITIONS.nyc;
+
+    friends.forEach(function(f) {
+      var isGhost = _ghostMode && f.name === 'You';
+      if (isGhost) return; // Don't show self in ghost mode
+
+      // Apply proximity blur
+      var x = jitterPct(f.x);
+      var y = jitterPct(f.y);
+
+      var pin = document.createElement('div');
+      pin.className = 'friend-map-pin';
+      pin.style.left = x;
+      pin.style.top  = y;
+      pin.style.pointerEvents = 'auto';
+
+      // Blur ring (shows jitter radius)
+      var blurSize = 44 + Math.random() * 16; // 44–60px visual blur ring
+      pin.innerHTML =
+        '<div class="friend-pin-blur-ring" style="width:' + blurSize + 'px;height:' + blurSize + 'px"></div>'
+        + '<div class="friend-pin-avatar' + (f.live ? '' : ' ghost') + '">' + f.emoji + '</div>'
+        + '<div class="friend-pin-label' + (f.live ? '' : ' ghost') + '">'
+        + f.name + (f.live ? ' <span style="color:var(--green)">●</span>' : '') + '</div>';
+
+      pin.title = f.name + (f.live ? ' · Live Now' : '') + ' · ±75m accuracy';
+      pin.addEventListener('click', function() {
+        // Show mini info popup (reuse geo-alert style)
+        var alert = document.getElementById('geo-alert');
+        var txt   = document.getElementById('geo-alert-text');
+        if (alert && txt) {
+          txt.textContent = f.emoji + ' ' + f.name + (f.live ? ' is live nearby' : ' was here recently');
+          alert.classList.add('active');
+          setTimeout(function(){ alert.classList.remove('active'); }, 2500);
+        }
+      });
+
+      container.appendChild(pin);
+    });
+  });
+}
+
+// Re-render pins when map opens
+var _origRenderMapPage = typeof renderMapPage === 'function' ? renderMapPage : null;
+renderMapPage = function() {
+  if (_origRenderMapPage) _origRenderMapPage();
+  setTimeout(renderFriendPins, 300);
+};
+var _origRenderDesktopMap = typeof renderDesktopMap === 'function' ? renderDesktopMap : null;
+renderDesktopMap = function(filter) {
+  if (_origRenderDesktopMap) _origRenderDesktopMap(filter);
+  setTimeout(renderFriendPins, 300);
+};
+
+// ── 4. Google Maps API Shell ──
+var _gmapApiKey = localStorage.getItem('hl_gmap_key') || '';
+var _gmapLoaded = false;
+
+function initGoogleMapsShell() {
+  // Show API key prompt if no key saved
+  ['gmap-mobile','gmap-desktop'].forEach(function(id) {
+    var container = document.getElementById(id);
+    if (!container) return;
+
+    if (!_gmapApiKey) {
+      // Show key prompt inside the container
+      container.style.display = 'block';
+      container.innerHTML =
+        '<div class="gmap-key-prompt">'
+        + '<span class="gmap-key-badge">&#9673; GOOGLE MAPS</span>'
+        + '<div class="gmap-key-title">CONNECT LIVE MAP</div>'
+        + '<div class="gmap-key-sub">Add your Google Maps API key to enable live street maps with real venue pins</div>'
+        + '<div class="gmap-key-input-row">'
+        + '<input class="gmap-key-input" id="gmap-key-input-' + id + '" type="password" placeholder="AIzaSy... paste your API key" />'
+        + '<button class="gmap-key-btn" onclick="saveGmapKey(\''+id+'\')">CONNECT</button>'
+        + '</div>'
+        + '<div style="font-family:var(--mono);font-size:7px;color:var(--text-muted);margin-top:4px">Key stored locally · Never sent to any server</div>'
+        + '</div>';
+      // Hide the placeholder grid behind it
+      var grid = container.previousElementSibling;
+    } else {
+      loadGoogleMap(container, id);
+    }
+  });
+}
+
+function saveGmapKey(containerId) {
+  var input = document.getElementById('gmap-key-input-' + containerId);
+  if (!input || !input.value.trim()) return;
+  _gmapApiKey = input.value.trim();
+  localStorage.setItem('hl_gmap_key', _gmapApiKey);
+  var container = document.getElementById(containerId);
+  if (container) loadGoogleMap(container, containerId);
+}
+
+function loadGoogleMap(container, containerId) {
+  var cfg = METRO_CONFIG[_currentMetro] || METRO_CONFIG.nyc;
+  container.style.display = 'block';
+
+  // Load Google Maps JS API if not already loaded
+  if (!_gmapLoaded && !document.getElementById('gmap-api-script')) {
+    var script = document.createElement('script');
+    script.id = 'gmap-api-script';
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=' + _gmapApiKey + '&callback=_onGmapReady';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+    _gmapLoaded = true;
+    // Store pending containers to init after load
+    window._gmapPendingContainers = window._gmapPendingContainers || [];
+    window._gmapPendingContainers.push({container: container, id: containerId});
+  } else if (window.google && window.google.maps) {
+    _createGmapInstance(container);
+  }
+}
+
+// Called by Google Maps API once script loads
+window._onGmapReady = function() {
+  (window._gmapPendingContainers || []).forEach(function(item) {
+    _createGmapInstance(item.container);
+  });
+  window._gmapPendingContainers = [];
+};
+
+function _createGmapInstance(container) {
+  var cfg = METRO_CONFIG[_currentMetro] || METRO_CONFIG.nyc;
+  container.innerHTML = '<div id="gmap-canvas-' + container.id + '" style="width:100%;height:100%"></div>';
+
+  var mapDiv = container.querySelector('[id^=gmap-canvas]');
+  if (!mapDiv || !window.google) return;
+
+  var map = new google.maps.Map(mapDiv, {
+    center: { lat: cfg.lat, lng: cfg.lng },
+    zoom: 14,
+    styles: [
+      { elementType:'geometry',          stylers:[{color:'#0D1525'}] },
+      { elementType:'labels.text.fill',  stylers:[{color:'#6B7A99'}] },
+      { elementType:'labels.text.stroke',stylers:[{color:'#04080F'}] },
+      { featureType:'road',             elementType:'geometry',       stylers:[{color:'#141F33'}] },
+      { featureType:'road.highway',     elementType:'geometry',       stylers:[{color:'#1A2740'}] },
+      { featureType:'water',            elementType:'geometry',       stylers:[{color:'#08111C'}] },
+      { featureType:'poi',              elementType:'geometry',       stylers:[{color:'#0D1525'}] },
+      { featureType:'transit',          elementType:'geometry',       stylers:[{color:'#0D1525'}] }
+    ],
+    disableDefaultUI: true,
+    zoomControl: true
+  });
+
+  // Drop venue markers from current event pool
+  var evs = ALL_EVENTS[currentZip] || ALL_EVENTS['10001'] || [];
+  var COLORS = {afterdark:'#C084FC', themenu:'#FF8C00', theladder:'#00E676', terminal:'#0047FF'};
+  evs.forEach(function(ev) {
+    if (!ev.lat && !ev.lng) return; // skip events without coords
+    new google.maps.Marker({
+      position: { lat: ev.lat, lng: ev.lng },
+      map: map,
+      title: ev.name,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 7,
+        fillColor: COLORS[ev.vertical] || '#0047FF',
+        fillOpacity: 0.9,
+        strokeColor: '#fff',
+        strokeWeight: 1.5
+      }
+    });
+  });
+
+  // Store map instance for later updates
+  container._gmapInstance = map;
+}
+
+// Update map center when metro changes
+function updateGmapCenter() {
+  var cfg = METRO_CONFIG[_currentMetro] || METRO_CONFIG.nyc;
+  ['gmap-mobile','gmap-desktop'].forEach(function(id) {
+    var c = document.getElementById(id);
+    if (c && c._gmapInstance && window.google) {
+      c._gmapInstance.setCenter({ lat: cfg.lat, lng: cfg.lng });
+    }
+  });
+}
+
+// ── 5. Boot Sprint 17 ──
+setTimeout(function() {
+  applyMetro(currentZip);
+  initGoogleMapsShell();
+  renderFriendPins();
+}, 800);
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 18: Smart Itinerary & Following Feed
+// ══════════════════════════════════════════════════════
+
+// ── 1. Live-Sync: Real-time event status using device clock ──
+function parseEventTime(timeStr) {
+  // Parses "10:00 PM", "9:30 PM", "11:00 AM" etc → today's Date object
+  if (!timeStr || timeStr === 'APPLY NOW' || timeStr === 'FULL TIME' ||
+      timeStr === 'WEEKENDS' || timeStr === 'THUR-SAT' || timeStr === 'APPLY ANYTIME') {
+    return null;
+  }
+  var m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return null;
+  var h = parseInt(m[1]);
+  var min = parseInt(m[2]);
+  var ampm = m[3].toUpperCase();
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  var d = new Date();
+  d.setHours(h, min, 0, 0);
+  return d;
+}
+
+function getLiveStatus(ev) {
+  // Returns: 'live' | 'soon' | 'upcoming' | 'ended' | null (for jobs)
+  var t = parseEventTime(ev.time);
+  if (!t) return null;
+  var now = new Date();
+  var diffMs = t - now;
+  var diffMin = diffMs / 60000;
+  // Assume events run ~2.5 hours
+  if (diffMin < 0 && diffMin > -150) return 'live';
+  if (diffMin >= 0 && diffMin <= 45)  return 'soon';
+  if (diffMin > 45)                   return 'upcoming';
+  return 'ended';
+}
+
+function getLiveLabel(status) {
+  if (status === 'live')     return '<span class="live-now-badge"><span class="live-now-dot"></span>LIVE NOW</span>';
+  if (status === 'soon')     return '<span style="font-family:var(--mono);font-size:7px;color:var(--yellow);font-weight:700">STARTING SOON</span>';
+  if (status === 'upcoming') return '';
+  if (status === 'ended')    return '<span style="font-family:var(--mono);font-size:7px;color:var(--text-muted)">ENDED</span>';
+  return '';
+}
+
+// ── 2. Itinerary Tab State ──
+var _itinActiveTab = 'upcoming';
+
+// Following profiles the user "follows"
+var _followingProfiles = [
+  { handle: '@maal',       emoji: '🌟', platform: 'Instagram', picks: [1, 4, 7, 500] },
+  { handle: '@hyperlocal', emoji: '⬡',  platform: 'HL',        picks: [2, 3, 6, 11, 501] },
+  { handle: '@jadevisuals',emoji: '📸', platform: 'Instagram', picks: [3, 6, 20, 21] },
+  { handle: '@NYCFoodMap', emoji: '🍕',  platform: 'YouTube',   picks: [7, 8, 9, 10, 11] }
+];
+
+// My personal event IDs (simulating user's bought tickets)
+var _myEventIds = [1, 4, 7, 500, 501];
+
+// Derive friend overlap events (events friends are attending too)
+function getFriendOverlapEvents(evPool) {
+  // _friendsData has .status = venue name. Match against event venues.
+  var friendVenues = (_friendsData || [])
+    .filter(function(f) { return f.live; })
+    .map(function(f) { return f.status.toLowerCase(); });
+  return evPool.filter(function(ev) {
+    return friendVenues.some(function(v) {
+      return ev.venue.toLowerCase().indexOf(v) !== -1 || v.indexOf(ev.venue.toLowerCase()) !== -1;
+    });
+  });
+}
+
+// Derive following feed events
+function getFollowingEvents(evPool) {
+  var seen = {};
+  var result = [];
+  _followingProfiles.forEach(function(profile) {
+    profile.picks.forEach(function(id) {
+      if (!seen[id]) {
+        var ev = evPool.find(function(e) { return e.id === id; });
+        if (ev) {
+          seen[id] = true;
+          result.push({ ev: ev, profile: profile });
+        }
+      }
+    });
+  });
+  return result;
+}
+
+function setItinTab(tab, btn) {
+  _itinActiveTab = tab;
+  // Update tab buttons
+  document.querySelectorAll('.itin-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderItinerary();
+}
+
+// ── 3. Override renderItinerary with 3-tab version ──
+renderItinerary = function() {
+  var el = document.getElementById('itin-scroll');
+  if (!el) return;
+  var titleEl = document.getElementById('itin-title');
+  if (titleEl) titleEl.innerHTML = '&#9783; LIVE ITINERARY';
+
+  var evPool = ALL_EVENTS[currentZip] || ALL_EVENTS['10001'] || [];
+  var myEvs   = evPool.filter(function(ev) { return _myEventIds.indexOf(ev.id) !== -1; });
+  var friendEvs = getFriendOverlapEvents(evPool);
+  var followingEvs = getFollowingEvents(evPool);
+
+  // Update counts
+  var cu = document.getElementById('itin-count-upcoming');
+  var cf = document.getElementById('itin-count-friends');
+  var cfo = document.getElementById('itin-count-following');
+  if (cu) cu.textContent = myEvs.length;
+  if (cf) cf.textContent = friendEvs.length;
+  if (cfo) cfo.textContent = followingEvs.length;
+
+  var html = '';
+
+  if (_itinActiveTab === 'upcoming') {
+    // Personal itinerary — sorted by time, live-sync status
+    var sorted = myEvs.slice().sort(function(a, b) {
+      var ta = parseEventTime(a.time), tb = parseEventTime(b.time);
+      if (!ta && !tb) return 0;
+      if (!ta) return 1;
+      if (!tb) return -1;
+      return ta - tb;
+    });
+
+    if (sorted.length === 0) {
+      html = '<div style="padding:24px 16px;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text-muted)">No upcoming events yet.<br>Tap GET TICKET on any event to add it.</div>';
+    } else {
+      html += '<div class="itin-day">TODAY &mdash; ' + new Date().toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric'}) + '</div>';
+      sorted.forEach(function(ev, i) {
+        var status = getLiveStatus(ev);
+        var liveLabel = getLiveLabel(status);
+        var isLive = status === 'live';
+        var VERT_COLORS = {afterdark:'#C084FC',themenu:'var(--orange)',theladder:'var(--green)',terminal:'var(--blue)'};
+        var color = VERT_COLORS[ev.vertical] || 'var(--blue)';
+        var isLast = i === sorted.length - 1;
+        html += '<div class="itin-item' + (isLive ? ' live' : '') + '">'
+          + '<span class="itin-time">' + ev.time + '</span>'
+          + '<div style="display:flex;flex-direction:column;align-items:center;width:7px;flex-shrink:0">'
+          + '<div style="width:7px;height:7px;border-radius:50%;background:' + (isLive ? 'var(--green)' : color) + ';border:1px solid rgba(255,255,255,.2);flex-shrink:0;' + (isLive ? 'animation:blink .8s infinite' : '') + '"></div>'
+          + (!isLast ? '<div style="width:1px;flex:1;min-height:16px;background:rgba(255,255,255,.08);margin-top:2px"></div>' : '')
+          + '</div>'
+          + '<div class="itin-body">'
+          + (liveLabel ? '<div style="margin-bottom:3px">' + liveLabel + '</div>' : '')
+          + '<div style="font-family:var(--mono);font-size:7px;color:' + color + ';letter-spacing:.08em;text-transform:uppercase;margin-bottom:1px">' + (ev.vertical === 'themenu' ? 'FOOD' : ev.vertical === 'afterdark' ? 'SOCIAL' : ev.vertical === 'theladder' ? 'GIGS' : 'ALL') + '</div>'
+          + '<div class="itin-ev-name">' + ev.name + '</div>'
+          + '<div class="itin-venue">' + ev.venue + ' &middot; ' + ev.hood + '</div>'
+          + '</div></div>';
+      });
+    }
+
+    // Also show Reunion days below
+    html += '<div class="itin-day" style="margin-top:8px">&#9760; FAMILY REUNION &mdash; JUN 27–29</div>';
+    _reunionDays.forEach(function(day) {
+      html += '<div style="padding:5px 14px 3px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">'
+        + '<span style="font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:.12em;color:' + day.color + '">' + day.day + '</span>'
+        + '<span style="font-family:var(--mono);font-size:7px;color:var(--text-muted)">' + day.label + '</span></div>';
+      day.items.forEach(function(item) {
+        var s2 = getLiveStatus(item);
+        var ll = getLiveLabel(s2);
+        html += '<div class="itin-item' + (item.live ? ' live' : '') + '">'
+          + '<span class="itin-time">' + item.time + '</span>'
+          + '<div class="itin-dot"></div>'
+          + '<div class="itin-body">'
+          + (ll ? '<div style="margin-bottom:2px">' + ll + '</div>' : '')
+          + '<div style="font-family:var(--mono);font-size:7px;color:' + item.color + ';letter-spacing:.08em;margin-bottom:1px">' + item.cat + '</div>'
+          + '<div class="itin-ev-name">' + item.name + '</div>'
+          + '<div class="itin-venue">' + item.venue + '</div>'
+          + '</div></div>';
+      });
+    });
+
+  } else if (_itinActiveTab === 'friends') {
+    if (friendEvs.length === 0) {
+      html = '<div style="padding:24px 16px;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text-muted)">None of your friends are at the same events right now.</div>';
+    } else {
+      html += '<div class="itin-day">FRIEND OVERLAPS &mdash; TONIGHT</div>';
+      friendEvs.forEach(function(ev) {
+        var status = getLiveStatus(ev);
+        var liveLabel = getLiveLabel(status);
+        // Find which friends are there
+        var atEvent = (_friendsData || []).filter(function(f) {
+          return f.live && (ev.venue.toLowerCase().indexOf(f.status.toLowerCase()) !== -1 || f.status.toLowerCase().indexOf(ev.venue.toLowerCase()) !== -1);
+        });
+        html += '<div class="itin-item' + (status === 'live' ? ' live' : '') + '">'
+          + '<span class="itin-time">' + ev.time + '</span>'
+          + '<div class="itin-dot"></div>'
+          + '<div class="itin-body">'
+          + '<span class="itin-overlap-badge">&#9899; ' + atEvent.map(function(f){return f.name;}).join(', ') + ' going</span>'
+          + (liveLabel ? '<div style="margin-bottom:2px">' + liveLabel + '</div>' : '')
+          + '<div class="itin-ev-name">' + ev.name + '</div>'
+          + '<div class="itin-venue">' + ev.venue + ' &middot; ' + ev.hood + '</div>'
+          + '<div style="font-family:var(--mono);font-size:8px;color:var(--yellow);margin-top:2px">' + ev.price + '</div>'
+          + '</div></div>';
+      });
+    }
+
+  } else if (_itinActiveTab === 'following') {
+    if (followingEvs.length === 0) {
+      html = '<div style="padding:24px 16px;text-align:center;font-family:var(--mono);font-size:9px;color:var(--text-muted)">Follow influencers to see their event picks here.</div>';
+    } else {
+      var PLATFORM_ICONS = { Instagram: '📸', YouTube: '▶', HL: '⬡', Eventbrite: '🎟' };
+      followingEvs.forEach(function(item) {
+        var ev = item.ev;
+        var profile = item.profile;
+        var status = getLiveStatus(ev);
+        var liveLabel = getLiveLabel(status);
+        html += '<div class="following-item" onclick="openEvDetailById(' + ev.id + ')">'
+          + '<div class="following-hdr">'
+          + '<div class="following-avatar">' + profile.emoji + '</div>'
+          + '<span class="following-handle">' + profile.handle + '</span>'
+          + '<span class="following-platform">' + (PLATFORM_ICONS[profile.platform] || '') + ' ' + profile.platform + '</span>'
+          + '</div>'
+          + (liveLabel ? '<div style="margin-bottom:4px">' + liveLabel + '</div>' : '')
+          + '<div class="following-ev-name">' + ev.name + '</div>'
+          + '<div class="following-meta">'
+          + '<span>' + ev.venue + '</span>'
+          + '<span>' + ev.time + '</span>'
+          + '<span style="color:var(--yellow);font-weight:700">' + ev.price + '</span>'
+          + '</div></div>';
+      });
+    }
+  }
+
+  el.innerHTML = html;
+};
+
+// ── 4. Auto-refresh live status every 60 seconds when itinerary is open ──
+var _itinRefreshTimer = null;
+var _origOpenItinerary = typeof openItinerary === 'function' ? openItinerary : null;
+openItinerary = function(mode) {
+  if (mode && mode !== _itinMode) { _itinMode = mode; }
+  // Reset to upcoming tab on fresh open unless mode is 'reunion'
+  if (mode !== 'reunion') {
+    _itinActiveTab = 'upcoming';
+    document.querySelectorAll('.itin-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    var upBtn = document.getElementById('itin-tab-upcoming');
+    if (upBtn) upBtn.classList.add('active');
+  }
+  var panel = document.getElementById('itinerary-panel');
+  var overlay = document.getElementById('itin-overlay');
+  if (panel) panel.classList.add('open');
+  if (overlay) overlay.style.display = 'block';
+  renderItinerary();
+  // Start auto-refresh
+  clearInterval(_itinRefreshTimer);
+  _itinRefreshTimer = setInterval(renderItinerary, 60000);
+};
+
+var _origCloseItinerary = typeof closeItinerary === 'function' ? closeItinerary : null;
+closeItinerary = function() {
+  var panel = document.getElementById('itinerary-panel');
+  var overlay = document.getElementById('itin-overlay');
+  if (panel) panel.classList.remove('open');
+  if (overlay) overlay.style.display = 'none';
+  clearInterval(_itinRefreshTimer);
+};
+
+// ── 5. Stream Ingestion — placeholders for IG, Eventbrite, YouTube ──
+var STREAM_SOURCES = [
+  {
+    platform: 'Instagram',
+    icon: '📸',
+    account: '@hyperlocal_nyc',
+    color: '#F472B6',
+    cssClass: 'src-instagram',
+    fetchFn: function(cb) {
+      // Placeholder: in production, call Instagram Basic Display API
+      // GET https://graph.instagram.com/me/media?fields=id,caption,media_url,permalink&access_token={TOKEN}
+      cb([
+        { id: 'ig_1', type: 'reel', caption: 'INDUSTRY TAKEOVER is PACKED tonight 🔥 Marquee NYC', thumb: null, permalink: '#', ts: new Date(Date.now() - 3600000) },
+        { id: 'ig_2', type: 'post', caption: 'Rooftop views at 230 Fifth — who else is heading up tonight?', thumb: null, permalink: '#', ts: new Date(Date.now() - 7200000) }
+      ]);
+    }
+  },
+  {
+    platform: 'YouTube',
+    icon: '▶',
+    account: 'HyperLocal Live',
+    color: '#F87171',
+    cssClass: 'src-youtube',
+    fetchFn: function(cb) {
+      // Placeholder: in production, call YouTube Data API v3
+      // GET https://www.googleapis.com/youtube/v3/search?channelId={CHANNEL_ID}&type=video&eventType=live&key={API_KEY}
+      cb([
+        { id: 'yt_1', title: 'LIVE: NYC Nightlife Roundup — What\'s Popping Tonight', views: '1.2K watching', ts: new Date(Date.now() - 1800000) },
+        { id: 'yt_2', title: 'Recap: Chef Table Pop-Up at Eleven Madison (Full Video)', views: '8.4K views', ts: new Date(Date.now() - 86400000) }
+      ]);
+    }
+  },
+  {
+    platform: 'Eventbrite',
+    icon: '🎟',
+    account: 'Org 73195697223',
+    color: '#FB923C',
+    cssClass: 'src-eventbrite',
+    fetchFn: function(cb) {
+      // Placeholder: in production, call Eventbrite API
+      // GET https://www.eventbriteapi.com/v3/organizations/73195697223/events/?token={TOKEN}
+      cb([
+        { id: 'eb_1', name: 'Davis Pemberton Reunion — Welcome Dinner', url: '#', starts: new Date(Date.now() + 86400000) },
+        { id: 'eb_2', name: 'Davis Pemberton Reunion — Saturday Gala', url: '#', starts: new Date(Date.now() + 172800000) }
+      ]);
+    }
+  }
+];
+
+function renderStreamPanel() {
+  var body = document.getElementById('stream-body');
+  if (!body) return;
+
+  var html = '';
+
+  STREAM_SOURCES.forEach(function(source) {
+    source.fetchFn(function(items) {
+      html += '<div style="margin-bottom:16px">'
+        + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">'
+        + '<span style="font-size:14px">' + source.icon + '</span>'
+        + '<span style="font-family:var(--mono);font-size:9px;font-weight:700;color:' + source.color + '">' + source.platform.toUpperCase() + '</span>'
+        + '<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">' + source.account + '</span>'
+        + '<span class="' + source.cssClass + ' webhook-status" style="margin-left:auto;font-size:7px;padding:1px 5px"><span class="webhook-status-dot"></span>CONNECTED</span>'
+        + '</div>';
+
+      items.forEach(function(item) {
+        var timeAgo = formatTimeAgo(item.ts || item.starts);
+        html += '<div class="stream-card" onclick="void(0)">'
+          + '<div class="stream-source-row">'
+          + '<span class="stream-platform-icon">' + source.icon + '</span>'
+          + '<span class="stream-account-name">' + source.account + '</span>'
+          + '<span class="stream-ingested-time">' + timeAgo + '</span>'
+          + '</div>'
+          + '<div style="padding:8px 10px 10px">'
+          + '<div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.35">'
+          + (item.caption || item.title || item.name) + '</div>'
+          + (item.views ? '<div style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">' + item.views + '</div>' : '')
+          + '<div style="margin-top:6px;display:flex;align-items:center;gap:6px">'
+          + '<span class="source-badge ' + source.cssClass + '">via ' + source.platform + '</span>'
+          + (source.platform === 'Eventbrite' && item.starts ? '<span style="font-family:var(--mono);font-size:7px;color:var(--text-muted)">' + item.starts.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + '</span>' : '')
+          + '</div>'
+          + '</div></div>';
+      });
+
+      html += '</div>';
+
+      // Once all sources collected, render
+      if (html.length > 0) {
+        // Append a refresh note
+        body.innerHTML = html
+          + '<div style="text-align:center;font-family:var(--mono);font-size:7px;color:var(--text-muted);padding:8px">'
+          + 'Auto-refreshes every 5 min &middot; <button onclick="renderStreamPanel()" style="background:none;border:none;color:var(--blue);font-family:var(--mono);font-size:7px;cursor:pointer;text-decoration:underline">Refresh now</button>'
+          + '</div>';
+      }
+    });
+  });
+}
+
+function formatTimeAgo(d) {
+  if (!d) return '';
+  var diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 0) return 'Upcoming';
+  if (diff < 60)   return 'Just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+// Hook openStream to render the stream panel with live data
+var _origOpenStream = typeof openStream === 'function' ? openStream : null;
+openStream = function() {
+  if (_origOpenStream) _origOpenStream();
+  setTimeout(renderStreamPanel, 200);
+};
+
+// ── 6. Source tag enhancement — add platform icon to source badges ──
+// Override srcCls to also add platform-specific class
+var _origGetSrcCls = typeof getSrcCls === 'function' ? getSrcCls : null;
+var SOURCE_META = {
+  posh:        { label: 'Posh',       icon: '●', cssClass: 'src-posh' },
+  eventbrite:  { label: 'Eventbrite', icon: '🎟', cssClass: 'src-eventbrite' },
+  luma:        { label: 'Lu.ma',      icon: '◆', cssClass: 'src-luma' },
+  instagram:   { label: 'Instagram',  icon: '📸', cssClass: 'src-instagram' },
+  youtube:     { label: 'YouTube',    icon: '▶', cssClass: 'src-youtube' },
+  stream:      { label: 'Stream',     icon: '⬡', cssClass: 'src-stream' }
+};
+
+// Patch renderCard to use richer source tags
 (function() {
   var origRenderCard = renderCard;
   renderCard = function(ev) {
     var html = origRenderCard(ev);
-    // Inject curator pick badge after source-badge
-    if (ev.curatorPick && _curatorSlug) {
-      var profile = _curatorProfiles[_curatorSlug.toLowerCase()];
-      if (profile) {
-        var badge = '<span style="position:absolute;top:5px;left:8px;font-family:var(--mono);font-size:7px;background:rgba(155,93,229,.18);color:#C084FC;border:1px solid rgba(155,93,229,.3);padding:1px 4px;border-radius:1px;letter-spacing:.05em">' + profile.emoji + ' PICK</span>';
-        html = html.replace('<span class="source-badge', badge + '<span class="source-badge');
-      }
-    }
-    // Show ingested indicator
-    if (ev.ingested) {
-      html = html.replace('>via ' + ev.source + '</span>', ' src-ingested">LIVE via ' + ev.source + '</span>');
-    }
+    var meta = SOURCE_META[ev.source] || { label: ev.source || 'HL', icon: '○', cssClass: 'src-luma' };
+    // Replace "via {source}" with icon + label
+    html = html.replace(
+      '>via ' + ev.source + '</span>',
+      '>' + meta.icon + ' ' + meta.label + '</span>'
+    );
     return html;
   };
 })();
 
-// ── 7. Update renderFriends with proximity blur + ghost mode ──
-// (already done above, but wire up open function to also render privacy dashboard)
-var _origOpenFriends = openFriends;
-openFriends = function() {
-  _origOpenFriends();
-  renderPrivacyDashboard(); // keep privacy stats fresh
-};
-
-// ── 8. Boot sequence ──
+// ── 7. Boot Sprint 18 ──
 setTimeout(function() {
-  renderPrivacyDashboard();
-  initCurator();
-}, 500);
+  // Pre-render itinerary counts without opening panel
+  var evPool = ALL_EVENTS[currentZip] || ALL_EVENTS['10001'] || [];
+  var cu = document.getElementById('itin-count-upcoming');
+  var cf = document.getElementById('itin-count-friends');
+  var cfo = document.getElementById('itin-count-following');
+  if (cu) cu.textContent = _myEventIds.filter(function(id){ return evPool.some(function(e){return e.id===id;}); }).length;
+  if (cf) cf.textContent = getFriendOverlapEvents(evPool).length;
+  if (cfo) cfo.textContent = getFollowingEvents(evPool).length;
+}, 1000);
 
 
 </script>
