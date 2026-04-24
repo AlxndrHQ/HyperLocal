@@ -69,8 +69,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .anchor-name{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:.08em}
 .hero-title{font-size:18px;font-weight:700;line-height:1.2;color:#fff}
 .hero-sub{font-size:10px;color:var(--text-dim);margin-top:3px;font-family:var(--mono)}
-.ctrl{width:28px;height:28px;border-radius:2px;background:rgba(0,0,0,.55);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,color .15s}
-.ctrl:hover{border-color:var(--blue);color:var(--blue)}
 .stats-bar{display:flex;border-bottom:1px solid var(--border);background:var(--bg1);flex-shrink:0;overflow-x:auto}
 .stats-bar::-webkit-scrollbar{height:0}
 .stat-c{flex:1;min-width:90px;padding:6px 12px;border-right:1px solid var(--border)}
@@ -80,7 +78,7 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .stat-ch{font-family:var(--mono);font-size:9px;margin-top:1px}
 .up{color:var(--green)}.dn{color:var(--red)}.yl{color:var(--yellow)}.bl{color:var(--blue)}
 .map-panel{flex:1;background:var(--bg2);display:flex;flex-direction:column;overflow:hidden;position:relative}
-.map-inner{flex:1;position:relative;overflow:hidden}
+.map-inner{flex:1;position:relative;overflow:hidden;z-index:1}
 .map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,71,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.04) 1px,transparent 1px);background-size:22px 22px}
 .map-dots-layer{position:absolute;inset:0}
 .map-dot{position:absolute;border-radius:50%}
@@ -101,17 +99,15 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .sidebar{width:250px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .ev-list{flex:1;overflow-y:auto;padding:2px 0}
 .ev-list::-webkit-scrollbar{width:2px}
-.ev-list::-webkit-scrollbar-thumb{background:var(--bg3)}:hover{background:rgba(250,204,21,.2)}
-.sidebar{width:250px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.ev-list::-webkit-scrollbar-thumb{background:var(--bg3)}debar{width:250px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .ev-list{flex:1;overflow-y:auto;padding:2px 0}
 .ev-list::-webkit-scrollbar{width:2px}
-.ev-list::-webkit-scrollbar-thumb{background:var(--bg3)}
-.ev-card{padding:8px 11px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;position:relative}
+.ev-card{padding:8px 11px;border:1px solid var(--border);display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;position:relative;margin-bottom:1px}
 .ev-card:hover{background:var(--bg3)}
-.ev-card.trending{border-left:2px solid var(--yellow)}
-.ev-card.featured{border-left:2px solid var(--blue)}
-.ev-card.job-card{border-left:2px solid var(--green)}
-.ev-card.food-card{border-left:2px solid var(--orange)}
+.ev-card.trending{border-left:2px solid var(--yellow)!important}
+.ev-card.featured{border-left:2px solid var(--blue)!important}
+.ev-card.job-card{border-left:2px solid var(--green)!important}
+.ev-card.food-card{border-left:2px solid var(--orange)!important}
 .ev-r1{display:flex;align-items:flex-start;justify-content:space-between;gap:5px}
 .ev-name{font-size:11px;font-weight:600;line-height:1.3;flex:1}
 .ev-r2{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
@@ -124,9 +120,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .tag-r{background:rgba(255,51,85,.09);color:var(--red);border:1px solid rgba(255,51,85,.2)}
 .tag-g{background:rgba(0,230,118,.09);color:var(--green);border:1px solid rgba(0,230,118,.2)}
 .tag-o{background:rgba(255,140,0,.09);color:var(--orange);border:1px solid rgba(255,140,0,.2)}
-.ev-r3{display:flex;align-items:center;gap:5px;margin-top:2px}
-.sparkline{display:flex;align-items:flex-end;gap:1.5px;height:14px}
-.sparkline span{width:2.5px;border-radius:1px 1px 0 0;background:var(--yellow);display:block;opacity:.75}
 .avail-bar{flex:1;height:3px;border-radius:1px;background:var(--bg3);overflow:hidden}
 .avail-fill{height:100%;border-radius:1px;transition:width .5s}
 .avail-pct{font-family:var(--mono);font-size:8px}
@@ -136,7 +129,7 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .src-luma{background:rgba(0,71,255,.13);color:#7AABFF;border:1px solid rgba(0,71,255,.22)}
 .card-map-btn{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:8px;color:var(--text-dim);background:none;border:1px solid var(--border);padding:1px 5px;border-radius:1px;cursor:pointer;transition:border-color .15s,color .15s;flex-shrink:0}
 .card-map-btn:hover{border-color:var(--blue);color:var(--blue)}
-.ticket-btn{font-family:var(--mono);font-size:9px;font-weight:600;background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.38);color:#7AABFF;padding:3px 8px;border-radius:2px;cursor:pointer;flex:1;text-align:center;transition:background .15s;text-decoration:none;display:block}
+.ticket-btn{font-family:var(--mono);font-size:9px;font-weight:600;background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.38);color:#7AABFF;padding:3px 8px;border-radius:2px;cursor:pointer;text-align:center;transition:background .15s;text-decoration:none;display:block}
 .ticket-btn:hover{background:rgba(0,71,255,.28);color:#fff}
 .ticker-wrap{background:var(--bg0);border-top:1px solid rgba(0,71,255,.35);height:30px;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
 .ticker-tag{background:var(--blue);color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;padding:0 11px;height:100%;display:flex;align-items:center;letter-spacing:.12em;flex-shrink:0;white-space:nowrap}
@@ -149,8 +142,7 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .t-up{color:var(--green)}.t-dn{color:var(--red)}.t-yl{color:var(--yellow)}.t-bl{color:#7AABFF}
 .modal-bg{position:fixed;inset:0;z-index:200;background:rgba(4,8,16,.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
 .modal-bg.open{opacity:1;pointer-events:all}
-.mini-map-modal{background:var(--bg2);border:1px solid var(--border-blue);width:380px;border-radius:3px;overflow:hidden;transform:translateY(14px);transition:transform .18s}
-.modal-bg.open .mini-map-modal{transform:translateY(0)}
+.mini-map-modal{background:var(--bg2);border:1px solid var(--border-blue);width:380px;border-radius:3px;overflow:hidden}
 .mm-hdr{background:var(--bg1);padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .mm-title{font-size:13px;font-weight:600}
 .mm-close{background:none;border:none;color:var(--text-dim);font-size:17px;cursor:pointer;line-height:1;padding:0}
@@ -169,24 +161,15 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .mm-btns{display:flex;gap:8px;margin-top:10px}
 .mm-btn{flex:1;padding:8px;border-radius:2px;font-family:var(--mono);font-size:10px;font-weight:700;text-align:center;cursor:pointer;text-decoration:none;border:none;letter-spacing:.05em}
 .mm-btn-primary{background:var(--blue);color:#fff}
-.mm-btn-primary:hover{background:#1a5fff}
 .mm-btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.mm-btn-secondary:hover{background:var(--bg4)}
 .tab-content{display:none;flex:1;overflow:hidden}
-.tab-content.active{display:flex}
-.slide-in{animation:slidefade .2s ease both}
-@keyframes slidefade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}en;flex:1;overflow:hidden}
 .tab-content.active{display:flex}
 .slide-in{animation:slidefade .2s ease both}
 @keyframes slidefade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 /* ════ THEME VARIABLES ════ */
 [data-theme="light"]{--bg0:#F0F4F8;--bg1:#FFFFFF;--bg2:#F8FAFC;--bg3:#EEF2F7;--bg4:#E2E8F0;--border:rgba(0,0,0,0.09);--border-blue:rgba(0,71,255,0.3);--text:#0A1628;--text-dim:#4A5568;--text-muted:#94A3B8}
 [data-theme="light"] .topbar,[data-theme="light"] .tab-nav,[data-theme="light"] .news-panel,[data-theme="light"] .sidebar{background:var(--bg1)!important}
-[data-theme="light"] .hero-bg{background:linear-gradient(135deg,#E8F0FE 0%,#C7D9FF 40%,#EEF4FF 100%)!important}
-[data-theme="light"] .hero-title{color:#0A1628!important}
-[data-theme="light"] .map-panel{background:var(--bg2)!important}
 .theme-btn{width:28px;height:28px;border-radius:2px;background:none;border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,color .15s;flex-shrink:0}
-.theme-btn:hover{border-color:var(--blue);color:var(--blue)}
 .pro-toggle-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
 .pro-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);transition:color .2s}
 .pro-label.active{color:var(--yellow)}
@@ -195,7 +178,7 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .pro-thumb{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--text-dim);transition:transform .2s,background .2s}
 .pro-track.on .pro-thumb{transform:translateX(16px);background:var(--yellow)}
 .pro-badge{font-family:var(--mono);font-size:7px;background:rgba(250,204,21,.15);color:var(--yellow);border:1px solid rgba(250,204,21,.35);padding:1px 4px;border-radius:1px;letter-spacing:.06em}
-.screener-card{padding:8px 11px;border-bottom:1px solid var(--border);background:var(--bg2);transition:background .12s;position:relative;cursor:pointer}
+.screener-card{padding:8px 11px;border:1px solid var(--border);background:var(--bg2);transition:background .12s;position:relative;cursor:pointer;margin-bottom:1px}
 .screener-card:hover{background:var(--bg3)}
 .screener-header{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px}
 .screener-name{font-size:11px;font-weight:600;flex:1}
@@ -221,36 +204,16 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .screener-actions{display:flex;gap:5px;margin-top:6px}
 .screener-btn{flex:1;font-family:var(--mono);font-size:8px;font-weight:600;padding:4px 6px;border-radius:2px;cursor:pointer;text-align:center;text-decoration:none;letter-spacing:.04em;transition:background .15s}
 .screener-btn-primary{background:rgba(0,71,255,.15);border:1px solid rgba(0,71,255,.38);color:#7AABFF}
-.screener-btn-primary:hover{background:rgba(0,71,255,.3)}
 .screener-btn-lead{background:rgba(255,140,0,.12);border:1px solid rgba(255,140,0,.3);color:var(--orange)}
-.screener-btn-lead:hover{background:rgba(255,140,0,.25)}
-.amz-sidebar{position:fixed;right:0;top:0;bottom:0;width:280px;background:var(--bg1);border-left:1px solid var(--border-blue);z-index:150;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;box-shadow:-4px 0 20px rgba(0,71,255,.15)}
-.amz-sidebar.open{transform:translateX(0)}
-.amz-hdr{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg0)}
-.amz-hdr-title{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text);letter-spacing:.08em}
-.amz-close{background:none;border:none;color:var(--text-dim);font-size:17px;cursor:pointer;line-height:1;padding:0}
-.amz-event-chip{margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:6px 10px}
-.amz-event-name{font-size:11px;font-weight:600;margin-bottom:2px}
-.amz-products{flex:1;overflow-y:auto;padding:0 10px 10px}
-.amz-products::-webkit-scrollbar{width:2px}
-.amz-product-card{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:10px;margin-bottom:8px}
-.amz-product-img{width:100%;height:80px;border-radius:2px;background:var(--bg3);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:28px;border:1px solid var(--border)}
-.amz-product-name{font-size:11px;font-weight:600;line-height:1.3;margin-bottom:3px}
-.amz-product-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.amz-product-price{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--yellow)}
-.amz-prime-btn{width:100%;padding:6px;border-radius:2px;background:linear-gradient(135deg,#FF9900,#FF6600);border:none;color:#000;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer}
 .sector-filter-bar{padding:6px 10px;border-bottom:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;background:var(--bg1)}
 .sector-pill{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:10px;cursor:pointer;border:1px solid var(--border);color:var(--text-dim);background:none;transition:all .15s;letter-spacing:.04em}
-.sector-pill:hover{border-color:var(--blue);color:var(--blue)}
 .sector-pill.active{background:rgba(0,71,255,.15);border-color:var(--blue);color:var(--blue)}
-/* ═══ TENANT BANNER ═══ */
 .tenant-banner{display:none;padding:5px 14px;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-shrink:0}
 .tenant-banner.active{display:flex}
 .tenant-avatar{width:26px;height:26px;border-radius:50%;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .tenant-name{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.08em}
 .tenant-tagline{font-family:var(--mono);font-size:8px;color:var(--text-dim)}
 .tenant-badge{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.12);color:var(--blue);border:1px solid rgba(0,71,255,.25);padding:2px 6px;border-radius:1px;letter-spacing:.08em;margin-left:auto}
-/* ═══ ITINERARY ═══ */
 .itinerary-panel{position:fixed;right:0;top:0;bottom:0;width:310px;background:var(--bg1);border-left:1px solid var(--border-blue);z-index:160;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease}
 .itinerary-panel.open{transform:translateX(0)}
 .itin-hdr{padding:11px 14px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
@@ -259,7 +222,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .itin-scroll::-webkit-scrollbar{width:2px}
 .itin-day{padding:5px 14px 2px;font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--border)}
 .itin-item{display:flex;gap:9px;padding:8px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
-.itin-item:hover{background:var(--bg3)}
 .itin-item.live{background:rgba(0,230,118,.05);border-left:2px solid var(--green)}
 .itin-time{font-family:var(--mono);font-size:8px;color:var(--text-dim);width:30px;flex-shrink:0;padding-top:1px}
 .itin-dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--border-blue);background:var(--bg0);flex-shrink:0;margin-top:3px}
@@ -270,11 +232,8 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .itin-venue{font-size:9px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .itin-footer{padding:9px 14px;border-top:1px solid var(--border);flex-shrink:0}
 .ics-btn{width:100%;padding:8px;border-radius:2px;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.28);color:var(--blue);font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
-.ics-btn:hover{background:rgba(0,71,255,.22)}
 .itin-btn{font-family:var(--mono);font-size:8px;font-weight:600;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green);padding:3px 8px;border-radius:2px;cursor:pointer;white-space:nowrap}
-.itin-btn:hover{background:rgba(0,230,118,.22)}
-/* ═══ PARTNER PORTAL ═══ */
-.partner-panel{position:fixed;left:0;top:0;bottom:0;width:290px;background:var(--bg1);border-right:1px solid var(--border-blue);z-index:160;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .25s ease}
+.partner-panel{position:fixed;left:0;top:0;bottom:0;width:290px;background:var(--bg1);border-right:1px solid var(--border-blue);z-index:220;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .25s ease}
 .partner-panel.open{transform:translateX(0)}
 .pp-hdr{padding:11px 14px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0}
 .pp-hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
@@ -305,16 +264,12 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .aff-box{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:5px 7px;display:flex;gap:5px;align-items:center}
 .aff-text{font-family:var(--mono);font-size:8px;color:var(--blue);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .aff-copy{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.25);color:var(--blue);padding:2px 5px;border-radius:1px;cursor:pointer;flex-shrink:0}
-.aff-copy:hover{background:rgba(0,71,255,.22)}
 .pp-btn{font-family:var(--mono);font-size:8px;font-weight:600;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green);padding:3px 8px;border-radius:2px;cursor:pointer;white-space:nowrap}
-.pp-btn:hover{background:rgba(0,230,118,.22)}
 .dtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:8px}
 .dtable th{color:var(--text-muted);font-size:7px;letter-spacing:.07em;text-transform:uppercase;padding:2px 0;border-bottom:1px solid var(--border);text-align:left;font-weight:400}
 .dtable td{padding:3px 0;border-bottom:1px solid var(--border);color:var(--text)}
 .dtable td.g{color:var(--green);font-weight:600}
-.dtable td.b{color:#7AABFF}(0,71,255,.1);border:1px solid rgba(0,71,255,.25);color:var(--green);padding:3px 8px;border-radius:2px;cursor:pointer;white-space:nowrap}
-.pp-btn:hover{background:rgba(0,230,118,.22)}
-/* ═══ FRIENDS TERMINAL ═══ */
+.dtable td.b{color:#7AABFF}
 .friends-panel{position:fixed;right:0;top:0;bottom:0;width:260px;background:var(--bg1);border-left:1px solid var(--border-blue);z-index:155;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;box-shadow:-4px 0 16px rgba(0,71,255,.1)}
 .friends-panel.open{transform:translateX(0)}
 .ft-hdr{padding:9px 12px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
@@ -337,7 +292,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .golive-track.on .golive-thumb{transform:translateX(14px);background:var(--green)}
 .ft-btn{font-family:var(--mono);font-size:8px;font-weight:600;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.25);color:#7AABFF;padding:3px 8px;border-radius:2px;cursor:pointer;white-space:nowrap}
 .ft-btn:hover{background:rgba(0,71,255,.2)}
-/* ═══ LOOKBOOK ═══ */
 .lookbook-modal{position:fixed;inset:0;z-index:250;background:rgba(4,8,16,.85);display:flex;align-items:center;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .18s}
 .lookbook-modal.open{opacity:1;pointer-events:all}
 .lookbook-sidecar{width:340px;height:100%;background:var(--bg1);border-left:1px solid var(--border-blue);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .2s}
@@ -354,7 +308,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .lb-prime-badge{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.15);color:#7AABFF;border:1px solid rgba(0,71,255,.3);padding:1px 5px;border-radius:1px}
 .lb-tonight-badge{font-family:var(--mono);font-size:7px;background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25);padding:1px 5px;border-radius:1px}
 .lb-buy-btn{width:100%;padding:6px;background:linear-gradient(135deg,#FF9900,#FF6600);border:none;color:#000;font-family:var(--mono);font-size:8px;font-weight:700;cursor:pointer;border-radius:2px}
-/* ═══ SOCIAL SUB-TICKER ═══ */
 .social-ticker-wrap{background:rgba(0,71,255,.08);border-top:1px solid rgba(0,71,255,.2);height:22px;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
 .social-ticker-tag{background:rgba(155,93,229,.8);color:#fff;font-family:var(--mono);font-size:8px;font-weight:700;padding:0 9px;height:100%;display:flex;align-items:center;letter-spacing:.1em;flex-shrink:0;white-space:nowrap}
 .social-ticker-scroller{overflow:hidden;flex:1}
@@ -362,7 +315,6 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .social-ticker-item{display:inline-flex;align-items:center;gap:4px;padding:0 14px;height:22px;border-right:1px solid var(--border);font-family:var(--mono);font-size:9px;color:var(--text-dim)}
 .sti-source{color:#C084FC;font-size:8px}
 .sti-text{color:var(--text)}
-/* ═══ SYNERGY ═══ */
 .synergy-badge{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:7px;background:rgba(155,93,229,.1);color:#C084FC;border:1px solid rgba(155,93,229,.22);padding:1px 5px;border-radius:1px;letter-spacing:.04em;margin-top:2px}
 .synergy-pct{font-weight:700;color:#E879F9}
 .share-earn-btn{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:8px;font-weight:600;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.22);color:var(--green);padding:2px 6px;border-radius:2px;cursor:pointer;transition:background .15s;white-space:nowrap}
@@ -374,20 +326,20 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 /* ════ SPRINT 11: TERMINAL MODE ════ */
 body.pub-mode .news-panel,body.pub-mode .stats-bar,body.pub-mode .social-ticker-wrap,body.pub-mode .synergy-badge,body.pub-mode .screener-card,body.pub-mode .partner-panel,body.pub-mode #tbar-extra-btns{display:none!important}
 body.pub-mode .hero-wrap{display:none}
+/* ════ SPRINT 13: Dark mode yellow fix ════ */
+.terminal-mode-btn.pub{background:#000!important;border-color:rgba(250,204,21,.6)!important;color:var(--yellow)!important}
+.tm-dot.pub{background:var(--yellow)!important}
 .terminal-mode-btn{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:2px;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text-dim);transition:all .18s;white-space:nowrap;display:flex;align-items:center;gap:5px}
 .terminal-mode-btn.pro{background:rgba(0,71,255,.15);border-color:var(--blue);color:var(--blue)}
-.terminal-mode-btn.pub{background:rgba(250,204,21,.1);border-color:rgba(250,204,21,.4);color:var(--yellow)}
 .tm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .tm-dot.pro{background:var(--blue);animation:blink .9s infinite}
-.tm-dot.pub{background:var(--yellow)}
-/* ════ SPRINT 11: MOBILE-FIRST ════ */
 @media(max-width:767px){.topbar{flex-wrap:wrap;height:auto;padding:0;position:sticky;top:0;z-index:30}
 .topbar-row1{display:flex!important;align-items:center;gap:8px;padding:7px 12px;width:100%;border-bottom:1px solid var(--border)}
 .topbar-row2{display:flex!important;align-items:center;gap:6px;padding:5px 12px;width:100%;min-height:36px}
 .topbar>.tb-div,.topbar>.brand,.topbar>.live-pill,.topbar>.theme-btn,.topbar>.datetime,.topbar>.zip-pulse-group,.topbar>.pro-toggle-wrap,#tbar-extra-btns{display:none!important}
 .tab-nav{overflow-x:auto;padding:0 4px;-webkit-overflow-scrolling:touch}
 .tab-btn{padding:0 10px;font-size:9px;min-height:44px;min-width:44px}
-.main-body{flex-direction:column;height:calc(100dvh - 120px)}
+.main-body{flex-direction:column;height:calc(100dvh - 120px - 58px)}
 .news-panel{display:none}
 .center-stage{height:42dvh;flex-shrink:0;order:-1}
 .hero-wrap{display:none}
@@ -395,7 +347,7 @@ body.pub-mode .hero-wrap{display:none}
 .map-panel{flex:1;height:100%}
 .sidebar{width:100%;flex-shrink:0;height:45dvh;border-left:none;border-top:1px solid var(--border);overflow:hidden}
 .ev-list{overflow-y:auto;-webkit-overflow-scrolling:touch}
-.tab-btn,.ticket-btn,.card-map-btn,.equip-btn,.sector-pill,.itin-btn,.pp-btn,.ft-btn,.terminal-mode-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.tab-btn,.ticket-btn,.card-map-btn,.shop-btn,.sector-pill,.itin-btn,.pp-btn,.ft-btn,.terminal-mode-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .ev-card{padding:10px 12px}
 .social-ticker-wrap{display:none}
 .mobile-status-bar{display:flex!important;position:sticky;bottom:0;z-index:25;background:var(--bg1);border-top:1px solid var(--border-blue);height:32px;align-items:center;gap:0;flex-shrink:0;overflow:hidden}}
@@ -405,7 +357,6 @@ body.pub-mode .hero-wrap{display:none}
 .msb-segment:last-child{border-right:none}
 .msb-label{font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0}
 .msb-val{font-family:var(--mono);font-size:9px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ════ SPRINT 11: VERTICAL PULSE ════ */
 .pulse-cycle-bar{display:flex;height:3px;flex-shrink:0;background:var(--bg3)}
 .pcb-seg{flex:1;transition:opacity .3s}
 .pcb-seg.active{opacity:1!important}
@@ -415,44 +366,41 @@ body.pub-mode .hero-wrap{display:none}
 .vp-ring{width:16px;height:16px;flex-shrink:0}
 .tab-btn.pulsing{animation:tab-pulse-flash .6s ease}
 @keyframes tab-pulse-flash{0%{background:rgba(0,71,255,.3);color:#fff}100%{background:none;color:var(--blue)}}
-/* ════ SPRINT 11: CSS GRID CARD FOOTER ════ */
 .ev-card-footer{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px;margin-top:4px}
 .ev-card-price-source{display:flex;flex-direction:column;gap:1px;min-width:0}
 .ev-card-price-val{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--yellow)}
 .ev-card-source-val{font-family:var(--mono);font-size:7px;color:var(--text-muted)}
 .ev-card-actions{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-/* ════ SPRINT 11: EQUIP MODAL ════ */
-.equip-modal{position:fixed;inset:0;z-index:260;background:rgba(4,8,16,.88);display:flex;align-items:stretch;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .18s}
-.equip-modal.open{opacity:1;pointer-events:all}
-.equip-sidecar{width:360px;max-width:100vw;background:var(--bg1);border-left:1px solid var(--border-blue);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s ease}
-.equip-modal.open .equip-sidecar{transform:translateX(0)}
-.equip-hdr{padding:12px 14px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between}
-.equip-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em}
-.equip-close{background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;padding:0;line-height:1}
-.equip-event-chip{margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:6px 10px}
-.equip-event-name{font-size:11px;font-weight:600;margin-bottom:1px}
-.equip-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
-.equip-tab-btn{flex:1;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;padding:8px 4px;border:none;background:none;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.equip-tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:rgba(0,71,255,.06)}
-.equip-scroll{flex:1;overflow-y:auto;padding:6px 10px 12px}
-.equip-scroll::-webkit-scrollbar{width:2px}
-.equip-product{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:10px;margin-bottom:8px;transition:border-color .15s}
-.equip-product:hover{border-color:var(--border-blue)}
-.equip-product-img{width:100%;height:72px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px}
-.equip-product-name{font-size:10px;font-weight:600;line-height:1.3;margin-bottom:3px}
-.equip-product-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
-.equip-price{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--yellow)}
-.equip-badges{display:flex;gap:3px}
-.equip-prime{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.15);color:#7AABFF;border:1px solid rgba(0,71,255,.3);padding:1px 5px;border-radius:1px}
-.equip-tonight{font-family:var(--mono);font-size:7px;background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25);padding:1px 5px;border-radius:1px}
-.equip-buy-btn{width:100%;padding:7px;border-radius:2px;background:linear-gradient(135deg,#FF9900,#FF6600);border:none;color:#000;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:flex;align-items:center;justify-content:center;gap:5px}
-.equip-buy-btn:hover{opacity:.88}
-.equip-stript-btn{width:100%;padding:7px;border-radius:2px;background:rgba(155,93,229,.15);border:1px solid rgba(155,93,229,.4);color:#C084FC;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:flex;align-items:center;justify-content:center;gap:5px}
-.equip-stript-btn:hover{background:rgba(155,93,229,.28)}
-.equip-footer{padding:8px 14px;border-top:1px solid var(--border);flex-shrink:0;font-family:var(--mono);font-size:7px;color:var(--text-muted);text-align:center}
-.equip-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;font-weight:700;background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(0,71,255,.1));border:1px solid rgba(250,204,21,.3);color:var(--yellow);padding:3px 8px;border-radius:2px;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.04em}
-.equip-btn:hover{background:rgba(250,204,21,.2);border-color:var(--yellow)}
-/* ════ SPRINT 11: PROMO VIDEO ════ */
+/* ════ SPRINT 13: SHOP MODAL ════ */
+.shop-modal{position:fixed;inset:0;z-index:260;background:rgba(4,8,16,.88);display:flex;align-items:stretch;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .18s}
+.shop-modal.open{opacity:1;pointer-events:all}
+.shop-sidecar{width:360px;max-width:100vw;background:var(--bg1);border-left:1px solid var(--border-blue);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s ease}
+.shop-modal.open .shop-sidecar{transform:translateX(0)}
+.shop-hdr{padding:12px 14px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between}
+.shop-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em}
+.shop-close{background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;padding:0;line-height:1}
+.shop-event-chip{margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:6px 10px}
+.shop-event-name{font-size:11px;font-weight:600;margin-bottom:1px}
+.shop-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.shop-tab-btn{flex:1;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;padding:8px 4px;border:none;background:none;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.shop-tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:rgba(0,71,255,.06)}
+.shop-scroll{flex:1;overflow-y:auto;padding:6px 10px 12px}
+.shop-scroll::-webkit-scrollbar{width:2px}
+.shop-product{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:10px;margin-bottom:8px;transition:border-color .15s}
+.shop-product:hover{border-color:var(--border-blue)}
+.shop-product-img{width:100%;height:72px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px}
+.shop-product-name{font-size:10px;font-weight:600;line-height:1.3;margin-bottom:3px}
+.shop-product-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.shop-price{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--yellow)}
+.shop-badges{display:flex;gap:3px}
+.shop-prime{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.15);color:#7AABFF;border:1px solid rgba(0,71,255,.3);padding:1px 5px;border-radius:1px}
+.shop-tonight{font-family:var(--mono);font-size:7px;background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25);padding:1px 5px;border-radius:1px}
+.shop-buy-btn{width:100%;padding:7px;border-radius:2px;background:linear-gradient(135deg,#FF9900,#FF6600);border:none;color:#000;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:flex;align-items:center;justify-content:center;gap:5px}
+.shop-stript-btn{width:100%;padding:7px;border-radius:2px;background:rgba(155,93,229,.15);border:1px solid rgba(155,93,229,.4);color:#C084FC;font-family:var(--mono);font-size:9px;font-weight:700;cursor:pointer;letter-spacing:.05em;display:flex;align-items:center;justify-content:center;gap:5px}
+.shop-footer{padding:8px 14px;border-top:1px solid var(--border);flex-shrink:0;font-family:var(--mono);font-size:7px;color:var(--text-muted);text-align:center}
+/* ════ SPRINT 13: SHOP BUTTON ════ */
+.shop-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;font-weight:700;background:#000;border:1px solid rgba(250,204,21,.5);color:var(--yellow);padding:3px 8px;border-radius:2px;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.04em}
+.shop-btn:hover{background:rgba(250,204,21,.12);border-color:var(--yellow)}
 .promo-video-wrap{position:relative;width:100%;overflow:hidden;background:var(--bg0)}
 .promo-video-wrap video{width:100%;height:100%;object-fit:cover;display:block}
 .promo-scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);pointer-events:none}
@@ -460,6 +408,65 @@ body.pub-mode .hero-wrap{display:none}
 .promo-label{font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
 .promo-title{font-size:13px;font-weight:700;color:#fff;line-height:1.25}
 .promo-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-top:2px}
+/* ════ SPRINT 13: BLOOMBERG BOTTOM NAV ════ */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:58px;background:#000;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:stretch;z-index:200;flex-shrink:0}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.45);transition:color .15s;padding:0;position:relative}
+.bnav-item.active,.bnav-item:hover{color:var(--yellow)}
+.bnav-item.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--yellow);border-radius:0 0 2px 2px}
+.bnav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bnav-icon svg{width:18px;height:18px}
+.bnav-label{font-family:var(--mono);font-size:7px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+.bnav-b-logo{width:18px;height:18px;background:var(--yellow);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#000;line-height:1;transition:background .15s}
+.bnav-item:not(.active) .bnav-b-logo{background:rgba(255,255,255,.2);color:rgba(255,255,255,.6)}
+@media(max-width:767px){#app{padding-bottom:58px}.bottom-nav{display:flex}.mobile-status-bar{bottom:58px}.main-body{height:calc(100dvh - 120px - 58px)}}
+@media(min-width:768px){.bottom-nav{display:none}}
+/* ════ SPRINT 13: URGENCY BAR ════ */
+.urgency-bar{display:none;background:#C00;border-bottom:1px solid rgba(255,255,255,.2);height:26px;align-items:center;gap:8px;padding:0 12px;flex-shrink:0;overflow:hidden;position:relative;z-index:22}
+.urgency-bar.active{display:flex}
+.urgency-tag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.12em;color:#fff;background:rgba(255,255,255,.15);padding:1px 6px;border-radius:1px;flex-shrink:0;white-space:nowrap}
+.urgency-scroller{flex:1;overflow:hidden}
+.urgency-track{display:flex;white-space:nowrap;animation:tickscroll 18s linear infinite;align-items:center}
+.urgency-item{display:inline-flex;align-items:center;gap:6px;padding:0 28px 0 0;font-family:var(--mono);font-size:9px;font-weight:600;color:#fff;letter-spacing:.04em}
+.urgency-sep{color:rgba(255,255,255,.4);padding:0 4px}
+/* ════ SPRINT 13: SUB-NAV ════ */
+.sub-nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg1);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 10px;height:34px;align-items:stretch}
+.sub-nav::-webkit-scrollbar{height:0}
+.sub-nav-btn{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);padding:0 14px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap;flex-shrink:0}
+.sub-nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.sub-nav-btn:hover{color:var(--text)}
+/* ════ SPRINT 13: EVENT CAROUSEL ════ */
+.ev-carousel{display:flex;flex-direction:column;gap:0}
+.ev-hero-card{padding:12px 14px 10px;border-bottom:2px solid var(--border-blue);cursor:pointer;transition:background .12s;background:var(--bg2)}
+.ev-hero-card:hover{background:var(--bg3)}
+.ev-hero-img{width:100%;height:80px;background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--border-blue);border-radius:2px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;overflow:hidden}
+.ev-hero-badge{position:absolute;top:6px;left:6px;font-family:var(--mono);font-size:8px;font-weight:700;padding:2px 6px;border-radius:1px;letter-spacing:.08em}
+.ev-hero-name{font-size:13px;font-weight:700;line-height:1.25;margin-bottom:3px}
+.ev-hero-meta{font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-bottom:5px}
+.ev-hero-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ev-hero-price{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--yellow)}
+.ev-hero-avail{font-family:var(--mono);font-size:8px}
+.ev-list-card{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.ev-list-card:hover{background:var(--bg3)}
+.ev-list-thumb{width:42px;height:42px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ev-list-body{min-width:0}
+.ev-list-name{font-size:11px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
+.ev-list-meta{font-family:var(--mono);font-size:8px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-list-right{text-align:right;flex-shrink:0}
+.ev-list-price{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--yellow)}
+.ev-list-avail{font-family:var(--mono);font-size:7px;margin-top:1px;white-space:nowrap}
+.partner-panel{z-index:220!important}
+#pp-overlay{z-index:219!important}
+.stream-panel{position:fixed;inset:0;z-index:210;background:var(--bg0);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .25s ease}
+.stream-panel.open{transform:translateY(0)}
+.stream-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg1)}
+.stream-close{background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:0}
+.stream-body{flex:1;overflow-y:auto;padding:16px}
+.stream-card{background:var(--bg2);border:1px solid var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.stream-video-wrap{position:relative;width:100%;height:180px;background:var(--bg0)}
+.stream-video-wrap video{width:100%;height:100%;object-fit:cover}
+.stream-meta{padding:10px 12px}
+.stream-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.stream-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim)}
 
 </style>
 </head>
@@ -470,32 +477,16 @@ body.pub-mode .hero-wrap{display:none}
   <div class="topbar-row1">
     <div class="brand"><span class="brand-dot"></span>Hyper<span style="color:var(--yellow)">Local</span></div>
     <div class="live-pill" style="margin-left:auto"><span class="live-dot"></span>LIVE</div>
-    <button class="terminal-mode-btn pub" id="tm-btn-m" onclick="toggleTerminalMode()">
-      <span class="tm-dot pub" id="tm-dot-m"></span>
-      <span id="tm-label-m">PUBLIC</span>
-    </button>
-    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
-      <svg id="tim-m" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg id="tis-m" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/></svg>
-    </button>
+    <button class="terminal-mode-btn pub" id="tm-btn-m" onclick="toggleTerminalMode()"><span class="tm-dot pub" id="tm-dot-m"></span><span id="tm-label-m">PUBLIC</span></button>
+    <button class="theme-btn" onclick="toggleTheme()"><svg id="tim-m" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="tis-m" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/></svg></button>
   </div>
   <!-- MOBILE ROW 2 -->
   <div class="topbar-row2">
     <span class="zip-label">ZIP</span>
     <input class="zip-input" id="zip-m" value="10001" maxlength="5" type="text" style="width:66px"/>
-    <div class="pulse-toggle-wrap" onclick="togglePulse()" style="margin-left:2px">
-      <span class="pulse-label" id="pll-m">PULSE</span>
-      <div class="toggle-track" id="ptt-m"><div class="toggle-thumb"></div></div>
-    </div>
-    <div class="vp-countdown" id="vp-countdown-m">
-      <svg class="vp-ring" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--border)" stroke-width="2"/><circle id="vp-arc-m" cx="8" cy="8" r="6" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="37.7" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 8 8)"/></svg>
-      <span id="vp-sec-m">30</span>s
-    </div>
-    <div style="margin-left:auto;display:flex;gap:4px;align-items:center">
-      <button class="itin-btn" onclick="openItinerary()">&#9783;</button>
-      <button class="pp-btn" onclick="openPartner()">$</button>
-      <button class="ft-btn" onclick="openFriends()">&#9899;</button>
-    </div>
+    <div class="pulse-toggle-wrap" onclick="togglePulse()" style="margin-left:2px"><span class="pulse-label" id="pll-m">PULSE</span><div class="toggle-track" id="ptt-m"><div class="toggle-thumb"></div></div></div>
+    <div class="vp-countdown" id="vp-countdown-m"><svg class="vp-ring" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--border)" stroke-width="2"/><circle id="vp-arc-m" cx="8" cy="8" r="6" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="37.7" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 8 8)"/></svg><span id="vp-sec-m">30</span>s</div>
+    <div style="margin-left:auto;display:flex;gap:4px;align-items:center"><button class="itin-btn" onclick="openItinerary()">&#9783;</button><button class="pp-btn" onclick="openPartner()">$</button><button class="ft-btn" onclick="openFriends()">&#9899;</button></div>
   </div>
   <!-- DESKTOP -->
   <div class="brand"><span class="brand-dot"></span>Hyper<span style="color:var(--yellow)">Local</span></div>
@@ -506,26 +497,13 @@ body.pub-mode .hero-wrap{display:none}
     <span class="zip-label">ZIP</span>
     <input class="zip-input" id="zip-input" value="10001" maxlength="5" type="text"/>
     <div class="tb-div"></div>
-    <div class="pulse-toggle-wrap" onclick="togglePulse()">
-      <span class="pulse-label" id="pulse-label">PULSE</span>
-      <div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div>
-    </div>
+    <div class="pulse-toggle-wrap" onclick="togglePulse()"><span class="pulse-label" id="pulse-label">PULSE</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div></div>
   </div>
   <div class="tb-div"></div>
-  <div class="pro-toggle-wrap" onclick="togglePro()">
-    <span class="pro-label" id="pro-label">PRO</span>
-    <div class="pro-track" id="pro-track"><div class="pro-thumb"></div></div>
-    <span class="pro-badge">SCREENER</span>
-  </div>
+  <div class="pro-toggle-wrap" onclick="togglePro()"><span class="pro-label" id="pro-label">PRO</span><div class="pro-track" id="pro-track"><div class="pro-thumb"></div></div><span class="pro-badge">SCREENER</span></div>
   <div class="tb-div"></div>
-  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
-    <svg id="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    <svg id="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/></svg>
-  </button>
-  <button class="terminal-mode-btn pub" id="tm-btn" onclick="toggleTerminalMode()">
-    <span class="tm-dot pub" id="tm-dot"></span>
-    <span id="tm-label">PUBLIC</span>
-  </button>
+  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()"><svg id="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/></svg></button>
+  <button class="terminal-mode-btn pub" id="tm-btn" onclick="toggleTerminalMode()"><span class="tm-dot pub" id="tm-dot"></span><span id="tm-label">PUBLIC</span></button>
   <div class="tb-div"></div>
   <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim)">NY METRO</span>
   <div class="datetime" id="datetime"></div>
@@ -535,124 +513,84 @@ body.pub-mode .hero-wrap{display:none}
   <div><div class="tenant-name" id="tenant-name">HyperLocal</div><div class="tenant-tagline" id="tenant-tagline">Your city, live</div></div>
   <div class="tenant-badge" id="tenant-badge">HYPERLOCAL</div>
 </div>
-<div class="pulse-banner" id="pulse-banner">
-  <div class="pulse-banner-dot"></div>
-  <span class="pulse-banner-text">PULSE ACTIVE &mdash; SCANNING <span class="pulse-banner-range">25-MILE RING</span> AROUND <span id="pulse-zip-display">10001</span></span>
-</div>
+<!-- SPRINT 13: URGENCY BAR -->
+<div class="urgency-bar" id="urgency-bar"><span class="urgency-tag">&#9650; URGENT</span><div class="urgency-scroller"><div class="urgency-track" id="urgency-track"></div></div></div>
+<div class="pulse-banner" id="pulse-banner"><div class="pulse-banner-dot"></div><span class="pulse-banner-text">PULSE ACTIVE &mdash; SCANNING <span class="pulse-banner-range">25-MILE RING</span> AROUND <span id="pulse-zip-display">10001</span></span></div>
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('terminal',this)">&#9651; TERMINAL <span class="tab-count" id="count-terminal">0</span></button>
   <button class="tab-btn" onclick="switchTab('afterdark',this)">&#9790; AFTER DARK <span class="tab-count" id="count-afterdark">0</span></button>
   <button class="tab-btn" onclick="switchTab('themenu',this)">&#9745; THE MENU <span class="tab-count" id="count-themenu">0</span></button>
   <button class="tab-btn" onclick="switchTab('theladder',this)">&#9650; THE LADDER <span class="tab-count" id="count-theladder">0</span></button>
 </div>
-<!-- VERTICAL PULSE CYCLE BAR -->
-<div class="pulse-cycle-bar" id="pulse-cycle-bar">
-  <div class="pcb-seg inactive" id="pcb-0" style="background:#0047FF"></div>
-  <div class="pcb-seg inactive" id="pcb-1" style="background:#9B5DE5"></div>
-  <div class="pcb-seg inactive" id="pcb-2" style="background:#FF8C00"></div>
-  <div class="pcb-seg inactive" id="pcb-3" style="background:#00E676"></div>
-</div>
+<div class="pulse-cycle-bar" id="pulse-cycle-bar"><div class="pcb-seg inactive" id="pcb-0" style="background:#0047FF"></div><div class="pcb-seg inactive" id="pcb-1" style="background:#9B5DE5"></div><div class="pcb-seg inactive" id="pcb-2" style="background:#FF8C00"></div><div class="pcb-seg inactive" id="pcb-3" style="background:#00E676"></div></div>
 <div class="tab-content active slide-in" id="tab-terminal">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">Headlines</span><span class="panel-hdr-badge">BREAKING</span></div><div class="news-scroll" id="news-terminal"></div><div class="weather-box" id="weather-terminal"></div></div>
-  <div class="center-stage">
-    <div class="hero-wrap"><div class="hero-aspect" id="hero-terminal"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip"><span class="live-pill" style="font-size:8px;padding:1px 5px"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE</span></div><div class="hero-title">Tonight's HyperLocal Rundown</div><div class="hero-sub">NIGHTLIFE &middot; FOOD &middot; JOBS</div></div></div></div>
-    <div class="stats-bar" id="stats-terminal"></div>
-    <div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Venue Map &mdash; <span id="map-zip">10001</span></span><span class="panel-hdr-badge" id="map-count">0 ACTIVE</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-terminal"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-terminal"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Posh VIP &mdash; Skip every line</div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div></div></div>
-  </div>
+  <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-terminal"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip"><span class="live-pill" style="font-size:8px;padding:1px 5px"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE</span></div><div class="hero-title">Tonight's HyperLocal Rundown</div><div class="hero-sub">NIGHTLIFE &middot; FOOD &middot; JOBS</div></div></div></div><div class="stats-bar" id="stats-terminal"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Venue Map &mdash; <span id="map-zip">10001</span></span><span class="panel-hdr-badge" id="map-count">0 ACTIVE</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-terminal"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-terminal"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Posh VIP &mdash; Skip every line</div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div></div></div></div>
   <div class="sidebar"><div class="panel-hdr"><span class="panel-hdr-title">All Events</span><span class="panel-hdr-badge" id="ev-count-terminal">0</span></div><div class="ev-list" id="evlist-terminal"></div></div>
 </div>
 <div class="tab-content slide-in" id="tab-afterdark">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">Nightlife Intel</span><span class="panel-hdr-badge" style="color:#C084FC">LIVE</span></div><div class="news-scroll" id="news-afterdark"></div><div class="weather-box" id="weather-afterdark"></div></div>
-  <div class="center-stage">
-    <div class="hero-wrap"><div class="hero-aspect" id="hero-afterdark"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#140A2A 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(155,93,229,.12);border-color:rgba(155,93,229,.45)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:#9B5DE5"><span class="live-dot"></span>LIVE</span><span class="anchor-name" style="color:#C084FC">AFTER DARK</span></div><div class="hero-title">NYC After Dark: Tonight's Hottest</div><div class="hero-sub">CLUBS &middot; LOUNGES &middot; ROOFTOPS</div></div></div></div>
-    <div class="stats-bar" id="stats-afterdark"></div>
-    <div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Nightlife Map</span><span class="panel-hdr-badge" style="color:#C084FC">AFTER DARK</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-afterdark"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-afterdark"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">VIP Table via Posh</div><a href="https://posh.vip" target="_blank" class="ad-cta">BOOK TABLE</a></div></div></div></div>
-  </div>
+  <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-afterdark"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#140A2A 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(155,93,229,.12);border-color:rgba(155,93,229,.45)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:#9B5DE5"><span class="live-dot"></span>LIVE</span><span class="anchor-name" style="color:#C084FC">AFTER DARK</span></div><div class="hero-title">NYC After Dark</div><div class="hero-sub">CLUBS &middot; LOUNGES &middot; ROOFTOPS</div></div></div></div><div class="stats-bar" id="stats-afterdark"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Nightlife Map</span><span class="panel-hdr-badge" style="color:#C084FC">AFTER DARK</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-afterdark"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-afterdark"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">VIP Table via Posh</div><a href="https://posh.vip" target="_blank" class="ad-cta">BOOK TABLE</a></div></div></div></div></div>
   <div class="sidebar"><div class="panel-hdr"><span class="panel-hdr-title">After Dark</span><span class="panel-hdr-badge" id="ev-count-afterdark">0</span></div><div class="ev-list" id="evlist-afterdark"></div></div>
 </div>
 <div class="tab-content slide-in" id="tab-themenu">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">Food &amp; Dining</span><span class="panel-hdr-badge" style="color:var(--orange)">OPEN</span></div><div class="news-scroll" id="news-themenu"></div><div class="weather-box" id="weather-themenu"></div></div>
-  <div class="center-stage">
-    <div class="hero-wrap"><div class="hero-aspect" id="hero-themenu"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#1A0E00 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.4)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:var(--orange)"><span class="live-dot"></span>LIVE</span><span class="anchor-name" style="color:var(--orange)">THE MENU</span></div><div class="hero-title">Tonight's Top Tables &amp; Pop-Ups</div><div class="hero-sub">RESTAURANTS &middot; TASTINGS</div></div></div></div>
-    <div class="stats-bar" id="stats-themenu"></div>
-    <div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Dining Map</span><span class="panel-hdr-badge" style="color:var(--orange)">THE MENU</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-themenu"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-themenu"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Reserve or walk in</div><a href="#" class="ad-cta">FIND TABLE</a></div></div></div></div>
-  </div>
+  <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-themenu"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#1A0E00 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.4)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:var(--orange)"><span class="live-dot"></span>LIVE</span><span class="anchor-name" style="color:var(--orange)">THE MENU</span></div><div class="hero-title">Tonight's Top Tables</div><div class="hero-sub">RESTAURANTS &middot; TASTINGS</div></div></div></div><div class="stats-bar" id="stats-themenu"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Dining Map</span><span class="panel-hdr-badge" style="color:var(--orange)">THE MENU</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-themenu"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-themenu"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Reserve or walk in</div><a href="#" class="ad-cta">FIND TABLE</a></div></div></div></div></div>
   <div class="sidebar"><div class="panel-hdr"><span class="panel-hdr-title">The Menu</span><span class="panel-hdr-badge" id="ev-count-themenu">0</span></div><div class="ev-list" id="evlist-themenu"></div></div>
 </div>
 <div class="tab-content slide-in" id="tab-theladder">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">Job Board</span><span class="panel-hdr-badge" style="color:var(--green)">HIRING</span></div><div class="news-scroll" id="news-theladder"></div><div class="weather-box" id="weather-theladder"></div></div>
-  <div class="center-stage">
-    <div class="hero-wrap"><div class="hero-aspect" id="hero-theladder"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#001A0E 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.35)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:var(--green);color:#000"><span class="live-dot" style="background:#000"></span>LIVE</span><span class="anchor-name" style="color:var(--green)">THE LADDER</span></div><div class="hero-title">23 Local Job Openings This Hour</div><div class="hero-sub">HOSPITALITY &middot; TECH &middot; GIGS</div></div></div></div>
-    <div class="stats-bar" id="stats-theladder"></div>
-    <div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Hiring Map</span><span class="panel-hdr-badge" style="color:var(--green)">23 OPEN</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-theladder"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-theladder"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Post a job via HyperLocal</div><a href="#" class="ad-cta">POST JOB</a></div></div></div></div>
-  </div>
+  <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-theladder"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#001A0E 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.35)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:var(--green);color:#000"><span class="live-dot" style="background:#000"></span>LIVE</span><span class="anchor-name" style="color:var(--green)">THE LADDER</span></div><div class="hero-title">23 Local Job Openings</div><div class="hero-sub">HOSPITALITY &middot; TECH &middot; GIGS</div></div></div></div><div class="stats-bar" id="stats-theladder"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Hiring Map</span><span class="panel-hdr-badge" style="color:var(--green)">23 OPEN</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-theladder"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-theladder"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Post a job via HyperLocal</div><a href="#" class="ad-cta">POST JOB</a></div></div></div></div></div>
   <div class="sidebar"><div class="sector-filter-bar" id="sector-filter-bar"><button class="sector-pill active" onclick="setSector('all',this)">ALL</button><button class="sector-pill" onclick="setSector('tech',this)">TECH</button><button class="sector-pill" onclick="setSector('hospitality',this)">HOSPITALITY</button><button class="sector-pill" onclick="setSector('corporate',this)">CORP</button><button class="sector-pill" onclick="setSector('medical',this)">MEDICAL</button></div><div class="panel-hdr"><span class="panel-hdr-title">The Ladder</span><span class="panel-hdr-badge" id="ev-count-theladder">0</span></div><div class="ev-list" id="evlist-theladder"></div></div>
 </div>
 <div class="ticker-wrap"><div class="ticker-tag" id="ticker-tag">LIVE</div><div class="ticker-scroller"><div class="ticker-track" id="ticker-track"></div></div></div>
 <div class="social-ticker-wrap"><div class="social-ticker-tag">&#9830; SOCIAL</div><div class="social-ticker-scroller"><div class="social-ticker-track" id="social-ticker-track"></div></div></div>
 </div>
 <!-- MOBILE STATUS BAR -->
-<div class="mobile-status-bar" id="mobile-status-bar">
-  <div class="msb-segment"><span class="msb-label">TEMP</span><span class="msb-val yl" id="msb-temp">62F</span></div>
-  <div class="msb-segment" style="flex:3"><span class="msb-val" id="msb-headline" style="font-size:8px;color:var(--text-dim)">Loading...</span></div>
-  <div class="msb-segment"><span class="msb-val bl" id="msb-count">0</span><span class="msb-label">&nbsp;EVT</span></div>
-</div>
-<!-- EQUIP FOR EVENT MODAL -->
-<div class="equip-modal" id="equip-modal">
-  <div class="equip-sidecar">
-    <div class="equip-hdr"><div><div class="equip-title">&#127381; EQUIP FOR EVENT</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:2px" id="equip-event-sub">Select an event</div></div><button class="equip-close" onclick="closeEquipModal()">&#10005;</button></div>
-    <div class="equip-event-chip"><div class="equip-event-name" id="equip-event-name">&mdash;</div><div id="equip-venue-sub" style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">&mdash;</div></div>
-    <div class="equip-tabs"><button class="equip-tab-btn active" id="equip-tab-look" onclick="setEquipTab('look')">&#128252; THE LOOK</button><button class="equip-tab-btn" id="equip-tab-gear" onclick="setEquipTab('gear')">&#127297; GET READY</button></div>
-    <div class="equip-scroll" id="equip-products"></div>
-    <div class="equip-footer">&#9733; Affiliate links support HyperLocal &middot; STRIPT &times; Amazon &middot; 50/50 split</div>
+<div class="mobile-status-bar" id="mobile-status-bar"><div class="msb-segment"><span class="msb-label">TEMP</span><span class="msb-val yl" id="msb-temp">62F</span></div><div class="msb-segment" style="flex:3"><span class="msb-val" id="msb-headline" style="font-size:8px;color:var(--text-dim)">Loading...</span></div><div class="msb-segment"><span class="msb-val bl" id="msb-count">0</span><span class="msb-label">&nbsp;EVT</span></div></div>
+<!-- SHOP THE LOOK MODAL -->
+<div class="shop-modal" id="shop-modal">
+  <div class="shop-sidecar">
+    <div class="shop-hdr"><div><div class="shop-title">&#128722; SHOP THE LOOK</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:2px" id="shop-event-sub">Select an event</div></div><button class="shop-close" onclick="closeShopModal()">&#10005;</button></div>
+    <div class="shop-event-chip"><div class="shop-event-name" id="shop-event-name">&mdash;</div><div id="shop-venue-sub" style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">&mdash;</div></div>
+    <div class="shop-tabs"><button class="shop-tab-btn active" id="shop-tab-look" onclick="setShopTab('look')">&#128252; THE LOOK</button><button class="shop-tab-btn" id="shop-tab-gear" onclick="setShopTab('gear')">&#127297; GET READY</button></div>
+    <div class="shop-scroll" id="shop-products"></div>
+    <div class="shop-footer">&#9733; Affiliate links support HyperLocal &middot; STRIPT &times; Amazon &middot; 50/50 split</div>
   </div>
 </div>
-<div id="equip-overlay" style="display:none;position:fixed;inset:0;z-index:249;background:rgba(0,0,0,.25)" onclick="closeEquipModal()"></div>
+<div id="shop-overlay" style="display:none;position:fixed;inset:0;z-index:249;background:rgba(0,0,0,.25)" onclick="closeShopModal()"></div>
 <!-- ITINERARY -->
-<div class="itinerary-panel" id="itinerary-panel">
-  <div class="itin-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em" id="itin-title">&#9783; LIVE ITINERARY</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:1px" id="itin-sub">Next 7 Days</div></div><button class="itin-close" onclick="closeItinerary()">&#10005;</button></div>
-  <div class="itin-scroll" id="itin-scroll"></div>
-  <div class="itin-footer"><button class="ics-btn" onclick="exportICS()">&#8645; SYNC TO CALENDAR (.ICS)</button></div>
-</div>
+<div class="itinerary-panel" id="itinerary-panel"><div class="itin-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em" id="itin-title">&#9783; LIVE ITINERARY</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:1px" id="itin-sub">Next 7 Days</div></div><button class="itin-close" onclick="closeItinerary()">&#10005;</button></div><div class="itin-scroll" id="itin-scroll"></div><div class="itin-footer"><button class="ics-btn" onclick="exportICS()">&#8645; SYNC TO CALENDAR (.ICS)</button></div></div>
 <div id="itin-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.3)" onclick="closeItinerary()"></div>
 <!-- PARTNER -->
-<div class="partner-panel" id="partner-panel">
-  <div class="pp-hdr"><div class="pp-hdr-row"><div class="pp-hdr-title">$ PARTNER PORTAL</div><button class="pp-close" onclick="closePartner()">&#10005;</button></div><div class="rep-row"><div><div class="rep-num" id="rep-score">847</div><div class="rep-meta">REP SCORE</div></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7px;color:var(--text-muted);margin-bottom:2px"><span>PARTNER</span><span>1000=INFLUENCER</span></div><div class="rep-bar"><div class="rep-bar-fill" style="width:84.7%"></div></div></div></div></div>
-  <div class="pp-scroll"><div class="pp-section"><div class="pp-section-title">LIVE EARNINGS</div><div class="earn-total" id="earn-total">$1,247.50</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-top:1px">This Month &middot; 50/50 Split</div><div class="earn-split"><div class="earn-split-item"><div class="earn-split-label">AFFILIATE</div><div class="earn-split-val" id="earn-aff">$623.75</div></div><div class="earn-split-item"><div class="earn-split-label">TICKETS</div><div class="earn-split-val" id="earn-tix">$498.00</div></div><div class="earn-split-item"><div class="earn-split-label">MERCH</div><div class="earn-split-val" id="earn-merch">$125.75</div></div></div></div><div class="pp-section"><div class="pp-section-title">SPONSOR CTR</div><table class="dtable" id="ctr-table"></table></div><div class="pp-section"><div class="pp-section-title">MILESTONES</div><div id="ms-list"></div></div><div class="pp-section"><div class="pp-section-title">AFFILIATE LINK</div><div class="aff-box"><span class="aff-text" id="aff-link">hyperlocal.app/ref=user123</span><button class="aff-copy" onclick="copyAff()">COPY</button></div></div><div class="pp-section"><div class="pp-section-title">CONVERSIONS</div><table class="dtable" id="conv-table"></table></div></div>
-</div>
-<div id="pp-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.2)" onclick="closePartner()"></div>
+<div class="partner-panel" id="partner-panel"><div class="pp-hdr"><div class="pp-hdr-row"><div class="pp-hdr-title">$ PARTNER PORTAL</div><button class="pp-close" onclick="closePartner()">&#10005;</button></div><div class="rep-row"><div><div class="rep-num" id="rep-score">847</div><div class="rep-meta">REP SCORE</div></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7px;color:var(--text-muted);margin-bottom:2px"><span>PARTNER</span><span>1000=INFLUENCER</span></div><div class="rep-bar"><div class="rep-bar-fill" style="width:84.7%"></div></div></div></div></div><div class="pp-scroll"><div class="pp-section"><div class="pp-section-title">LIVE EARNINGS</div><div class="earn-total" id="earn-total">$1,247.50</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-top:1px">This Month &middot; 50/50 Split</div><div class="earn-split"><div class="earn-split-item"><div class="earn-split-label">AFFILIATE</div><div class="earn-split-val" id="earn-aff">$623.75</div></div><div class="earn-split-item"><div class="earn-split-label">TICKETS</div><div class="earn-split-val" id="earn-tix">$498.00</div></div><div class="earn-split-item"><div class="earn-split-label">MERCH</div><div class="earn-split-val" id="earn-merch">$125.75</div></div></div></div><div class="pp-section"><div class="pp-section-title">SPONSOR CTR</div><table class="dtable" id="ctr-table"></table></div><div class="pp-section"><div class="pp-section-title">MILESTONES</div><div id="ms-list"></div></div><div class="pp-section"><div class="pp-section-title">AFFILIATE LINK</div><div class="aff-box"><span class="aff-text" id="aff-link">hyperlocal.app/ref=user123</span><button class="aff-copy" onclick="copyAff()">COPY</button></div></div><div class="pp-section"><div class="pp-section-title">CONVERSIONS</div><table class="dtable" id="conv-table"></table></div></div></div>
+<div id="pp-overlay" style="display:none;position:fixed;inset:0;z-index:219;background:rgba(0,0,0,.2)" onclick="closePartner()"></div>
 <!-- FRIENDS -->
-<div class="friends-panel" id="friends-panel">
-  <div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div>
-  <div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span><span style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-left:4px">Share location</span></div>
-  <div class="ft-scroll" id="friends-scroll"></div>
-</div>
+<div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span><span style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-left:4px">Share location</span></div><div class="ft-scroll" id="friends-scroll"></div></div>
 <div id="ft-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.2)" onclick="closeFriends()"></div>
 <!-- LOOKBOOK -->
-<div class="lookbook-modal" id="lookbook-modal">
-  <div class="lookbook-sidecar"><div class="lb-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em">&#127381; SHOP THE LOOK</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:1px" id="lb-brand">Powered by STRIPT</div></div><button class="lb-close" onclick="closeLookbook()">&#10005;</button></div><div style="margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:5px 9px"><div style="font-size:10px;font-weight:600;margin-bottom:1px" id="lb-event-name">Event</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim)" id="lb-event-sub">Loading...</div></div><div style="font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;padding:7px 14px 3px;border-top:1px solid var(--border)">CURATED FOR THIS EVENT</div><div class="lb-scroll" id="lb-products"></div><div style="font-family:var(--mono);font-size:7px;color:var(--text-muted);text-align:center;padding:8px 14px;border-top:1px solid var(--border);flex-shrink:0">&#9733; Affiliate links support HyperLocal &middot; 50/50 split</div></div>
-</div>
+<div class="lookbook-modal" id="lookbook-modal"><div class="lookbook-sidecar"><div class="lb-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em">&#127381; SHOP THE LOOK</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:1px" id="lb-brand">Powered by STRIPT</div></div><button class="lb-close" onclick="closeLookbook()">&#10005;</button></div><div style="margin:8px 14px;background:var(--bg3);border:1px solid var(--border-blue);border-radius:2px;padding:5px 9px"><div style="font-size:10px;font-weight:600;margin-bottom:1px" id="lb-event-name">Event</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim)" id="lb-event-sub">Loading...</div></div><div class="lb-scroll" id="lb-products"></div><div style="font-family:var(--mono);font-size:7px;color:var(--text-muted);text-align:center;padding:8px 14px;border-top:1px solid var(--border);flex-shrink:0">&#9733; Affiliate links support HyperLocal &middot; 50/50 split</div></div></div>
 <!-- AMZ SIDEBAR -->
-<div class="amz-sidebar" id="amz-sidebar">
-  <div class="amz-hdr"><div><div class="amz-hdr-title">&#127297; GET READY</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">Amazon picks for your event</div></div><button class="amz-close" onclick="closeAmzSidebar()">&#10005;</button></div>
-  <div class="amz-event-chip"><div class="amz-event-name" id="amz-event-name">Event</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="amz-event-sub">Loading...</div></div>
-  <div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;padding:8px 14px 4px;border-top:1px solid var(--border)">RECOMMENDED</div>
-  <div class="amz-products" id="amz-products"></div>
-  <div style="padding:10px 14px;border-top:1px solid var(--border);flex-shrink:0"><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center">&#9733; Prime eligible &middot; Affiliate links</div></div>
-</div>
+<div class="amz-sidebar" id="amz-sidebar"><div class="amz-hdr"><div><div class="amz-hdr-title">&#127297; GET READY</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim)">Amazon picks for your event</div></div><button class="amz-close" onclick="closeAmzSidebar()">&#10005;</button></div><div class="amz-event-chip"><div class="amz-event-name" id="amz-event-name">Event</div><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="amz-event-sub">Loading...</div></div><div class="amz-products" id="amz-products"></div><div style="padding:10px 14px;border-top:1px solid var(--border);flex-shrink:0"><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center">&#9733; Prime eligible &middot; Affiliate links</div></div></div>
 <div id="amz-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.3)" onclick="closeAmzSidebar()"></div>
-<!-- GEO ALERT -->
+<!-- GEO -->
 <div class="geo-alert" id="geo-alert"><div class="geo-alert-dot"></div><span id="geo-alert-text">You've arrived! Tap to Go Live.</span><button class="geo-accept-btn" onclick="acceptGeoAlert()">GO LIVE</button></div>
 <!-- MINI MAP MODAL -->
-<div class="modal-bg" id="modal-bg">
-  <div class="mini-map-modal"><div class="mm-hdr"><div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Venue Location</div><div class="mm-title" id="mm-title"></div></div><button class="mm-close" id="mm-close">&#10005;</button></div><div class="mm-map"><div class="mm-map-grid"></div><div class="mm-pin"><div class="mm-pin-ring"></div><div class="mm-pin-dot"></div><div class="mm-pin-tail"></div></div><div class="mm-label" id="mm-venue-label">Venue</div></div><div class="mm-body"><div class="mm-detail"><span class="mm-dl">ADDRESS</span><span class="mm-dv" id="mm-address">-</span></div><div class="mm-detail"><span class="mm-dl">NEIGHBORHOOD</span><span class="mm-dv" id="mm-neighborhood">-</span></div><div class="mm-detail" style="border:none;padding:0;margin:0"><span class="mm-dl">DISTANCE</span><span class="mm-dv" id="mm-distance" style="color:var(--green)">-</span></div><div class="mm-btns"><a class="mm-btn mm-btn-primary" id="mm-directions" href="#" target="_blank">GET DIRECTIONS &#8599;</a><button class="mm-btn mm-btn-secondary" id="mm-close-btn">CLOSE</button></div></div></div>
+<div class="modal-bg" id="modal-bg"><div class="mini-map-modal"><div class="mm-hdr"><div><div style="font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Venue Location</div><div class="mm-title" id="mm-title"></div></div><button class="mm-close" id="mm-close">&#10005;</button></div><div class="mm-map"><div class="mm-map-grid"></div><div class="mm-pin"><div class="mm-pin-ring"></div><div class="mm-pin-dot"></div><div class="mm-pin-tail"></div></div><div class="mm-label" id="mm-venue-label">Venue</div></div><div class="mm-body"><div class="mm-detail"><span class="mm-dl">ADDRESS</span><span class="mm-dv" id="mm-address">-</span></div><div class="mm-detail"><span class="mm-dl">NEIGHBORHOOD</span><span class="mm-dv" id="mm-neighborhood">-</span></div><div class="mm-detail" style="border:none;padding:0;margin:0"><span class="mm-dl">DISTANCE</span><span class="mm-dv" id="mm-distance" style="color:var(--green)">-</span></div><div class="mm-btns"><a class="mm-btn mm-btn-primary" id="mm-directions" href="#" target="_blank">GET DIRECTIONS &#8599;</a><button class="mm-btn mm-btn-secondary" id="mm-close-btn">CLOSE</button></div></div></div></div>
+<!-- BLOOMBERG BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="bnav-item active" id="bnav-home" onclick="bnavGo('home',this)"><div class="bnav-icon"><div class="bnav-b-logo">B</div></div><span class="bnav-label">HOME</span></button>
+  <button class="bnav-item" id="bnav-markets" onclick="bnavGo('markets',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><span class="bnav-label">MARKETS</span></button>
+  <button class="bnav-item" id="bnav-watch" onclick="bnavGo('watch',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/><circle cx="19" cy="7" r="3"/></svg></div><span class="bnav-label">WATCH</span></button>
+  <button class="bnav-item" id="bnav-stream" onclick="bnavGo('stream',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="bnav-label">STREAM</span></button>
+  <button class="bnav-item" id="bnav-menu" onclick="bnavGo('menu',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><span class="bnav-label">MENU</span></button>
 </div>
+<!-- STREAM PANEL -->
+<div class="stream-panel" id="stream-panel"><div class="stream-hdr"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em">&#9654; HYPERLOCAL STREAM</div><button class="stream-close" onclick="closeStream()">&#10005;</button></div><div class="stream-body" id="stream-body"></div></div>
 <script>
 const TABS=["terminal","afterdark","themenu","theladder"];
 let currentTab="terminal",currentZip="10001",pulseOn=false;
-
-const ALL_EVENTS={
-"10001":[
+const ALL_EVENTS={"10001":[
 {id:1,name:"INDUSTRY TAKEOVER",venue:"Marquee NYC",addr:"289 10th Ave",hood:"Chelsea",time:"10:00 PM",price:"$45",avail:12,trending:true,featured:false,tags:["EDM","OPEN BAR"],genre:"Electronic",cap:800,vertical:"afterdark",source:"posh"},
 {id:2,name:"Jazz & Cocktails",venue:"Village Vanguard",addr:"178 7th Ave S",hood:"West Village",time:"8:30 PM",price:"$28",avail:65,trending:false,featured:true,tags:["JAZZ","SEATED"],genre:"Jazz",cap:120,vertical:"afterdark",source:"eventbrite"},
 {id:3,name:"Rooftop Sessions Vol.11",venue:"230 Fifth",addr:"230 5th Ave",hood:"Flatiron",time:"9:00 PM",price:"$35",avail:33,trending:true,featured:false,tags:["ROOFTOP","DJ SET"],genre:"House",cap:500,vertical:"afterdark",source:"posh"},
@@ -669,41 +607,31 @@ const ALL_EVENTS={
 {id:14,name:"Line Cook",venue:"Gramercy Tavern",addr:"42 E 20th St",hood:"Gramercy",time:"FULL TIME",price:"$22/hr",avail:100,trending:false,featured:false,tags:["KITCHEN","BENEFITS"],genre:"Food & Bev",cap:1,vertical:"theladder",source:"eventbrite"},
 {id:15,name:"Door Host",venue:"Output Brooklyn",addr:"74 Wythe Ave",hood:"Williamsburg",time:"THUR-SAT",price:"$20/hr",avail:100,trending:false,featured:false,tags:["PART-TIME","NIGHTS"],genre:"Hospitality",cap:1,vertical:"theladder",source:"posh"},
 {id:16,name:"Social Media Manager",venue:"HyperLocal HQ",addr:"Remote NYC",hood:"Remote",time:"FULL TIME",price:"$65k",avail:100,trending:true,featured:true,tags:["TECH","REMOTE-OK"],genre:"Marketing",cap:1,vertical:"theladder",source:"luma"}
-],
-"90210":[
+],"90210":[
 {id:20,name:"Sunset Sessions",venue:"Mondrian Rooftop",addr:"8440 Sunset Blvd",hood:"West Hollywood",time:"8:00 PM",price:"$60",avail:30,trending:true,featured:true,tags:["POOL","DJ"],genre:"House",cap:400,vertical:"afterdark",source:"posh"},
 {id:21,name:"Beverly Hills Gala",venue:"The Beverly Hilton",addr:"9876 Wilshire Blvd",hood:"Beverly Hills",time:"7:30 PM",price:"$220",avail:15,trending:false,featured:true,tags:["BLACK TIE","CHARITY"],genre:"Gala",cap:500,vertical:"afterdark",source:"eventbrite"},
 {id:22,name:"Nobu Omakase",venue:"Nobu Malibu",addr:"22706 PCH",hood:"Malibu",time:"7:00 PM",price:"$180",avail:10,trending:true,featured:true,tags:["OMAKASE","OCEAN VIEW"],genre:"Japanese",cap:20,vertical:"themenu",source:"luma"},
 {id:23,name:"Talent Agency Intern",venue:"WME Beverly Hills",addr:"9601 Wilshire Blvd",hood:"Beverly Hills",time:"FULL TIME",price:"$20/hr",avail:100,trending:false,featured:false,tags:["ENTERTAINMENT","ENTRY"],genre:"Entertainment",cap:1,vertical:"theladder",source:"eventbrite"}
-],
-"60601":[
+],"60601":[
 {id:30,name:"Deep House Night",venue:"Smart Bar",addr:"3730 N Clark St",hood:"Wrigleyville",time:"10:30 PM",price:"$25",avail:45,trending:true,featured:false,tags:["HOUSE","18+"],genre:"House",cap:400,vertical:"afterdark",source:"posh"},
 {id:31,name:"Chicago Blues Jam",venue:"Buddy Guys Legends",addr:"700 S Wabash Ave",hood:"South Loop",time:"8:00 PM",price:"$18",avail:80,trending:false,featured:true,tags:["BLUES","LIVE"],genre:"Blues",cap:150,vertical:"afterdark",source:"eventbrite"},
 {id:32,name:"Alinea Dinner",venue:"Alinea",addr:"1723 N Halsted St",hood:"Lincoln Park",time:"6:30 PM",price:"$395",avail:5,trending:true,featured:true,tags:["3-STAR","MICHELIN"],genre:"Fine Dining",cap:68,vertical:"themenu",source:"luma"},
 {id:33,name:"Loop Bartender",venue:"Aviary Chicago",addr:"955 W Fulton Mkt",hood:"West Loop",time:"THUR-SUN",price:"$26/hr",avail:100,trending:false,featured:false,tags:["MIXOLOGY","TIPS"],genre:"Hospitality",cap:1,vertical:"theladder",source:"posh"}
-],
-default:[
+],default:[
 {id:99,name:"Open Night",venue:"Local Venue",addr:"Main St",hood:"Downtown",time:"9:00 PM",price:"$20",avail:50,trending:false,featured:false,tags:["MUSIC"],genre:"Mixed",cap:200,vertical:"afterdark",source:"posh"},
 {id:100,name:"Weekend Pop-Up",venue:"Community Kitchen",addr:"5th Ave",hood:"Midtown",time:"12:00 PM",price:"FREE",avail:100,trending:false,featured:false,tags:["FOOD","LOCAL"],genre:"Casual",cap:100,vertical:"themenu",source:"luma"}
 ]};
-
 const PULSE_EXTRA=[
 {id:200,name:"Rooftop at The Edge",venue:"The Edge NYC",addr:"30 Hudson Yards",hood:"Hudson Yards",time:"9:00 PM",price:"$40",avail:55,trending:true,featured:false,tags:["VIEWS","25-MILE"],genre:"Lounge",cap:400,vertical:"afterdark",source:"posh"},
 {id:201,name:"Jersey City Jazz",venue:"Pet Shop NJ",addr:"254 1st St",hood:"Jersey City",time:"8:30 PM",price:"$15",avail:70,trending:false,featured:false,tags:["JAZZ","25-MILE"],genre:"Jazz",cap:100,vertical:"afterdark",source:"eventbrite"},
-{id:202,name:"Hackensack Supper Club",venue:"The River Palm",addr:"41 River Rd",hood:"Edgewater NJ",time:"7:00 PM",price:"$75",avail:20,trending:false,featured:false,tags:["SUPPER CLUB","25-MILE"],genre:"American",cap:150,vertical:"themenu",source:"luma"},
 {id:204,name:"Brooklyn Bowl Party",venue:"Brooklyn Bowl",addr:"61 Wythe Ave",hood:"Williamsburg",time:"10:00 PM",price:"$30",avail:35,trending:true,featured:false,tags:["BOWLING","LIVE"],genre:"Social",cap:600,vertical:"afterdark",source:"posh"},
 {id:205,name:"Astoria Food Crawl",venue:"30th Ave Strip",addr:"30th Ave",hood:"Astoria Queens",time:"6:00 PM",price:"$25",avail:60,trending:false,featured:false,tags:["FOOD CRAWL","25-MILE"],genre:"Casual",cap:50,vertical:"themenu",source:"eventbrite"}
 ];
-
-const NEWS_DB={terminal:[{cat:"TRENDING",cc:"#FACC15",h:"Marquee sellout — under 12 tickets remaining",t:"3m ago"},{cat:"JOBS",cc:"#00E676",h:"HyperLocal HQ hiring Social Media Manager — $65k",t:"8m ago"},{cat:"FOOD",cc:"#FF8C00",h:"Alinea adds 4 walk-in seats tonight",t:"15m ago"},{cat:"ALERT",cc:"#FF3355",h:"MTA L train delays 20-min gaps through midnight",t:"22m ago"},{cat:"CITY",cc:"#7AABFF",h:"Mayor extends rooftop venue hours through Labor Day",t:"45m ago"}],afterdark:[{cat:"HOT",cc:"#FACC15",h:"Output Brooklyn just activated laser rig for NEON DREAMS",t:"2m ago"},{cat:"ALERT",cc:"#FF3355",h:"Marquee: dress code enforced — no sneakers after 10PM",t:"9m ago"},{cat:"TRENDING",cc:"#9B5DE5",h:"SOBs Hip-Hop Thursday — DJ Mustard confirmed",t:"18m ago"},{cat:"DEALS",cc:"#7AABFF",h:"230 Fifth offering 2-for-1 cocktails until 10PM",t:"35m ago"}],themenu:[{cat:"HOT",cc:"#FF8C00",h:"Gramercy Tavern wine dinner — last 3 seats remain",t:"5m ago"},{cat:"TRENDING",cc:"#FACC15",h:"Robertas Smash Burger Battle sold out",t:"14m ago"},{cat:"REVIEW",cc:"#00E676",h:"Le Bain Rooftop Brunch gets 4 stars from Eater NY",t:"31m ago"}],theladder:[{cat:"HOT",cc:"#00E676",h:"HyperLocal Social Media Manager — 24 applicants already",t:"4m ago"},{cat:"NEW",cc:"#7AABFF",h:"Event photographer gig posted — $35/hr weekends",t:"11m ago"},{cat:"TRENDING",cc:"#FACC15",h:"Hospitality sector adding 300 jobs this month",t:"28m ago"}]};
-
-const TICKER_DB={terminal:[{k:"TICKETS SOLD",v:"1,247",c:"t-up"},{k:"NYC TEMP",v:"62F",c:"t-yl"},{k:"MARQUEE",v:"12 LEFT",c:"t-dn"},{k:"JOBS",v:"23 OPEN",c:"t-up"},{k:"OUTPUT BK",v:"5 SEATS",c:"t-dn"},{k:"MTA L",v:"DELAYED",c:"t-dn"},{k:"HYPERLOCAL",v:"LIVE",c:"t-bl"}],afterdark:[{k:"VENUES LIVE",v:"34",c:"t-up"},{k:"MARQUEE",v:"12 TICKETS",c:"t-dn"},{k:"OUTPUT BK",v:"5 SEATS",c:"t-dn"},{k:"230 FIFTH",v:"OPEN",c:"t-up"},{k:"DJ MUSTARD",v:"SOBs 9:30P",c:"t-yl"},{k:"AFTER DARK",v:"LIVE",c:"t-bl"}],themenu:[{k:"RESERVATIONS",v:"142 MADE",c:"t-up"},{k:"ALINEA",v:"5 SEATS",c:"t-dn"},{k:"SUSHI NOZ",v:"8 SEATS",c:"t-dn"},{k:"GRAMERCY",v:"25 AVAIL",c:"t-up"},{k:"FOOD DESK",v:"LIVE",c:"t-bl"}],theladder:[{k:"OPEN JOBS",v:"23 ACTIVE",c:"t-up"},{k:"BARTENDER",v:"$28/HR",c:"t-yl"},{k:"SOCIAL MGR",v:"$65K REMOTE",c:"t-up"},{k:"JOBS DESK",v:"LIVE",c:"t-bl"}]};
-
+const NEWS_DB={terminal:[{cat:"TRENDING",cc:"#FACC15",h:"Marquee sellout — under 12 tickets remaining",t:"3m ago"},{cat:"JOBS",cc:"#00E676",h:"HyperLocal HQ hiring Social Media Manager — $65k",t:"8m ago"},{cat:"FOOD",cc:"#FF8C00",h:"Alinea adds 4 walk-in seats tonight",t:"15m ago"},{cat:"ALERT",cc:"#FF3355",h:"MTA L train delays 20-min gaps through midnight",t:"22m ago"}],afterdark:[{cat:"HOT",cc:"#FACC15",h:"Output Brooklyn just activated laser rig for NEON DREAMS",t:"2m ago"},{cat:"ALERT",cc:"#FF3355",h:"Marquee: dress code enforced — no sneakers after 10PM",t:"9m ago"},{cat:"TRENDING",cc:"#9B5DE5",h:"SOBs Hip-Hop Thursday — DJ Mustard confirmed",t:"18m ago"}],themenu:[{cat:"HOT",cc:"#FF8C00",h:"Gramercy Tavern wine dinner — last 3 seats remain",t:"5m ago"},{cat:"TRENDING",cc:"#FACC15",h:"Robertas Smash Burger Battle sold out",t:"14m ago"}],theladder:[{cat:"HOT",cc:"#00E676",h:"HyperLocal Social Media Manager — 24 applicants already",t:"4m ago"},{cat:"NEW",cc:"#7AABFF",h:"Event photographer gig posted — $35/hr weekends",t:"11m ago"}]};
+const TICKER_DB={terminal:[{k:"TICKETS SOLD",v:"1,247",c:"t-up"},{k:"NYC TEMP",v:"62F",c:"t-yl"},{k:"MARQUEE",v:"12 LEFT",c:"t-dn"},{k:"JOBS",v:"23 OPEN",c:"t-up"},{k:"HYPERLOCAL",v:"LIVE",c:"t-bl"}],afterdark:[{k:"VENUES LIVE",v:"34",c:"t-up"},{k:"MARQUEE",v:"12 TICKETS",c:"t-dn"},{k:"OUTPUT BK",v:"5 SEATS",c:"t-dn"},{k:"AFTER DARK",v:"LIVE",c:"t-bl"}],themenu:[{k:"RESERVATIONS",v:"142 MADE",c:"t-up"},{k:"ALINEA",v:"5 SEATS",c:"t-dn"},{k:"FOOD DESK",v:"LIVE",c:"t-bl"}],theladder:[{k:"OPEN JOBS",v:"23 ACTIVE",c:"t-up"},{k:"BARTENDER",v:"$28/HR",c:"t-yl"},{k:"JOBS DESK",v:"LIVE",c:"t-bl"}]};
 const WEATHER_DB={"10001":{temp:"62F",cond:"Clear",wind:"W 7mph",hum:"48%"},"90210":{temp:"74F",cond:"Partly Cloudy",wind:"SW 4mph",hum:"32%"},"60601":{temp:"55F",cond:"Overcast",wind:"N 12mph",hum:"61%"},default:{temp:"65F",cond:"Checking...",wind:"--",hum:"--"}};
-const STATS_DB={terminal:[{l:"TICKETS SOLD",v:"1,247",ch:"+89",c:"up"},{l:"EVENTS LIVE",v:"34",ch:"+7",c:"up"},{l:"JOB LISTINGS",v:"23",ch:"6 new",c:"yl"},{l:"AVG TICKET",v:"$38",ch:"up $2",c:"up"},{l:"POSH DEALS",v:"4",ch:"tonight",c:"bl"}],afterdark:[{l:"VENUES OPEN",v:"34",ch:"+7",c:"up"},{l:"TICKETS LEFT",v:"130",ch:"fast",c:"yl"},{l:"VIP TABLES",v:"3",ch:"avail",c:"up"},{l:"AVG ENTRY",v:"$38",ch:"up $2",c:"up"},{l:"HOT TONIGHT",v:"OUTPUT BK",ch:"techno",c:"bl"}],themenu:[{l:"RESERVATIONS",v:"142",ch:"+28",c:"up"},{l:"TABLES OPEN",v:"87",ch:"tonight",c:"up"},{l:"AVG PRICE",v:"$95",ch:"per head",c:"yl"},{l:"TRENDING",v:"OMAKASE",ch:"rising",c:"up"}],theladder:[{l:"OPEN JOBS",v:"23",ch:"6 new",c:"up"},{l:"AVG WAGE",v:"$26/hr",ch:"up $1.50",c:"up"},{l:"HOSPITALITY",v:"14 ROLES",ch:"most",c:"yl"},{l:"TOP PAY",v:"$65k",ch:"social mgr",c:"bl"}]};
-
-const MAP_DOTS={terminal:[{x:"28%",y:"35%",r:8,color:"#00E676",label:"Output BK"},{x:"55%",y:"42%",r:11,color:"#FACC15",label:"Marquee"},{x:"40%",y:"55%",r:6,color:"#7AABFF",label:"Village V."},{x:"65%",y:"30%",r:9,color:"#FF3355",label:"230 Fifth"},{x:"72%",y:"60%",r:7,color:"#00E676",label:"SOBs"},{x:"50%",y:"68%",r:8,color:"#FF8C00",label:"Gramercy"},{x:"35%",y:"25%",r:6,color:"#FF8C00",label:"Le Bain"}],afterdark:[{x:"28%",y:"35%",r:8,color:"#9B5DE5",label:"Output BK"},{x:"55%",y:"42%",r:12,color:"#FACC15",label:"Marquee"},{x:"40%",y:"55%",r:6,color:"#C084FC",label:"Village V."},{x:"65%",y:"30%",r:10,color:"#FF3355",label:"230 Fifth"},{x:"72%",y:"60%",r:7,color:"#9B5DE5",label:"SOBs"},{x:"35%",y:"25%",r:6,color:"#C084FC",label:"Le Bain"}],themenu:[{x:"50%",y:"68%",r:10,color:"#FF8C00",label:"Gramercy"},{x:"35%",y:"25%",r:8,color:"#FF8C00",label:"Le Bain"},{x:"60%",y:"72%",r:10,color:"#FF8C00",label:"Robertas"},{x:"70%",y:"40%",r:7,color:"#FF8C00",label:"Sushi Noz"}],theladder:[{x:"22%",y:"50%",r:9,color:"#00E676",label:"HyperLocal HQ"},{x:"55%",y:"42%",r:7,color:"#00E676",label:"Marquee"},{x:"50%",y:"68%",r:7,color:"#00E676",label:"Gramercy"},{x:"28%",y:"35%",r:6,color:"#00E676",label:"Output BK"}]};
-
+const STATS_DB={terminal:[{l:"TICKETS SOLD",v:"1,247",ch:"+89",c:"up"},{l:"EVENTS LIVE",v:"34",ch:"+7",c:"up"},{l:"JOB LISTINGS",v:"23",ch:"6 new",c:"yl"},{l:"AVG TICKET",v:"$38",ch:"up $2",c:"up"},{l:"POSH DEALS",v:"4",ch:"tonight",c:"bl"}],afterdark:[{l:"VENUES OPEN",v:"34",ch:"+7",c:"up"},{l:"TICKETS LEFT",v:"130",ch:"fast",c:"yl"},{l:"VIP TABLES",v:"3",ch:"avail",c:"up"},{l:"AVG ENTRY",v:"$38",ch:"up $2",c:"up"}],themenu:[{l:"RESERVATIONS",v:"142",ch:"+28",c:"up"},{l:"TABLES OPEN",v:"87",ch:"tonight",c:"up"},{l:"AVG PRICE",v:"$95",ch:"per head",c:"yl"}],theladder:[{l:"OPEN JOBS",v:"23",ch:"6 new",c:"up"},{l:"AVG WAGE",v:"$26/hr",ch:"up $1.50",c:"up"},{l:"TOP PAY",v:"$65k",ch:"social mgr",c:"bl"}]};
+const MAP_DOTS={terminal:[{x:"28%",y:"35%",r:8,color:"#00E676",label:"Output BK"},{x:"55%",y:"42%",r:11,color:"#FACC15",label:"Marquee"},{x:"40%",y:"55%",r:6,color:"#7AABFF",label:"Village V."},{x:"65%",y:"30%",r:9,color:"#FF3355",label:"230 Fifth"},{x:"72%",y:"60%",r:7,color:"#00E676",label:"SOBs"},{x:"50%",y:"68%",r:8,color:"#FF8C00",label:"Gramercy"},{x:"35%",y:"25%",r:6,color:"#FF8C00",label:"Le Bain"}],afterdark:[{x:"28%",y:"35%",r:8,color:"#9B5DE5",label:"Output BK"},{x:"55%",y:"42%",r:12,color:"#FACC15",label:"Marquee"},{x:"40%",y:"55%",r:6,color:"#C084FC",label:"Village V."},{x:"65%",y:"30%",r:10,color:"#FF3355",label:"230 Fifth"},{x:"72%",y:"60%",r:7,color:"#9B5DE5",label:"SOBs"},{x:"35%",y:"25%",r:6,color:"#C084FC",label:"Le Bain"}],themenu:[{x:"50%",y:"68%",r:10,color:"#FF8C00",label:"Gramercy"},{x:"35%",y:"25%",r:8,color:"#FF8C00",label:"Le Bain"},{x:"60%",y:"72%",r:10,color:"#FF8C00",label:"Robertas"},{x:"70%",y:"40%",r:7,color:"#FF8C00",label:"Sushi Noz"}],theladder:[{x:"22%",y:"50%",r:9,color:"#00E676",label:"HyperLocal HQ"},{x:"55%",y:"42%",r:7,color:"#00E676",label:"Marquee"},{x:"50%",y:"68%",r:7,color:"#00E676",label:"Gramercy"}]};
 var SRC_CLS={posh:"src-posh",eventbrite:"src-eventbrite",luma:"src-luma"};
 var TRIBE_DATA={posh:{match:88,promoter:'Posh Events'},eventbrite:{match:74,promoter:'Eventbrite'},luma:{match:91,promoter:'Luma Events'}};
 function gk(z){return ALL_EVENTS[z]?z:"default";}
@@ -712,106 +640,53 @@ function allEvFlat(){return Object.values(ALL_EVENTS).flat().concat(PULSE_EXTRA)
 function tagCls(t){if(["HOT","FEW LEFT","SOLD OUT SOON"].includes(t))return"ev-tag tag-r";if(["FREE","BENEFITS"].includes(t))return"ev-tag tag-g";if(["MICHELIN","3-STAR","OMAKASE"].includes(t))return"ev-tag tag-y";if(t.includes("25-MILE"))return"ev-tag tag-o";return"ev-tag tag-b";}
 function cardCls(ev){if(ev.vertical==="theladder")return"ev-card job-card";if(ev.vertical==="themenu")return"ev-card food-card";if(ev.trending)return"ev-card trending";if(ev.featured)return"ev-card featured";return"ev-card";}
 function spark(t){if(!t)return'';return'<div class="sparkline">'+[3,6,4,8,5,11,9,13,10,15].map(function(n){return'<span style="height:'+n+'px"></span>';}).join('')+'</div>';}
-// CSS GRID CARD FOOTER
 function renderCard(ev){
   var pct=ev.avail,ac=pct<20?"#FF3355":pct<50?"#FACC15":"#00E676",isJob=ev.vertical==="theladder";
   var srcCls=SRC_CLS[ev.source]||'src-posh';
   var tagsHtml=ev.tags.map(function(t){return'<span class="'+tagCls(t)+'">'+t+'</span>';}).join('')+(ev.trending?'<span class="ev-tag tag-y">HOT</span>':'');
-  var availHtml=isJob?'<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">APPLY ANYTIME</span>':'<div style="display:flex;align-items:center;gap:4px;margin-top:2px"><div class="avail-bar" style="width:50px"><div class="avail-fill" style="width:'+pct+'%;background:'+ac+'"></div></div><span class="avail-pct" style="color:'+ac+'">'+pct+'%</span></div>';
   var td=TRIBE_DATA&&TRIBE_DATA[ev.source]||{match:75,promoter:'HyperLocal'};
   var synBadge='<span class="synergy-badge">◆ <span class="synergy-pct">'+td.match+'%</span> TRIBE MATCH w/ '+td.promoter+'</span>';
-  var equipBtn=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="equip-btn" onclick="openEquipModal('+ev.id+')">&#127381; EQUIP</button>':'';
+  var shopBtn=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="shop-btn" onclick="event.stopPropagation();openShopModal('+ev.id+')">&#128722; SHOP</button>':'';
   var shareBtn='<button class="share-earn-btn" onclick="openShareEarn('+ev.id+')">&#8679; EARN</button>';
-  return '<div class="'+cardCls(ev)+'">'
-    +'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'
-    +'<div class="ev-r1"><div class="ev-name">'+ev.name+'</div></div>'
-    +'<div class="ev-r2"><span class="ev-venue">'+ev.venue+'</span><span class="ev-time">'+ev.time+'</span></div>'
-    +'<div class="ev-tags">'+tagsHtml+'</div>'
-    +synBadge
-    +availHtml
-    +'<div class="ev-card-footer">'
-    +'<div class="ev-card-price-source"><div class="ev-card-price-val">'+ev.price+'</div><div class="ev-card-source-val">via '+ev.source+'</div></div>'
-    +'<div class="ev-card-actions">'+(equipBtn?equipBtn:'')+shareBtn+'<button class="card-map-btn" onclick="openMap(event,'+ev.id+')">MAP</button></div>'
-    +'</div>'
-    +'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank">'+(isJob?'APPLY NOW':'GET TICKET')+' →</a>'
-    +'</div>';
+  var avHtml=isJob?'<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">APPLY ANYTIME</span>':'<div style="display:flex;align-items:center;gap:4px;margin-top:2px"><div class="avail-bar" style="width:50px"><div class="avail-fill" style="width:'+pct+'%;background:'+ac+'"></div></div><span class="avail-pct" style="color:'+ac+'">'+pct+'%</span></div>';
+  return '<div class="'+cardCls(ev)+'">'+'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'+'<div class="ev-r1"><div class="ev-name">'+ev.name+'</div></div>'+'<div class="ev-r2"><span class="ev-venue">'+ev.venue+'</span><span class="ev-time">'+ev.time+'</span></div>'+'<div class="ev-tags">'+tagsHtml+'</div>'+synBadge+avHtml+'<div class="ev-card-footer"><div class="ev-card-price-source"><div class="ev-card-price-val">'+ev.price+'</div><div class="ev-card-source-val">via '+ev.source+'</div></div><div class="ev-card-actions">'+(shopBtn?shopBtn:'')+shareBtn+'<button class="card-map-btn" onclick="openMap(event,'+ev.id+')">MAP</button></div></div>'+'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank">'+(isJob?'APPLY NOW':'GET TICKET')+' →</a>'+'</div>';
 }
-function renderEvList(tab,zip,pulse){
-  var evs=getEvs(zip,tab,pulse);
-  var filtered=(tab==='theladder'&&currentSector!=='all')?evs.filter(function(e){return sectorMatch(e,currentSector);}):evs;
-  var el=document.getElementById('evlist-'+tab);
-  if(el){
-    if(filtered.length===0){el.innerHTML='<div style="padding:22px 14px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-muted)"><div style="font-size:20px;margin-bottom:8px">△</div>NO EVENTS FOUND<div style="margin-top:6px;font-size:9px;line-height:1.5">Try a different ZIP or enable<br/>PULSE for 25-mile results</div></div>';}
-    else{el.innerHTML=filtered.map(function(ev){return renderCard(ev);}).join('');}
-  }
-  var ct=document.getElementById('ev-count-'+tab);if(ct)ct.textContent=filtered.length+' FOUND';
-  var tc=document.getElementById('count-'+tab);if(tc)tc.textContent=filtered.length;
-}
+function renderEvList(tab,zip,pulse){renderCarousel(tab,zip,pulse);}
 function renderNews(tab){var el=document.getElementById('news-'+tab);if(!el)return;var items=NEWS_DB[tab]||NEWS_DB.terminal;el.innerHTML=items.map(function(it){return'<div class="news-item"><div class="news-cat" style="color:'+it.cc+'">'+it.cat+'</div><div class="news-headline">'+it.h+'</div><div class="news-time">'+it.t+'</div></div>';}).join('');}
 function renderWeather(tab,zip){var el=document.getElementById('weather-'+tab);if(!el)return;var w=WEATHER_DB[gk(zip)]||WEATHER_DB.default;el.innerHTML='<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">LOCAL WEATHER</div><div class="weather-temp">'+w.temp+'</div><div class="weather-cond">'+w.cond+'</div><div class="weather-detail">Wind: '+w.wind+' &middot; Humidity: '+w.hum+'</div>';}
 function renderStats(tab){var el=document.getElementById('stats-'+tab);if(!el)return;var d=STATS_DB[tab]||STATS_DB.terminal;el.innerHTML=d.map(function(s){return'<div class="stat-c"><div class="stat-l">'+s.l+'</div><div class="stat-v '+s.c+'">'+s.v+'</div><div class="stat-ch '+s.c+'">'+s.ch+'</div></div>';}).join('');}
-function renderMapDots(tab,pulse){
-  var el=document.getElementById('map-dots-'+tab);if(!el)return;
-  el.innerHTML='';
-  (MAP_DOTS[tab]||MAP_DOTS.terminal).forEach(function(d){
-    var dot=document.createElement('div');dot.className='map-dot';
-    dot.style.cssText='left:'+d.x+';top:'+d.y+';width:'+(d.r*2)+'px;height:'+(d.r*2)+'px;background:'+d.color+';opacity:.75;box-shadow:0 0 8px '+d.color;
-    el.appendChild(dot);
-    var lbl=document.createElement('div');lbl.className='map-dot-label';
-    lbl.style.cssText='left:calc('+d.x+' + '+(d.r+3)+'px);top:'+d.y+';transform:translateY(-50%)';
-    lbl.textContent=d.label;el.appendChild(lbl);
-  });
-  if(pulse){var pDot=document.createElement('div');pDot.className='map-dot';pDot.style.cssText='left:12%;top:18%;width:10px;height:10px;background:var(--blue);opacity:.45;box-shadow:0 0 6px var(--blue)';el.appendChild(pDot);}
-}
+function renderMapDots(tab,pulse){var el=document.getElementById('map-dots-'+tab);if(!el)return;el.innerHTML='';(MAP_DOTS[tab]||MAP_DOTS.terminal).forEach(function(d){var dot=document.createElement('div');dot.className='map-dot';dot.style.cssText='left:'+d.x+';top:'+d.y+';width:'+(d.r*2)+'px;height:'+(d.r*2)+'px;background:'+d.color+';opacity:.75;box-shadow:0 0 8px '+d.color;el.appendChild(dot);var lbl=document.createElement('div');lbl.className='map-dot-label';lbl.style.cssText='left:calc('+d.x+' + '+(d.r+3)+'px);top:'+d.y+';transform:translateY(-50%)';lbl.textContent=d.label;el.appendChild(lbl);});if(pulse){var pDot=document.createElement('div');pDot.className='map-dot';pDot.style.cssText='left:12%;top:18%;width:10px;height:10px;background:var(--blue);opacity:.45;box-shadow:0 0 6px var(--blue)';el.appendChild(pDot);}}
 function renderTicker(tab){var items=TICKER_DB[tab]||TICKER_DB.terminal;var d=items.concat(items);document.getElementById('ticker-track').innerHTML=d.map(function(t){return'<div class="ticker-item"><span class="tk">'+t.k+'</span><span class="tv '+t.c+'">'+t.v+'</span></div>';}).join('');document.getElementById('ticker-tag').textContent={terminal:'LIVE',afterdark:'AFTER DARK',themenu:'THE MENU',theladder:'THE LADDER'}[tab]||'LIVE';}
 function setPulseCircles(tab,on){var el=document.getElementById('pc-'+tab);if(el){on?el.classList.add('active'):el.classList.remove('active');}}
-function renderAll(tab,zip,pulse){renderEvList(tab,zip,pulse);renderNews(tab);renderWeather(tab,zip);renderStats(tab);renderMapDots(tab,pulse);renderTicker(tab);setPulseCircles(tab,pulse);injectPromoVideo(tab);renderMobileStatusBar(tab,zip);}
+function renderMobileStatusBar(tab,zip){if(window.innerWidth>=768)return;var w=WEATHER_DB[gk(zip)]||WEATHER_DB.default;var el=document.getElementById('msb-temp');if(el)el.textContent=w.temp;var news=NEWS_DB[tab]||NEWS_DB.terminal;var hl=document.getElementById('msb-headline');if(hl&&news[0])hl.textContent=news[0].h.substring(0,50)+(news[0].h.length>50?'\u2026':'');var ct=document.getElementById('msb-count');if(ct)ct.textContent=getEvs(zip,tab,pulseOn).length;}
+// ── SPRINT 13: Sub-Nav ──
+var currentSubNav='popular';
+var SUB_FILTERS={popular:function(evs){return evs.slice().sort(function(a,b){return b.trending-a.trending;});},latest:function(evs){return evs.slice().reverse();},local:function(evs){return evs.filter(function(e){return e.hood&&e.hood!=='Citywide'&&e.hood!=='Remote';});}};
+function setSubNav(filter,btn){currentSubNav=filter;document.querySelectorAll('.sub-nav-btn').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');renderCarousel(currentTab,currentZip,pulseOn);}
+function buildSubNavHTML(){return'<div class="sub-nav">'+'<button class="sub-nav-btn active" onclick="setSubNav(\"popular\",this)">Most Popular</button>'+'<button class="sub-nav-btn" onclick="setSubNav(\"latest\",this)">Latest</button>'+'<button class="sub-nav-btn" onclick="setSubNav(\"local\",this)">Local Market</button>'+'</div>';}
+var VERT_EMOJI={afterdark:'🌙',themenu:'🍝',theladder:'🧤',terminal:'▲'};
+var HERO_BADGE_STYLE={afterdark:'background:#9B5DE5;color:#fff',themenu:'background:var(--orange);color:#fff',theladder:'background:var(--green);color:#000',terminal:'background:var(--blue);color:#fff'};
+function renderHeroCard(ev){var emoji=VERT_EMOJI[ev.vertical]||'▲';var bs=HERO_BADGE_STYLE[ev.vertical]||HERO_BADGE_STYLE.terminal;var pct=ev.avail,ac=pct<20?'#FF3355':pct<50?'#FACC15':'#00E676';var isJob=ev.vertical==='theladder';var td=TRIBE_DATA&&TRIBE_DATA[ev.source]||{match:75};var shopBtn=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="shop-btn" onclick="event.stopPropagation();openShopModal('+ev.id+')">&#128722; SHOP</button>':'';return'<div class="ev-hero-card">'+'<div class="ev-hero-img">'+emoji+'<span class="ev-hero-badge" style="'+bs+'">'+((ev.trending)?'HOT':'FEATURED')+'</span></div>'+'<div class="ev-hero-name">'+ev.name+'</div>'+'<div class="ev-hero-meta">'+ev.venue+' &middot; '+ev.time+' &middot; '+ev.hood+'</div>'+'<div class="ev-tags" style="margin-bottom:5px">'+ev.tags.map(function(t){return'<span class="ev-tag '+tagCls(t)+'">'+t+'</span>';}).join('')+'</div>'+'<span class="synergy-badge">◆ <span class="synergy-pct">'+td.match+'%</span> TRIBE MATCH</span>'+'<div class="ev-hero-row"><span class="ev-hero-price">'+ev.price+'</span>'+(isJob?'<span class="ev-hero-avail" style="color:var(--green)">HIRING</span>':'<span class="ev-hero-avail" style="color:'+ac+'">'+pct+'% avail</span>')+'</div>'+shopBtn+'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank" style="margin-top:6px;display:block">'+(isJob?'APPLY NOW':'GET TICKET')+' →</a>'+'</div>';}
+function renderListCard(ev){var emoji=VERT_EMOJI[ev.vertical]||'▲';var pct=ev.avail,ac=pct<20?'#FF3355':pct<50?'#FACC15':'#00E676';var isJob=ev.vertical==='theladder';return'<div class="ev-list-card" onclick="openMap(event,'+ev.id+')">'+'<div class="ev-list-thumb">'+emoji+'</div>'+'<div class="ev-list-body"><div class="ev-list-name">'+ev.name+'</div><div class="ev-list-meta">'+ev.venue+' &middot; '+ev.time+'</div>'+'<div class="ev-tags" style="margin-top:2px">'+ev.tags.slice(0,2).map(function(t){return'<span class="ev-tag '+tagCls(t)+'">'+t+'</span>';}).join('')+'</div></div>'+'<div class="ev-list-right"><div class="ev-list-price">'+ev.price+'</div><div class="ev-list-avail" style="color:'+ac+'">'+(isJob?'OPEN':pct+'% avail')+'</div></div>'+'</div>';}
+function renderCarousel(tab,zip,pulse){var evs=getEvs(zip,tab,pulse);var filterFn=SUB_FILTERS[currentSubNav]||SUB_FILTERS.popular;var filtered=filterFn(evs);if(tab==='theladder'&&currentSector!=='all')filtered=filtered.filter(function(e){return sectorMatch(e,currentSector);});TABS.forEach(function(t){var el=document.getElementById('evlist-'+t);if(!el)return;var sn=document.getElementById('sub-nav-'+t);if(!sn){sn=document.createElement('div');sn.id='sub-nav-'+t;sn.innerHTML=buildSubNavHTML();el.parentNode.insertBefore(sn,el);}if(t!==tab)return;if(filtered.length===0){el.innerHTML='<div style="padding:22px 14px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-muted)"><div style="font-size:20px;margin-bottom:8px">△</div>NO EVENTS FOUND<div style="margin-top:6px;font-size:9px;line-height:1.5">Try a different ZIP<br/>or enable PULSE</div></div>';return;}var hero=renderHeroCard(filtered[0]);var list=filtered.slice(1).map(function(ev){return renderListCard(ev);}).join('');el.innerHTML='<div class="ev-carousel">'+hero+list+'</div>';});var ct=document.getElementById('ev-count-'+tab);if(ct)ct.textContent=filtered.length+' FOUND';var tc=document.getElementById('count-'+tab);if(tc)tc.textContent=filtered.length;}
+renderAll=function(tab,zip,pulse){renderNews(tab);renderWeather(tab,zip);renderStats(tab);renderMapDots(tab,pulse);renderTicker(tab);setPulseCircles(tab,pulse);renderCarousel(tab,zip,pulse);if(typeof injectPromoVideo==='function')injectPromoVideo(tab);renderMobileStatusBar(tab,zip);};
 function renderAllCounts(zip,pulse){TABS.forEach(function(t){var evs=getEvs(zip,t,pulse);var el=document.getElementById('count-'+t);if(el)el.textContent=evs.length;});}
 var currentSector='all';
-function switchTab(tab,btn){
-  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
-  var tc=document.getElementById('tab-'+tab);if(tc){tc.classList.add('active');tc.classList.remove('slide-in');void tc.offsetWidth;tc.classList.add('slide-in');}
-  currentTab=tab;
-  renderAll(tab,currentZip,pulseOn);
-  vpCurrentIdx=VP_ORDER.indexOf(tab);if(vpCurrentIdx<0)vpCurrentIdx=0;
-  updatePulseSegments();
-  renderMobileStatusBar(tab,currentZip);
-}
-function togglePulse(){
-  pulseOn=!pulseOn;
-  document.getElementById('toggle-track').classList.toggle('on',pulseOn);
-  document.getElementById('pulse-label').classList.toggle('active',pulseOn);
-  var pttm=document.getElementById('ptt-m'),pllm=document.getElementById('pll-m');
-  if(pttm)pttm.classList.toggle('on',pulseOn);if(pllm)pllm.classList.toggle('active',pulseOn);
-  document.getElementById('pulse-banner').classList.toggle('active',pulseOn);
-  var pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=currentZip;
-  if(pulseOn){startVerticalPulse();}else{stopVerticalPulse();}
-  renderAll(currentTab,currentZip,pulseOn);renderAllCounts(currentZip,pulseOn);
-}
-function handleZip(zip){
-  currentZip=zip;
-  var mz=document.getElementById('map-zip');if(mz)mz.textContent=zip;
-  var pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=zip;
-  renderAll(currentTab,zip,pulseOn);renderAllCounts(zip,pulseOn);
-}
-var ziEl=document.getElementById('zip-input');
-if(ziEl){ziEl.addEventListener('change',function(){if(this.value.trim().length>=3)handleZip(this.value.trim());});ziEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim().length>=3)handleZip(this.value.trim());});}
-var ziElM=document.getElementById('zip-m');
-if(ziElM){ziElM.addEventListener('change',function(){if(this.value.trim().length>=3){var zd=document.getElementById('zip-input');if(zd)zd.value=this.value.trim();handleZip(this.value.trim());}});ziElM.addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim().length>=3){var zd=document.getElementById('zip-input');if(zd)zd.value=this.value.trim();handleZip(this.value.trim());}});}
+function switchTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});var tc=document.getElementById('tab-'+tab);if(tc){tc.classList.add('active');tc.classList.remove('slide-in');void tc.offsetWidth;tc.classList.add('slide-in');}currentTab=tab;renderAll(tab,currentZip,pulseOn);vpCurrentIdx=VP_ORDER.indexOf(tab);if(vpCurrentIdx<0)vpCurrentIdx=0;updatePulseSegments();renderMobileStatusBar(tab,currentZip);}
+function togglePulse(){pulseOn=!pulseOn;document.getElementById('toggle-track').classList.toggle('on',pulseOn);document.getElementById('pulse-label').classList.toggle('active',pulseOn);var pttm=document.getElementById('ptt-m'),pllm=document.getElementById('pll-m');if(pttm)pttm.classList.toggle('on',pulseOn);if(pllm)pllm.classList.toggle('active',pulseOn);document.getElementById('pulse-banner').classList.toggle('active',pulseOn);var pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=currentZip;if(pulseOn){startVerticalPulse();}else{stopVerticalPulse();}renderAll(currentTab,currentZip,pulseOn);renderAllCounts(currentZip,pulseOn);}
+function handleZip(zip){currentZip=zip;var mz=document.getElementById('map-zip');if(mz)mz.textContent=zip;var pzd=document.getElementById('pulse-zip-display');if(pzd)pzd.textContent=zip;renderAll(currentTab,zip,pulseOn);renderAllCounts(zip,pulseOn);}
+var ziEl=document.getElementById('zip-input');if(ziEl){ziEl.addEventListener('change',function(){if(this.value.trim().length>=3)handleZip(this.value.trim());});ziEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim().length>=3)handleZip(this.value.trim());});}
+var ziElM=document.getElementById('zip-m');if(ziElM){ziElM.addEventListener('change',function(){if(this.value.trim().length>=3){var zd=document.getElementById('zip-input');if(zd)zd.value=this.value.trim();handleZip(this.value.trim());}});ziElM.addEventListener('keydown',function(e){if(e.key==='Enter'&&this.value.trim().length>=3){var zd=document.getElementById('zip-input');if(zd)zd.value=this.value.trim();handleZip(this.value.trim());}});}
 function openMap(e,id){e.stopPropagation();var ev=allEvFlat().find(function(x){return x.id===id;});if(!ev)return;document.getElementById('mm-title').textContent=ev.name;document.getElementById('mm-venue-label').textContent=ev.venue;document.getElementById('mm-address').textContent=ev.addr||'--';document.getElementById('mm-neighborhood').textContent=ev.hood||'--';document.getElementById('mm-distance').textContent=ev.vertical==='theladder'?'Hiring Location':(Math.floor(Math.random()*28)+2)+' min away';document.getElementById('mm-directions').href='https://maps.google.com/?q='+encodeURIComponent((ev.addr||'')+' '+ev.venue);document.getElementById('modal-bg').classList.add('open');}
 function closeMap(){document.getElementById('modal-bg').classList.remove('open');}
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeMap();});
 document.getElementById('mm-close').addEventListener('click',closeMap);
 document.getElementById('mm-close-btn').addEventListener('click',closeMap);
 function clock(){var n=new Date(),D=['SUN','MON','TUE','WED','THU','FRI','SAT'],M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];function p(x){return String(x).padStart(2,'0');}var el=document.getElementById('datetime');if(el)el.textContent=D[n.getDay()]+' '+p(n.getDate())+' '+M[n.getMonth()]+' '+n.getFullYear()+' -- '+p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());}
-// THEME
 var currentTheme=localStorage.getItem('hl-theme')||(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
 function applyTheme(t){currentTheme=t;document.documentElement.setAttribute('data-theme',t);localStorage.setItem('hl-theme',t);var moon=document.getElementById('theme-icon-moon'),sun=document.getElementById('theme-icon-sun'),moonM=document.getElementById('tim-m'),sunM=document.getElementById('tis-m');if(t==='light'){if(moon)moon.style.display='none';if(sun)sun.style.display='block';if(moonM)moonM.style.display='none';if(sunM)sunM.style.display='block';}else{if(moon)moon.style.display='block';if(sun)sun.style.display='none';if(moonM)moonM.style.display='block';if(sunM)sunM.style.display='none';}}
 function toggleTheme(){applyTheme(currentTheme==='dark'?'light':'dark');}
 applyTheme(currentTheme);
-// PRO / SCREENER
 var proOn=false;
 var ORGANIZER_TYPES={afterdark:['Corporate','SMB','SMB','Corporate','NPO','SMB'],themenu:['Corporate','SMB','SMB','Corporate','SMB'],theladder:['Corporate','Corporate','SMB','SMB','Tech','Tech'],terminal:['Corporate','SMB','NPO','Gov','Corporate','SMB','Tech']};
 var ORG_CLASS={Corporate:'org-corporate',Gov:'org-gov',SMB:'org-smb',NPO:'org-npo',Tech:'org-corporate'};
@@ -820,46 +695,23 @@ var SPARKDATA=[3,5,4,7,6,9,8,11,10,13];
 var SPONSOR_CTR={};
 function getOrgType(tab,idx){var arr=ORGANIZER_TYPES[tab]||ORGANIZER_TYPES.terminal;return arr[idx%arr.length];}
 function trackSponsorImpression(evId){if(!SPONSOR_CTR[evId])SPONSOR_CTR[evId]={imp:0,clicks:0};SPONSOR_CTR[evId].imp++;var d=SPONSOR_CTR[evId];return d.clicks>0?((d.clicks/d.imp)*100).toFixed(1):'0.0';}
-function screenerCard(ev,idx,tab){
-  var orgType=getOrgType(tab,idx),orgCls=ORG_CLASS[orgType]||'org-smb';
-  var hasLead=ev.cap>20||ev.vertical==='theladder',isJob=ev.vertical==='theladder';
-  var insights=COMPANY_INSIGHTS[ev.venue]||null;
-  var pct=ev.avail,ac=pct<20?'#FF3355':pct<50?'#FACC15':'#00E676';
-  var growth=['+12%','+8%','+22%','+5%','+31%','+18%','+9%'][idx%7];
-  var sparkHTML=SPARKDATA.map(function(h){return'<span style="height:'+h+'px;background:'+(isJob?'#00E676':'#0047FF')+'"></span>';}).join('');
-  var insightsHTML='';
-  if(insights){insightsHTML='<div class="screener-insights"><div class="si-title">RECENT BY '+ev.venue.substring(0,18).toUpperCase()+'</div>';insights.forEach(function(r){insightsHTML+='<div class="si-item"><span>'+r.e+'</span><span class="si-date">'+r.d+'</span></div>';});insightsHTML+='</div>';}
-  var ctr=trackSponsorImpression(ev.id);
-  var srcCls=SRC_CLS[ev.source]||'src-posh';
-  return'<div class="screener-card">'
-    +'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'
-    +'<div class="screener-header"><div class="screener-name">'+ev.name+'</div><div class="screener-price">'+ev.price+'</div></div>'
-    +'<div class="screener-meta-row"><span class="org-badge '+orgCls+'">'+orgType+'</span>'+(hasLead?'<span class="lead-signal">◇ VENDOR OPP</span>':'')+'</div>'
-    +'<div class="screener-data-row"><div class="screener-metric"><span class="sm-label">CAP</span><span class="sm-value" style="color:'+ac+'">'+ev.cap+'</span></div><div class="screener-metric" style="margin-left:8px"><span class="sm-label">GROWTH</span><span class="sm-value" style="color:#00E676">'+growth+'</span></div><div class="screener-metric" style="margin-left:8px"><span class="sm-label">CTR</span><span class="sm-value" style="color:var(--orange)">'+ctr+'%</span></div><div style="margin-left:8px"><div class="sm-label" style="margin-bottom:2px">TREND</div><div class="sparkline-sm">'+sparkHTML+'</div></div></div>'
-    +insightsHTML
-    +'<div class="screener-actions"><a class="screener-btn screener-btn-primary" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank">'+(isJob?'APPLY NOW':'BUY TICKET')+' →</a>'+(hasLead?'<button class="screener-btn screener-btn-lead">VENDOR ◇</button>':'')+'</div></div>';
-}
+function screenerCard(ev,idx,tab){var orgType=getOrgType(tab,idx),orgCls=ORG_CLASS[orgType]||'org-smb';var hasLead=ev.cap>20||ev.vertical==='theladder',isJob=ev.vertical==='theladder';var insights=COMPANY_INSIGHTS[ev.venue]||null;var pct=ev.avail,ac=pct<20?'#FF3355':pct<50?'#FACC15':'#00E676';var growth=['+12%','+8%','+22%','+5%','+31%','+18%','+9%'][idx%7];var sparkHTML=SPARKDATA.map(function(h){return'<span style="height:'+h+'px;background:'+(isJob?'#00E676':'#0047FF')+'"></span>';}).join('');var insightsHTML='';if(insights){insightsHTML='<div class="screener-insights"><div class="si-title">RECENT BY '+ev.venue.substring(0,18).toUpperCase()+'</div>';insights.forEach(function(r){insightsHTML+='<div class="si-item"><span>'+r.e+'</span><span class="si-date">'+r.d+'</span></div>';});insightsHTML+='</div>';}var ctr=trackSponsorImpression(ev.id);var srcCls=SRC_CLS[ev.source]||'src-posh';return'<div class="screener-card">'+'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'+'<div class="screener-header"><div class="screener-name">'+ev.name+'</div><div class="screener-price">'+ev.price+'</div></div>'+'<div class="screener-meta-row"><span class="org-badge '+orgCls+'">'+orgType+'</span>'+(hasLead?'<span class="lead-signal">◇ VENDOR OPP</span>':'')+'</div>'+'<div class="screener-data-row"><div class="screener-metric"><span class="sm-label">CAP</span><span class="sm-value" style="color:'+ac+'">'+ev.cap+'</span></div><div class="screener-metric" style="margin-left:8px"><span class="sm-label">GROWTH</span><span class="sm-value" style="color:#00E676">'+growth+'</span></div><div class="screener-metric" style="margin-left:8px"><span class="sm-label">CTR</span><span class="sm-value" style="color:var(--orange)">'+ctr+'%</span></div><div style="margin-left:8px"><div class="sm-label" style="margin-bottom:2px">TREND</div><div class="sparkline-sm">'+sparkHTML+'</div></div></div>'+insightsHTML+'<div class="screener-actions"><a class="screener-btn screener-btn-primary" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank">'+(isJob?'APPLY NOW':'BUY TICKET')+' →</a>'+(hasLead?'<button class="screener-btn screener-btn-lead">VENDOR ◇</button>':'')+'</div></div>';}
 var _oRC=renderCard;
-renderCard=function(ev,idx){
-  if(proOn)return screenerCard(ev,idx||0,currentTab);
-  return _oRC(ev);
-};
-function togglePro(){proOn=!proOn;document.getElementById('pro-track').classList.toggle('on',proOn);document.getElementById('pro-label').classList.toggle('active',proOn);var pm=document.getElementById('prt-m'),plm=document.getElementById('prl-m');if(pm)pm.classList.toggle('on',proOn);if(plm)plm.classList.toggle('active',proOn);renderAll(currentTab,currentZip,pulseOn);}
+renderCard=function(ev,idx){if(proOn)return screenerCard(ev,idx||0,currentTab);return _oRC(ev);};
+function togglePro(){proOn=!proOn;document.getElementById('pro-track').classList.toggle('on',proOn);document.getElementById('pro-label').classList.toggle('active',proOn);renderAll(currentTab,currentZip,pulseOn);}
 var SECTOR_MAP={tech:['TECH','REMOTE-OK','CREATIVE'],hospitality:['TIPS','FULL-TIME','PART-TIME','KITCHEN','MIXOLOGY'],corporate:['BENEFITS','CORPORATE','ENTERTAINMENT','BLACK TIE'],medical:['MEDICAL','HEALTH']};
 function sectorMatch(ev,sector){if(sector==='all')return true;var kws=SECTOR_MAP[sector]||[];var tags=(ev.tags||[]).map(function(t){return t.toUpperCase();});var genre=(ev.genre||'').toUpperCase();return kws.some(function(k){return tags.includes(k)||genre.includes(k);})||(sector==='hospitality'&&['Hospitality','Food & Bev'].includes(ev.genre));}
-function setSector(sector,btn){currentSector=sector;document.querySelectorAll('.sector-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderEvList('theladder',currentZip,pulseOn);}
+function setSector(sector,btn){currentSector=sector;document.querySelectorAll('.sector-pill').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderCarousel('theladder',currentZip,pulseOn);}
 // TENANT
 var TENANTS={maal:{name:'Maal The Socialite',tagline:'Curated by Maal',avatar:'🦅',badge:"MAAL'S PICKS",accent:'#FF6B35',filter:'afterdark',itinerary:[{day:'THU APR 24',time:'9PM',name:'NEON DREAMS Pre-Party',venue:'Output Brooklyn',activity:'VIP Arrival',live:true},{day:'THU APR 24',time:'11PM',name:'INDUSTRY TAKEOVER',venue:'Marquee NYC',activity:'Main Set',live:false},{day:'FRI APR 25',time:'8PM',name:'Rooftop Sessions',venue:'230 Fifth',activity:'Host',live:false}]},applebees:{name:"Applebee's NYC",tagline:"Tonight's specials",avatar:'🍎',badge:"APPLEBEE'S",accent:'#FF0000',filter:'themenu',itinerary:[]},highstatus:{name:'High Status',tagline:'Premium curation',avatar:'👑',badge:'HIGH STATUS',accent:'#FACC15',filter:null,itinerary:[]}};
 var currentTenant=null;
 function detectTenant(){var slug=(window.location.hash.replace('#','')||new URLSearchParams(window.location.search).get('tenant')||'').toLowerCase();if(TENANTS[slug])applyTenant(slug);}
 function applyTenant(slug){var t=TENANTS[slug];if(!t)return;currentTenant=slug;document.documentElement.style.setProperty('--blue',t.accent);var b=document.getElementById('tenant-banner');if(b)b.classList.add('active');document.getElementById('tenant-avatar').textContent=t.avatar;document.getElementById('tenant-name').textContent=t.name;document.getElementById('tenant-tagline').textContent=t.tagline;document.getElementById('tenant-badge').textContent=t.badge;var it=document.getElementById('itin-title');if(it)it.textContent='☣ '+t.name.toUpperCase();if(t.itinerary&&t.itinerary.length>0)setTimeout(openItinerary,600);if(slug==='applebees'){var mb=document.querySelector('.tab-btn[onclick*="themenu"]');if(mb)mb.click();}}
-// ITINERARY
 function openItinerary(){renderItinerary();document.getElementById('itinerary-panel').classList.add('open');document.getElementById('itin-overlay').style.display='block';}
 function closeItinerary(){document.getElementById('itinerary-panel').classList.remove('open');document.getElementById('itin-overlay').style.display='none';}
 function getDefaultSchedule(){return[{day:'THU APR 24',time:'9PM',name:'NEON DREAMS',venue:'Output Brooklyn',activity:'Featured',live:true},{day:'THU APR 24',time:'11PM',name:'INDUSTRY TAKEOVER',venue:'Marquee NYC',activity:'Nightlife',live:true},{day:'FRI APR 25',time:'8PM',name:'Rooftop Sessions',venue:'230 Fifth',activity:'Social',live:false},{day:'SAT APR 26',time:'7PM',name:'Chef Table Pop-Up',venue:'Eleven Madison',activity:'Dining',live:false},{day:'SUN APR 27',time:'11AM',name:'Rooftop Brunch Rave',venue:'Le Bain',activity:'Brunch',live:false}];}
-function renderItinerary(){var t=currentTenant?TENANTS[currentTenant]:null;var sched=t&&t.itinerary.length?t.itinerary:getDefaultSchedule();var el=document.getElementById('itin-scroll');if(!el)return;var html='',lastDay='';sched.forEach(function(item){if(item.day!==lastDay){html+='<div class="itin-day">'+item.day+'</div>';lastDay=item.day;}html+='<div class="itin-item'+(item.live?' live':'')+'">'+'<div class="itin-time">'+item.time+'</div><div class="itin-dot"></div><div class="itin-body">'+(item.live?'<div class="itin-live-badge">LIVE NOW</div>':'')+'<div class="itin-ev-name">'+item.name+'</div><div class="itin-venue">'+item.venue+'</div><div class="ev-tags"><span class="ev-tag tag-b">'+item.activity+'</span>'+(item.live?'<span class="ev-tag tag-g">LIVE</span>':'')+'</div></div></div>';});el.innerHTML=html;}
+function renderItinerary(){var t=currentTenant?TENANTS[currentTenant]:null;var sched=t&&t.itinerary.length?t.itinerary:getDefaultSchedule();var el=document.getElementById('itin-scroll');if(!el)return;var html='',lastDay='';sched.forEach(function(item){if(item.day!==lastDay){html+='<div class="itin-day">'+item.day+'</div>';lastDay=item.day;}html+='<div class="itin-item'+(item.live?' live':'')+'"><div class="itin-time">'+item.time+'</div><div class="itin-dot"></div><div class="itin-body">'+(item.live?'<div class="itin-live-badge">LIVE NOW</div>':'')+'<div class="itin-ev-name">'+item.name+'</div><div class="itin-venue">'+item.venue+'</div><div class="ev-tags"><span class="ev-tag tag-b">'+item.activity+'</span>'+(item.live?'<span class="ev-tag tag-g">LIVE</span>':'')+'</div></div></div>';});el.innerHTML=html;}
 function exportICS(){var t=currentTenant?TENANTS[currentTenant]:null;var sched=t&&t.itinerary.length?t.itinerary:getDefaultSchedule();var mo={'APR':4,'MAY':5,'JUN':6,'JUL':7};var lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//HyperLocal//EN'];sched.forEach(function(item,i){var p=item.day.split(' ');var mon=mo[p[1]]||4;var day=parseInt(p[2])||(24+i);var h=parseInt((item.time||'9PM').replace('PM','').replace('AM',''));if(item.time&&item.time.includes('PM')&&h!==12)h+=12;var pad=function(x){return String(x).padStart(2,'0');};lines.push('BEGIN:VEVENT','UID:hl-'+i+'@hl.app','DTSTART:2025'+pad(mon)+pad(day)+'T'+pad(h)+'0000','DTEND:2025'+pad(mon)+pad(day)+'T'+pad(h+2)+'0000','SUMMARY:'+item.name+' @ '+item.venue,'END:VEVENT');});lines.push('END:VCALENDAR');var blob=new Blob([lines.join('\r\n')],{type:'text/calendar'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hyperlocal.ics';a.click();}
-// PARTNER PORTAL
 var MILESTONES=[{name:'First Referral',target:1,current:1,desc:'Earn first affiliate commission'},{name:'$1k Revenue',target:1000,current:1247,desc:'Drive $1,000 in total sales'},{name:'$10k Revenue',target:10000,current:1247,desc:'Drive $10k in sales'},{name:'$50k Revenue',target:50000,current:1247,desc:'Drive $50k for equity'}];
 var CONVERSIONS=[{ev:'NEON DREAMS',type:'Ticket',amt:'$55',comm:'$27.50',when:'2m ago'},{ev:'Marquee Takeover',type:'Affiliate',amt:'$45',comm:'$22.50',when:'18m ago'},{ev:'Jazz & Cocktails',type:'Ticket',amt:'$28',comm:'$14.00',when:'1h ago'}];
 var _earnTotal=1247.50;
@@ -868,160 +720,61 @@ function closePartner(){document.getElementById('partner-panel').classList.remov
 function renderPartner(){var ml=document.getElementById('ms-list');if(ml)ml.innerHTML=MILESTONES.map(function(m){var p=Math.min(100,Math.round((m.current/m.target)*100));return'<div class="ms-item"><div class="ms-row"><div class="ms-name">'+m.name+'</div><div class="ms-pct">'+p+'%</div></div><div class="ms-bar"><div class="ms-bar-fill" style="width:'+p+'%"></div></div><div class="ms-desc">'+m.desc+(p>=100?' ✓ UNLOCKED':'')+'</div></div>';}).join('');var ct=document.getElementById('conv-table');if(ct)ct.innerHTML='<thead><tr><th>EVENT</th><th>TYPE</th><th>AMT</th><th>YOUR 50%</th></tr></thead><tbody>'+CONVERSIONS.map(function(c){return'<tr><td class="b">'+c.ev+'</td><td>'+c.type+'</td><td>'+c.amt+'</td><td class="g">'+c.comm+'</td></tr>';}).join('')+'</tbody>';var ctr=document.getElementById('ctr-table');if(ctr){var rows=Object.keys(SPONSOR_CTR).map(function(id){var d=SPONSOR_CTR[id];var ctrPct=d.clicks>0?((d.clicks/d.imp)*100).toFixed(1)+'%':'0%';var ev=allEvFlat().find(function(e){return e.id==id;});return'<tr><td class="b">'+(ev?ev.name:'Ev '+id)+'</td><td>'+d.imp+'</td><td>'+d.clicks+'</td><td class="g">'+ctrPct+'</td></tr>';});if(!rows.length)rows=['<tr><td colspan="4" style="color:var(--text-muted)">No sponsor clicks yet</td></tr>'];ctr.innerHTML='<thead><tr><th>EVENT</th><th>IMP</th><th>CLICKS</th><th>CTR</th></tr></thead><tbody>'+rows.join('')+'</tbody>';}setInterval(function(){_earnTotal+=(Math.random()*2);var el=document.getElementById('earn-total');if(el)el.textContent='$'+_earnTotal.toFixed(2);var ea=document.getElementById('earn-aff');if(ea)ea.textContent='$'+(_earnTotal*.5).toFixed(2);},3500);}
 function copyAff(){var txt=document.getElementById('aff-link').textContent;if(navigator.clipboard)navigator.clipboard.writeText(txt);var btn=document.querySelector('.aff-copy');if(btn){btn.textContent='COPIED!';setTimeout(function(){btn.textContent='COPY';},2000);}}
 function openShareEarn(evId){document.getElementById('aff-link').textContent='hyperlocal.app/event/'+evId+'?ref=user123';openPartner();}
-// FRIENDS
 var goLiveOn=false;
 var FRIENDS=[{name:'Marcus L.',avatar:'🧣',status:'At NEON DREAMS · Output BK',live:true},{name:'Jade M.',avatar:'💙',status:'En route to Marquee',live:false},{name:'Trey A.',avatar:'🎮',status:'At Rooftop Sessions · 230 Fifth',live:true},{name:'Sasha K.',avatar:'🌼',status:'Last seen: SOBs',live:false},{name:'DeShawn R.',avatar:'🎯',status:'Offline',live:false},{name:'Priya N.',avatar:'🌟',status:'At Chef Table · Eleven Madison',live:true}];
 function openFriends(){renderFriends();document.getElementById('friends-panel').classList.add('open');document.getElementById('ft-overlay').style.display='block';}
 function closeFriends(){document.getElementById('friends-panel').classList.remove('open');document.getElementById('ft-overlay').style.display='none';}
-function toggleGoLive(){goLiveOn=!goLiveOn;var trk=document.getElementById('gl-track'),lbl=document.getElementById('gl-label');if(trk)trk.classList.toggle('on',goLiveOn);if(lbl)lbl.textContent=goLiveOn?'YOU ARE LIVE':'GO LIVE';if(goLiveOn){var mapEl=document.getElementById('map-dots-'+currentTab);if(mapEl&&!mapEl.querySelector('.self-marker')){var dot=document.createElement('div');dot.className='map-dot self-marker';dot.style.cssText='left:50%;top:50%;width:14px;height:14px;background:var(--blue);opacity:1;box-shadow:0 0 16px var(--blue),0 0 32px var(--blue);animation:blink .8s infinite;z-index:20';mapEl.appendChild(dot);}}}
-function renderFriends(){var el=document.getElementById('friends-scroll');if(!el)return;el.innerHTML=FRIENDS.map(function(f,i){return'<div class="friend-row"><div class="friend-avatar'+(f.live?' golive':'')+'">'+(f.avatar||'👤')+'</div><div style="flex:1;min-width:0"><div class="friend-name">'+f.name+'</div><div class="friend-status">'+f.status+'</div></div>'+(f.live?'<div class="friend-live-tag">LIVE</div>':'')+'<button class="friend-join-btn">'+(f.live?'JOIN':'INVITE')+'</button></div>';}).join('');}
-// LOOKBOOK
-var LOOKBOOK_ITEMS={afterdark:{brand:'STRIPT NYC',items:[{emoji:'👕',name:'STRIPT Oversized Hoodie — Black',price:'$89',prime:true,tonight:true,tags:'Sold at events'},{emoji:'👔',name:'STRIPT Logo Cap — Navy',price:'$45',prime:true,tonight:true,tags:'Limited drop'},{emoji:'👜',name:'Clear Stadium Bag',price:'$12.99',prime:true,tonight:true,tags:'Venue compliant'},{emoji:'🔉',name:'Foam Earplugs NRR33',price:'$9.99',prime:true,tonight:true,tags:'Protect ears'},{emoji:'📱',name:'Portable Charger 10000mAh',price:'$27.99',prime:true,tonight:false,tags:'Stay powered'}]},themenu:{brand:'STRIPT x Le Bain',items:[{emoji:'👕',name:'STRIPT Linen Blazer — White',price:'$129',prime:true,tonight:false,tags:'Dinner look'},{emoji:'🕹',name:'Sommelier Corkscrew Set',price:'$34',prime:true,tonight:true,tags:'Dinner ready'},{emoji:'📷',name:'Ring Light Clip-On',price:'$18.99',prime:true,tonight:true,tags:'For the gram'},{emoji:'🌬',name:'Breath Freshening Strips',price:'$6.99',prime:true,tonight:true,tags:'Essentials'},{emoji:'🥂',name:'Mimosa Kit Flutes 4-Pack',price:'$22.99',prime:true,tonight:false,tags:'Brunch staple'}]}};
-function openLookbook(evId){var ev=allEvFlat().find(function(x){return x.id===evId;});if(!ev)return;var cat=ev.vertical==='themenu'?'themenu':'afterdark';var data=LOOKBOOK_ITEMS[cat]||LOOKBOOK_ITEMS.afterdark;var nameEl=document.getElementById('lb-event-name');if(nameEl)nameEl.textContent=ev.name;var subEl=document.getElementById('lb-event-sub');if(subEl)subEl.textContent=ev.venue+' · '+ev.time;var zip=currentZip;document.getElementById('lb-products').innerHTML=data.items.map(function(p){var ton=p.tonight&&['10001','90210','60601'].includes(zip)?'<span class="lb-tonight-badge">▲ GET IT TONIGHT</span>':'';var prime=p.prime?'<span class="lb-prime-badge">PRIME</span>':'';var ref='https://amazon.com/s?k='+encodeURIComponent(p.name)+'&tag=hyperlocal-ref-'+evId;return'<div class="lb-product"><div class="lb-product-img">'+p.emoji+'</div><div class="lb-product-name">'+p.name+'</div><div class="lb-product-row"><span class="lb-price">'+p.price+'</span><div style="display:flex;gap:3px">'+prime+ton+'</div></div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-bottom:6px">'+p.tags+'</div><a class="lb-buy-btn" href="'+ref+'" target="_blank"> BUY ON AMAZON</a></div>';}).join('');document.getElementById('lookbook-modal').classList.add('open');}
-function closeLookbook(){document.getElementById('lookbook-modal').classList.remove('open');}
-// AMZ SIDEBAR (legacy)
-function openAmzSidebar(evId){openEquipModal(evId);}
-function closeAmzSidebar(){closeEquipModal();}
-// GEO-FENCE
+function toggleGoLive(){goLiveOn=!goLiveOn;var trk=document.getElementById('gl-track'),lbl=document.getElementById('gl-label');if(trk)trk.classList.toggle('on',goLiveOn);if(lbl)lbl.textContent=goLiveOn?'YOU ARE LIVE':'GO LIVE';}
+function renderFriends(){var el=document.getElementById('friends-scroll');if(!el)return;el.innerHTML=FRIENDS.map(function(f){return'<div class="friend-row"><div class="friend-avatar'+(f.live?' golive':'')+'">'+(f.avatar||'👤')+'</div><div style="flex:1;min-width:0"><div class="friend-name">'+f.name+'</div><div class="friend-status">'+f.status+'</div></div>'+(f.live?'<div class="friend-live-tag">LIVE</div>':'')+'<button class="friend-join-btn">'+(f.live?'JOIN':'INVITE')+'</button></div>';}).join('');}
+var SHOP_LOOK={afterdark:[{emoji:'👕',name:'STRIPT Oversized Hoodie — Black',price:'$89',prime:true,tonight:true,note:'Sold at events'},{emoji:'👔',name:'STRIPT Logo Cap — Navy',price:'$45',prime:true,tonight:true,note:'Limited drop'},{emoji:'👜',name:'Clear Stadium Bag',price:'$12.99',prime:true,tonight:true,note:'Venue compliant'},{emoji:'🔉',name:'Foam Earplugs NRR33',price:'$9.99',prime:true,tonight:true,note:'Protect ears'},{emoji:'📱',name:'Portable Charger 10000mAh',price:'$27.99',prime:true,tonight:false,note:'Stay powered'}],themenu:[{emoji:'👕',name:'STRIPT Linen Blazer — White',price:'$129',prime:true,tonight:false,note:'Dinner look'},{emoji:'🕹',name:'Sommelier Corkscrew Set',price:'$34',prime:true,tonight:true,note:'Dinner ready'},{emoji:'📷',name:'Ring Light Clip-On',price:'$18.99',prime:true,tonight:true,note:'For the gram'},{emoji:'🌬',name:'Breath Freshening Strips',price:'$6.99',prime:true,tonight:true,note:'Essentials'}]};
+var SHOP_GEAR={afterdark:[{emoji:'🔇',name:'Foam Earplugs NRR33',price:'$9.99',prime:true,tonight:true,note:'Protect your ears'},{emoji:'🧴',name:'Hand Sanitizer 3-Pack',price:'$8.49',prime:true,tonight:true,note:'Quick dry'},{emoji:'📱',name:'MagSafe Phone Wallet',price:'$22.99',prime:true,tonight:true,note:'Cards + phone'},{emoji:'🕋',name:'Portable Charger 10k',price:'$27.99',prime:true,tonight:true,note:'Never die out'}],themenu:[{emoji:'📷',name:'Ring Light Clip-On',price:'$18.99',prime:true,tonight:true,note:'Food photos'},{emoji:'🍷',name:'Sommelier Corkscrew Set',price:'$11.99',prime:true,tonight:true,note:'Dinner ready'},{emoji:'🥂',name:'Mimosa Kit Flutes 4-Pack',price:'$22.99',prime:true,tonight:false,note:'Brunch staple'}]};
+var _shopCurrentEvId=null,_shopCurrentTab='look';
+function openShopModal(evId){var ev=allEvFlat().find(function(x){return x.id===evId;});if(!ev)return;_shopCurrentEvId=evId;_shopCurrentTab='look';document.getElementById('shop-event-name').textContent=ev.name;var es=document.getElementById('shop-event-sub');if(es)es.textContent=ev.venue+' · '+ev.time;var vs=document.getElementById('shop-venue-sub');if(vs)vs.textContent=ev.venue+' · '+ev.time;setShopTab('look');document.getElementById('shop-modal').classList.add('open');document.getElementById('shop-overlay').style.display='block';}
+function closeShopModal(){document.getElementById('shop-modal').classList.remove('open');document.getElementById('shop-overlay').style.display='none';}
+function setShopTab(tab){_shopCurrentTab=tab;document.getElementById('shop-tab-look').classList.toggle('active',tab==='look');document.getElementById('shop-tab-gear').classList.toggle('active',tab==='gear');renderShopTab();}
+function renderShopTab(){var ev=allEvFlat().find(function(x){return x.id===_shopCurrentEvId;});if(!ev)return;var cat=ev.vertical==='themenu'?'themenu':'afterdark';var items=_shopCurrentTab==='look'?(SHOP_LOOK[cat]||SHOP_LOOK.afterdark):(SHOP_GEAR[cat]||SHOP_GEAR.afterdark);var zip=currentZip,isLook=_shopCurrentTab==='look';document.getElementById('shop-products').innerHTML=items.map(function(p){var ton=p.tonight&&['10001','90210','60601'].includes(zip)?'<span class="shop-tonight">▲ TONIGHT</span>':'';var prime=p.prime?'<span class="shop-prime">PRIME</span>':'';var ref='https://amazon.com/s?k='+encodeURIComponent(p.name)+'&tag=hl-shop-'+_shopCurrentEvId;var buyBtn=isLook?'<a class="shop-stript-btn" href="'+ref+'" target="_blank">🟣 VIEW ON STRIPT</a>':'<a class="shop-buy-btn" href="'+ref+'" target="_blank">▲ BUY — PRIME</a>';return'<div class="shop-product"><div class="shop-product-img">'+p.emoji+'</div><div class="shop-product-name">'+p.name+'</div><div class="shop-product-row"><span class="shop-price">'+p.price+'</span><div class="shop-badges">'+prime+ton+'</div></div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-bottom:7px">'+p.note+'</div>'+buyBtn+'</div>';}).join('');}
+function openAmzSidebar(evId){openShopModal(evId);}
+function closeAmzSidebar(){closeShopModal();}
+function openLookbook(evId){openShopModal(evId);}
+function closeLookbook(){closeShopModal();}
 function checkGeoFence(){if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(function(pos){var nearby=getEvs(currentZip,currentTab,pulseOn).find(function(e){return e.id===4;});if(nearby){var alertEl=document.getElementById('geo-alert');if(alertEl){document.getElementById('geo-alert-text').textContent="You've arrived at "+nearby.venue+"!";alertEl.classList.add('show');setTimeout(function(){alertEl.classList.remove('show');},8000);}}},function(){},{timeout:5000,maximumAge:60000});}
-function acceptGeoAlert(){var alertEl=document.getElementById('geo-alert');if(alertEl)alertEl.classList.remove('show');goLiveOn=true;toggleGoLive();openFriends();}
-// SOCIAL TICKER
-var SOCIAL_FEED=[{source:'IG @marquisnyc',text:'NEON DREAMS loading up 🔥 laser show confirmed for midnight'},{source:'TT @hyperlocal',text:'Dropping the STRIPT x HyperLocal lookbook tonight'},{source:'IG @230fifth',text:'Rooftop is SOLD OUT but DM us for last VIP tickets'},{source:'TT @maalthesocialite',text:'See you at Output tonight 👏 DJ dropping new tracks 11pm'},{source:'IG @lebainyc',text:'Brunch rave lineup posted — 3 DJ sets, unlimited mimosas'},{source:'TT @striptnyc',text:'The drop is tonight. STRIPT x Output BK hoodie limited to 50 units'}];
+function acceptGeoAlert(){var alertEl=document.getElementById('geo-alert');if(alertEl)alertEl.classList.remove('show');goLiveOn=true;openFriends();}
+var SOCIAL_FEED=[{source:'IG @marquisnyc',text:'NEON DREAMS loading up 🔥 laser show confirmed'},{source:'TT @hyperlocal',text:'Dropping the STRIPT x HyperLocal lookbook tonight'},{source:'IG @230fifth',text:'Rooftop is SOLD OUT but DM us for last VIP tickets'},{source:'TT @maalthesocialite',text:'See you at Output tonight 👏 DJ dropping new tracks 11pm'},{source:'TT @striptnyc',text:'The drop is tonight. STRIPT x Output BK hoodie limited to 50 units'}];
 function renderSocialTicker(){var el=document.getElementById('social-ticker-track');if(!el)return;var doubled=SOCIAL_FEED.concat(SOCIAL_FEED);el.innerHTML=doubled.map(function(s){return'<div class="social-ticker-item"><span class="sti-source">'+s.source+'</span><span class="sti-text">'+s.text+'</span></div>';}).join('');}
 // TOPBAR EXTRA BUTTONS
-setTimeout(function(){
-  var dt=document.getElementById('datetime');
-  if(dt&&!document.getElementById('tbar-extra-btns')){
-    var wrap=document.createElement('div');wrap.id='tbar-extra-btns';wrap.style.cssText='display:flex;align-items:center;gap:5px;margin-right:6px';
-    wrap.innerHTML='<button class="itin-btn" onclick="openItinerary()" style="padding:3px 8px;font-size:8px">☣ SCHEDULE</button>'
-      +'<button class="pp-btn" onclick="openPartner()" style="padding:3px 8px;font-size:8px">$ PORTAL</button>'
-      +'<button class="ft-btn" onclick="openFriends()" style="padding:3px 8px;font-size:8px">⚫ FRIENDS</button>';
-    dt.parentNode.insertBefore(wrap,dt);
-  }
-  renderSocialTicker();
-  detectTenant();
-  setTimeout(checkGeoFence,2000);
-},300);
-// ══ SPRINT 11: TERMINAL MODE ══
+setTimeout(function(){var dt=document.getElementById('datetime');if(dt&&!document.getElementById('tbar-extra-btns')){var wrap=document.createElement('div');wrap.id='tbar-extra-btns';wrap.style.cssText='display:flex;align-items:center;gap:5px;margin-right:6px';wrap.innerHTML='<button class="itin-btn" onclick="openItinerary()" style="padding:3px 8px;font-size:8px">☣ SCHEDULE</button>'+'<button class="pp-btn" onclick="openPartner()" style="padding:3px 8px;font-size:8px">$ PORTAL</button>'+'<button class="ft-btn" onclick="openFriends()" style="padding:3px 8px;font-size:8px">⚫ FRIENDS</button>';dt.parentNode.insertBefore(wrap,dt);}renderSocialTicker();detectTenant();setTimeout(checkGeoFence,2000);},300);
+// ════ SPRINT 11: TERMINAL MODE ════
 var isProMode=window.innerWidth>=768;
 function initTerminalMode(){isProMode=window.innerWidth>=768;applyTerminalMode();}
-function applyTerminalMode(){
-  var body=document.body;
-  if(isProMode){
-    body.classList.add('pro-mode');body.classList.remove('pub-mode');
-    var btn=document.getElementById('tm-btn');if(btn){btn.className='terminal-mode-btn pro';var dot=document.getElementById('tm-dot');if(dot)dot.className='tm-dot pro';var lbl=document.getElementById('tm-label');if(lbl)lbl.textContent='TERMINAL';}
-    var btnM=document.getElementById('tm-btn-m');if(btnM){btnM.className='terminal-mode-btn pro';var dotM=document.getElementById('tm-dot-m');if(dotM)dotM.className='tm-dot pro';var lblM=document.getElementById('tm-label-m');if(lblM)lblM.textContent='TERMINAL';}
-    proOn=true;
-    var pt=document.getElementById('pro-track'),pl=document.getElementById('pro-label');if(pt)pt.classList.add('on');if(pl)pl.classList.add('active');
-  }else{
-    body.classList.remove('pro-mode');body.classList.add('pub-mode');
-    var btn=document.getElementById('tm-btn');if(btn){btn.className='terminal-mode-btn pub';var dot=document.getElementById('tm-dot');if(dot)dot.className='tm-dot pub';var lbl=document.getElementById('tm-label');if(lbl)lbl.textContent='PUBLIC';}
-    var btnM=document.getElementById('tm-btn-m');if(btnM){btnM.className='terminal-mode-btn pub';var dotM=document.getElementById('tm-dot-m');if(dotM)dotM.className='tm-dot pub';var lblM=document.getElementById('tm-label-m');if(lblM)lblM.textContent='PUBLIC';}
-    proOn=false;
-    var pt=document.getElementById('pro-track'),pl=document.getElementById('pro-label');if(pt)pt.classList.remove('on');if(pl)pl.classList.remove('active');
-  }
-  renderAll(currentTab,currentZip,pulseOn);
-}
+function applyTerminalMode(){var body=document.body;if(isProMode){body.classList.add('pro-mode');body.classList.remove('pub-mode');var btn=document.getElementById('tm-btn');if(btn){btn.className='terminal-mode-btn pro';var dot=document.getElementById('tm-dot');if(dot)dot.className='tm-dot pro';var lbl=document.getElementById('tm-label');if(lbl)lbl.textContent='TERMINAL';}var btnM=document.getElementById('tm-btn-m');if(btnM){btnM.className='terminal-mode-btn pro';var dotM=document.getElementById('tm-dot-m');if(dotM)dotM.className='tm-dot pro';var lblM=document.getElementById('tm-label-m');if(lblM)lblM.textContent='TERMINAL';}proOn=true;var pt=document.getElementById('pro-track'),pl=document.getElementById('pro-label');if(pt)pt.classList.add('on');if(pl)pl.classList.add('active');}else{body.classList.remove('pro-mode');body.classList.add('pub-mode');var btn=document.getElementById('tm-btn');if(btn){btn.className='terminal-mode-btn pub';var dot=document.getElementById('tm-dot');if(dot)dot.className='tm-dot pub';var lbl=document.getElementById('tm-label');if(lbl)lbl.textContent='PUBLIC';}var btnM=document.getElementById('tm-btn-m');if(btnM){btnM.className='terminal-mode-btn pub';var dotM=document.getElementById('tm-dot-m');if(dotM)dotM.className='tm-dot pub';var lblM=document.getElementById('tm-label-m');if(lblM)lblM.textContent='PUBLIC';}proOn=false;var pt=document.getElementById('pro-track'),pl=document.getElementById('pro-label');if(pt)pt.classList.remove('on');if(pl)pl.classList.remove('active');}renderAll(currentTab,currentZip,pulseOn);}
 function toggleTerminalMode(){isProMode=!isProMode;applyTerminalMode();}
-// ══ MOBILE STATUS BAR ══
-function renderMobileStatusBar(tab,zip){
-  if(window.innerWidth>=768)return;
-  var w=WEATHER_DB[gk(zip)]||WEATHER_DB.default;
-  var el=document.getElementById('msb-temp');if(el)el.textContent=w.temp;
-  var news=NEWS_DB[tab]||NEWS_DB.terminal;
-  var hl=document.getElementById('msb-headline');if(hl&&news[0])hl.textContent=news[0].h.substring(0,50)+(news[0].h.length>50?'\u2026':'');
-  var ct=document.getElementById('msb-count');if(ct)ct.textContent=getEvs(zip,tab,pulseOn).length;
-}
-// ══ VERTICAL PULSE SYNC ══
+// ════ VERTICAL PULSE ════
 var VP_ORDER=['terminal','afterdark','themenu','theladder'];
-var VP_COLORS=['#0047FF','#9B5DE5','#FF8C00','#00E676'];
 var vpActive=false,vpInterval=null,vpCountdown=30,vpCountdownInterval=null,vpCurrentIdx=0;
-function startVerticalPulse(){
-  vpActive=true;
-  vpCurrentIdx=VP_ORDER.indexOf(currentTab);if(vpCurrentIdx<0)vpCurrentIdx=0;
-  updatePulseSegments();
-  injectPulseCycleBar();
-  vpCountdown=30;
-  vpInterval=setInterval(advanceVerticalPulse,30000);
-  vpCountdownInterval=setInterval(function(){vpCountdown--;if(vpCountdown<0)vpCountdown=30;startVPCountdown(vpCountdown);},1000);
-}
-function stopVerticalPulse(){
-  vpActive=false;
-  if(vpInterval){clearInterval(vpInterval);vpInterval=null;}
-  if(vpCountdownInterval){clearInterval(vpCountdownInterval);vpCountdownInterval=null;}
-  document.querySelectorAll('.pcb-seg').forEach(function(s){s.className='pcb-seg inactive';});
-  var vpc=document.getElementById('vp-countdown');if(vpc)vpc.classList.remove('active');
-  var vpcm=document.getElementById('vp-countdown-m');if(vpcm)vpcm.classList.remove('active');
-}
-function advanceVerticalPulse(){
-  vpCurrentIdx=(vpCurrentIdx+1)%VP_ORDER.length;
-  var nextTab=VP_ORDER[vpCurrentIdx];
-  vpCountdown=30;
-  document.querySelectorAll('.tab-btn').forEach(function(b){
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+nextTab+"'")){
-      b.classList.add('pulsing');setTimeout(function(){b.classList.remove('pulsing');},700);
-      b.click();
-    }
-  });
-  updatePulseSegments();
-  renderMapDots(nextTab,pulseOn);
-  renderNews(nextTab);
-  renderMobileStatusBar(nextTab,currentZip);
-}
+function startVerticalPulse(){vpActive=true;vpCurrentIdx=VP_ORDER.indexOf(currentTab);if(vpCurrentIdx<0)vpCurrentIdx=0;updatePulseSegments();vpCountdown=30;vpInterval=setInterval(advanceVerticalPulse,30000);vpCountdownInterval=setInterval(function(){vpCountdown--;if(vpCountdown<0)vpCountdown=30;startVPCountdown(vpCountdown);},1000);}
+function stopVerticalPulse(){vpActive=false;if(vpInterval){clearInterval(vpInterval);vpInterval=null;}if(vpCountdownInterval){clearInterval(vpCountdownInterval);vpCountdownInterval=null;}document.querySelectorAll('.pcb-seg').forEach(function(s){s.className='pcb-seg inactive';});var vpc=document.getElementById('vp-countdown');if(vpc)vpc.classList.remove('active');var vpcm=document.getElementById('vp-countdown-m');if(vpcm)vpcm.classList.remove('active');}
+function advanceVerticalPulse(){vpCurrentIdx=(vpCurrentIdx+1)%VP_ORDER.length;var nextTab=VP_ORDER[vpCurrentIdx];vpCountdown=30;document.querySelectorAll('.tab-btn').forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+nextTab+"'")){b.classList.add('pulsing');setTimeout(function(){b.classList.remove('pulsing');},700);b.click();}});updatePulseSegments();}
 function updatePulseSegments(){for(var i=0;i<4;i++){var seg=document.getElementById('pcb-'+i);if(seg)seg.className='pcb-seg '+(i===vpCurrentIdx?'active':'inactive');}}
-function startVPCountdown(sec){
-  var circ=37.7,offset=circ*(1-sec/30);
-  var arc=document.getElementById('vp-arc');if(arc)arc.style.strokeDashoffset=offset;
-  var arcM=document.getElementById('vp-arc-m');if(arcM)arcM.style.strokeDashoffset=offset;
-  var secEl=document.getElementById('vp-sec');if(secEl)secEl.textContent=sec;
-  var secM=document.getElementById('vp-sec-m');if(secM)secM.textContent=sec;
-}
-function injectPulseCycleBar(){
-  var dt=document.getElementById('datetime');
-  if(dt&&!document.getElementById('vp-countdown')){
-    var ring=document.createElement('div');ring.id='vp-countdown';ring.className='vp-countdown';
-    ring.innerHTML='<svg class="vp-ring" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--border)" stroke-width="2"/><circle id="vp-arc" cx="8" cy="8" r="6" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="37.7" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 8 8)"/></svg><span id="vp-sec">30</span>s';
-    dt.parentNode.insertBefore(ring,dt);
-  }
-  var vpEl=document.getElementById('vp-countdown');if(vpEl)vpEl.classList.add('active');
-  var vpMEl=document.getElementById('vp-countdown-m');if(vpMEl)vpMEl.classList.add('active');
-}
-// ══ EQUIP FOR EVENT MODAL ══
-var EQUIP_LOOK={afterdark:[{emoji:'👕',name:'STRIPT Oversized Hoodie — Black',price:'$89',prime:true,tonight:true,note:'Sold at events'},{emoji:'👔',name:'STRIPT Logo Cap — Navy',price:'$45',prime:true,tonight:true,note:'Limited drop'},{emoji:'👚',name:'STRIPT Joggers',price:'$75',prime:false,tonight:false,note:'Streetwear staple'},{emoji:'👜',name:'Clear Stadium Bag',price:'$12.99',prime:true,tonight:true,note:'Venue compliant'},{emoji:'🔗',name:'Chunky Chain Necklace',price:'$34',prime:true,tonight:false,note:'Accessorize'}],themenu:[{emoji:'👕',name:'STRIPT Linen Blazer — White',price:'$129',prime:true,tonight:false,note:'Dinner look'},{emoji:'👠',name:'Oxford Derby Shoes',price:'$89',prime:true,tonight:false,note:'Smart casual'},{emoji:'⌚',name:'Minimalist Watch',price:'$149',prime:true,tonight:false,note:'Dress it up'},{emoji:'💳',name:'RFID Slim Card Wallet',price:'$19.99',prime:true,tonight:true,note:'Night out'},{emoji:'🌜',name:'Breath Freshening Strips',price:'$6.99',prime:true,tonight:true,note:'Essentials'}]};
-var EQUIP_GEAR={afterdark:[{emoji:'🔇',name:'Foam Earplugs NRR33',price:'$9.99',prime:true,tonight:true,note:'Protect your ears'},{emoji:'🧴',name:'Hand Sanitizer 3-Pack',price:'$8.49',prime:true,tonight:true,note:'Quick dry'},{emoji:'📱',name:'MagSafe Phone Wallet',price:'$22.99',prime:true,tonight:true,note:'Cards + phone'},{emoji:'💊',name:'B-Complex Energy Vitamins',price:'$14.99',prime:true,tonight:false,note:'Pre-event boost'},{emoji:'🕋',name:'Portable Charger 10k',price:'$27.99',prime:true,tonight:true,note:'Never die out'}],themenu:[{emoji:'📷',name:'Ring Light Clip-On',price:'$18.99',prime:true,tonight:true,note:'Food photos'},{emoji:'🍷',name:'Sommelier Corkscrew Set',price:'$11.99',prime:true,tonight:true,note:'Dinner ready'},{emoji:'🧻',name:'Stain Remover Pen',price:'$7.99',prime:true,tonight:true,note:'White shirt insurance'},{emoji:'📬',name:'Digital Business Cards NFC',price:'$24.99',prime:true,tonight:false,note:'Networking'},{emoji:'🥂',name:'Mimosa Kit Flutes 4-Pack',price:'$22.99',prime:true,tonight:false,note:'Brunch staple'}]};
-var _equipCurrentEvId=null,_equipCurrentTab='look';
-function openEquipModal(evId){var ev=allEvFlat().find(function(x){return x.id===evId;});if(!ev)return;_equipCurrentEvId=evId;_equipCurrentTab='look';document.getElementById('equip-event-name').textContent=ev.name;var es=document.getElementById('equip-event-sub');if(es)es.textContent=ev.venue+' · '+ev.time;var evs=document.getElementById('equip-venue-sub');if(evs)evs.textContent=ev.venue+' · '+ev.time;setEquipTab('look');document.getElementById('equip-modal').classList.add('open');document.getElementById('equip-overlay').style.display='block';}
-function closeEquipModal(){document.getElementById('equip-modal').classList.remove('open');document.getElementById('equip-overlay').style.display='none';}
-function setEquipTab(tab){_equipCurrentTab=tab;document.getElementById('equip-tab-look').classList.toggle('active',tab==='look');document.getElementById('equip-tab-gear').classList.toggle('active',tab==='gear');renderEquipTab();}
-function renderEquipTab(){
-  var ev=allEvFlat().find(function(x){return x.id===_equipCurrentEvId;});if(!ev)return;
-  var cat=ev.vertical==='themenu'?'themenu':'afterdark';
-  var items=_equipCurrentTab==='look'?(EQUIP_LOOK[cat]||EQUIP_LOOK.afterdark):(EQUIP_GEAR[cat]||EQUIP_GEAR.afterdark);
-  var zip=currentZip,isLook=_equipCurrentTab==='look';
-  document.getElementById('equip-products').innerHTML=items.map(function(p){
-    var ton=p.tonight&&['10001','90210','60601'].includes(zip)?'<span class="equip-tonight">▲ TONIGHT</span>':'';
-    var prime=p.prime?'<span class="equip-prime">PRIME</span>':'';
-    var ref='https://amazon.com/s?k='+encodeURIComponent(p.name)+'&tag=hl-equip-'+_equipCurrentEvId;
-    var buyBtn=isLook?'<a class="equip-stript-btn" href="'+ref+'" target="_blank">🟣 VIEW ON STRIPT</a>':'<a class="equip-buy-btn" href="'+ref+'" target="_blank">▲ BUY — PRIME</a>';
-    return'<div class="equip-product"><div class="equip-product-img">'+p.emoji+'</div><div class="equip-product-name">'+p.name+'</div><div class="equip-product-row"><span class="equip-price">'+p.price+'</span><div class="equip-badges">'+prime+ton+'</div></div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-bottom:7px">'+p.note+'</div>'+buyBtn+'</div>';
-  }).join('');
-}
-// ══ PROMO VIDEO (HTML5 muted autoplay) ══
+function startVPCountdown(sec){var circ=37.7,offset=circ*(1-sec/30);var arc=document.getElementById('vp-arc');if(arc)arc.style.strokeDashoffset=offset;var arcM=document.getElementById('vp-arc-m');if(arcM)arcM.style.strokeDashoffset=offset;var secEl=document.getElementById('vp-sec');if(secEl)secEl.textContent=sec;var secM=document.getElementById('vp-sec-m');if(secM)secM.textContent=sec;}
+function injectPulseCycleBar(){var dt=document.getElementById('datetime');if(dt&&!document.getElementById('vp-countdown')){var ring=document.createElement('div');ring.id='vp-countdown';ring.className='vp-countdown';ring.innerHTML='<svg class="vp-ring" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--border)" stroke-width="2"/><circle id="vp-arc" cx="8" cy="8" r="6" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="37.7" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 8 8)"/></svg><span id="vp-sec">30</span>s';dt.parentNode.insertBefore(ring,dt);}var vpEl=document.getElementById('vp-countdown');if(vpEl)vpEl.classList.add('active');var vpMEl=document.getElementById('vp-countdown-m');if(vpMEl)vpMEl.classList.add('active');}
 var PROMO_VIDEOS={terminal:'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',afterdark:'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',themenu:'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',theladder:'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4'};
-function getPromoVideoHTML(tab,title,sub){var src=PROMO_VIDEOS[tab]||PROMO_VIDEOS.terminal;return'<div class="promo-video-wrap" style="height:200px"><video autoplay muted loop playsinline style="height:200px;width:100%;object-fit:cover"><source src="'+src+'" type="video/mp4"></video><div class="promo-scanlines"></div><div class="promo-overlay"><div class="promo-label">● LIVE FEED</div><div class="promo-title">'+title+'</div><div class="promo-sub">'+sub+'</div></div></div>';}
-function injectPromoVideo(tab){
-  if(window.innerWidth<768)return;
-  var heroWrap=document.querySelector('#tab-'+tab+' .hero-wrap');if(!heroWrap)return;
-  if(heroWrap.querySelector('.promo-video-wrap'))return;
-  var titles={terminal:"Tonight's HyperLocal Rundown",afterdark:'NYC After Dark: Tonight\'s Hottest',themenu:"Tonight's Top Tables & Pop-Ups",theladder:'23 Local Job Openings This Hour'};
-  var subs={terminal:'NIGHTLIFE · FOOD · JOBS · LIVE',afterdark:'CLUBS · LOUNGES · ROOFTOPS',themenu:'RESTAURANTS · POP-UPS · TASTINGS',theladder:'HOSPITALITY · TECH · GIGS'};
-  var aspect=heroWrap.querySelector('.hero-aspect');if(aspect)aspect.innerHTML=getPromoVideoHTML(tab,titles[tab]||'',subs[tab]||'');
-}
-// ══ INIT ══
-TABS.forEach(function(t){renderAll(t,'10001',false);});
+function injectPromoVideo(tab){if(window.innerWidth<768)return;var heroWrap=document.querySelector('#tab-'+tab+' .hero-wrap');if(!heroWrap)return;if(heroWrap.querySelector('.promo-video-wrap'))return;var titles={terminal:"HyperLocal Rundown",afterdark:"NYC After Dark",themenu:"Top Tables Tonight",theladder:'23 Jobs This Hour'};var subs={terminal:'NIGHTLIFE · FOOD · JOBS',afterdark:'CLUBS · LOUNGES · ROOFTOPS',themenu:'RESTAURANTS · TASTINGS',theladder:'HOSPITALITY · TECH · GIGS'};var src=PROMO_VIDEOS[tab];var aspect=heroWrap.querySelector('.hero-aspect');if(aspect)aspect.innerHTML='<div class="promo-video-wrap" style="height:200px"><video autoplay muted loop playsinline style="height:200px;width:100%;object-fit:cover"><source src="'+src+'" type="video/mp4"></video><div class="promo-scanlines"></div><div class="promo-overlay"><div class="promo-label">● LIVE FEED</div><div class="promo-title">'+titles[tab]+'</div><div class="promo-sub">'+subs[tab]+'</div></div></div>';}
+// ════ SPRINT 13: BOTTOM NAV ════
+var _bnavCurrent='home';
+function bnavGo(dest,btn){document.querySelectorAll('.bnav-item').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');_bnavCurrent=dest;if(dest==='home'){closeStream();}else if(dest==='markets'){isProMode=!isProMode;if(typeof applyTerminalMode==='function')applyTerminalMode();setTimeout(function(){var nh=document.getElementById('bnav-home');if(nh)nh.classList.add('active');var nm=document.getElementById('bnav-markets');if(nm)nm.classList.remove('active');_bnavCurrent='home';},200);}else if(dest==='watch'){openFriends();setTimeout(function(){var nh=document.getElementById('bnav-home');if(nh)nh.classList.add('active');if(btn)btn.classList.remove('active');_bnavCurrent='home';},200);}else if(dest==='stream'){openStream();}else if(dest==='menu'){openPartner();setTimeout(function(){var nh=document.getElementById('bnav-home');if(nh)nh.classList.add('active');if(btn)btn.classList.remove('active');_bnavCurrent='home';},200);}}
+// ════ SPRINT 13: STREAM PANEL ════
+var STREAM_VIDEOS=[{title:"NYC After Dark: Tonight's Hottest",sub:"CLUBS · LOUNGES · ROOFTOPS",src:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"},{title:"Top Tables & Pop-Ups Tonight",sub:"RESTAURANTS · TASTINGS",src:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"},{title:"23 Local Job Openings This Hour",sub:"HOSPITALITY · TECH · GIGS",src:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"},{title:"HyperLocal Terminal: Live Coverage",sub:"NIGHTLIFE · FOOD · JOBS",src:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"}];
+function openStream(){var el=document.getElementById('stream-panel');if(!el)return;var body=document.getElementById('stream-body');if(body&&!body.querySelector('video')){body.innerHTML=STREAM_VIDEOS.map(function(v){return'<div class="stream-card"><div class="stream-video-wrap"><video autoplay muted loop playsinline style="width:100%;height:180px;object-fit:cover"><source src="'+v.src+'" type="video/mp4"></video></div><div class="stream-meta"><div class="stream-title">'+v.title+'</div><div class="stream-sub">'+v.sub+'</div></div></div>';}).join('');}el.classList.add('open');}
+function closeStream(){var el=document.getElementById('stream-panel');if(el)el.classList.remove('open');}
+// ════ SPRINT 13: URGENCY BAR ════
+var URGENCY_ALERTS=['URGENT: Marquee NYC under 10% capacity remaining — buy now','ALERT: Alinea adding 4 walk-in seats in 10 minutes','BREAKING: Output Brooklyn SOLD OUT — join waitlist','URGENT: Social Media Manager gig — 24 applicants, closes tonight','ALERT: MTA L-train delays — leave 20 min early for Chelsea venues','HOT: Rooftop Brunch Rave under 40 tickets remaining'];
+function renderUrgencyBar(){var el=document.getElementById('urgency-track');if(!el)return;var doubled=URGENCY_ALERTS.concat(URGENCY_ALERTS);el.innerHTML=doubled.map(function(a){return'<span class="urgency-item">'+a+'<span class="urgency-sep">&nbsp;&#9632;&nbsp;</span></span>';}).join('');document.getElementById('urgency-bar').classList.add('active');}
+// ════ INIT ════
+TABS.forEach(function(t){renderNews(t);renderWeather(t,'10001');renderStats(t);renderMapDots(t,false);renderTicker(t);setPulseCircles(t,false);});
 renderAllCounts('10001',false);
+renderCarousel('terminal','10001',false);
 setInterval(clock,1000);clock();
-setTimeout(function(){initTerminalMode();},400);
+setTimeout(function(){initTerminalMode();renderUrgencyBar();},400);
 </script>
 </body>
 </html>
