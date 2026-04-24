@@ -564,8 +564,7 @@ body.pub-mode .hero-wrap{display:none}
   .bottom-nav { z-index: 9999 !important; }
   .stream-panel { bottom: 58px !important; z-index: 180 !important; }
 }
-
-</style>-detail-title { font-size: 18px; font-weight: 700; margin-bottom: 4px }
+</style>
 
 </head>
 <body>
@@ -602,7 +601,6 @@ body.pub-mode .hero-wrap{display:none}
   <button class="theme-btn" id="theme-btn" onclick="toggleTheme()"><svg id="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg id="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/></svg></button>
   <button class="terminal-mode-btn pub" id="tm-btn" onclick="toggleTerminalMode()"><span class="tm-dot pub" id="tm-dot"></span><span id="tm-label">PUBLIC</span></button>
   <div class="tb-div"></div>
-  <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim)">NY METRO</span>
   <div class="datetime" id="datetime"></div>
 </div>
 <div class="tenant-banner" id="tenant-banner"><div class="tenant-avatar" id="tenant-avatar">H</div><div><div class="tenant-name" id="tenant-name">HyperLocal</div><div class="tenant-tagline" id="tenant-tagline">Your city, live</div></div><div class="tenant-badge" id="tenant-badge">HYPERLOCAL</div></div>
@@ -614,6 +612,7 @@ body.pub-mode .hero-wrap{display:none}
   <button class="tab-btn" onclick="switchTab('afterdark',this)">&#127769; SOCIAL <span class="tab-count" id="count-afterdark">0</span></button>
   <button class="tab-btn" onclick="switchTab('themenu',this)">&#127829; FOOD <span class="tab-count" id="count-themenu">0</span></button>
   <button class="tab-btn" onclick="switchTab('theladder',this)">&#9650; GIGS <span class="tab-count" id="count-theladder">0</span></button>
+  <button class="tab-btn" id="tab-btn-map" onclick="switchTab('mapview',this)">&#9673; MAP</button>
 </div>
 <div class="pulse-cycle-bar" id="pulse-cycle-bar"><div class="pcb-seg inactive" id="pcb-0" style="background:#0047FF"></div><div class="pcb-seg inactive" id="pcb-1" style="background:#9B5DE5"></div><div class="pcb-seg inactive" id="pcb-2" style="background:#FF8C00"></div><div class="pcb-seg inactive" id="pcb-3" style="background:#00E676"></div></div>
 <div class="tab-content active slide-in" id="tab-terminal">
@@ -635,6 +634,33 @@ body.pub-mode .hero-wrap{display:none}
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">Gigs</span><span class="panel-hdr-badge" style="color:var(--green)">HIRING</span></div><div class="news-scroll" id="news-theladder"></div><div class="weather-box" id="weather-theladder"></div></div>
   <div class="center-stage"><div class="hero-wrap"><div class="hero-aspect" id="hero-theladder"><div class="hero-bg" style="background:linear-gradient(135deg,#040810 0%,#001A0E 100%)"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip" style="background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.35)"><span class="live-pill" style="font-size:8px;padding:1px 5px;background:var(--green);color:#000"><span class="live-dot" style="background:#000"></span>LIVE</span><span class="anchor-name" style="color:var(--green)">GIGS</span></div><div class="hero-title">Gigs &mdash; Hiring Now</div><div class="hero-sub">HOSPITALITY &middot; TECH &middot; FREELANCE</div></div></div></div><div class="stats-bar" id="stats-theladder"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Gigs Map</span><span class="panel-hdr-badge" style="color:var(--green)">HIRING</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-theladder"></div><div class="pulse-overlay"><div class="pulse-circles" id="pc-theladder"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Post a gig via HyperLocal</div><a href="#" class="ad-cta">POST GIG</a></div></div></div></div></div>
   <div class="sidebar"><div class="sector-filter-bar" id="sector-filter-bar"><button class="sector-pill active" onclick="setSector('all',this)">ALL</button><button class="sector-pill" onclick="setSector('tech',this)">TECH</button><button class="sector-pill" onclick="setSector('hospitality',this)">HOSPITALITY</button><button class="sector-pill" onclick="setSector('corporate',this)">CORP</button><button class="sector-pill" onclick="setSector('medical',this)">MEDICAL</button></div><div class="panel-hdr"><span class="panel-hdr-title">Gigs</span><span class="panel-hdr-badge" id="ev-count-theladder">0</span></div><div class="ev-list" id="evlist-theladder"></div></div>
+</div>
+
+<div class="tab-content slide-in" id="tab-mapview">
+  <div style="display:flex;flex-direction:column;flex:1;overflow:hidden;background:var(--bg0)">
+    <div class="map-filter-bar" id="desktop-map-filter-bar">
+      <button class="map-filter-pill active" onclick="setDesktopMapFilter('all',this)">ALL</button>
+      <button class="map-filter-pill" onclick="setDesktopMapFilter('afterdark',this)">&#127769; SOCIAL</button>
+      <button class="map-filter-pill" onclick="setDesktopMapFilter('themenu',this)">&#127829; FOOD</button>
+      <button class="map-filter-pill" onclick="setDesktopMapFilter('theladder',this)">&#9650; GIGS</button>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div style="flex:1;position:relative;overflow:hidden;background:var(--bg2)">
+        <div class="map-page-grid" style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,71,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,71,255,.04) 1px,transparent 1px);background-size:24px 24px"></div>
+        <div id="desktop-map-dots" style="position:absolute;inset:0"></div>
+        <div class="pulse-overlay"><div class="pulse-circles" id="pc-mapview"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div>
+        <div style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:8px;z-index:5">
+          <span style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.1em">&#9673; LIVE MAP</span>
+          <span class="panel-hdr-badge" id="desktop-map-count">0 VENUES</span>
+        </div>
+        <div style="position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="desktop-map-zip">10001</div>
+      </div>
+      <div style="width:280px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <div class="panel-hdr"><span class="panel-hdr-title">Highlighted Events</span><span class="panel-hdr-badge" id="desktop-map-ev-count">0</span></div>
+        <div class="ev-list" id="evlist-mapview" style="overflow-y:auto;flex:1"></div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="ticker-wrap"><div class="ticker-tag" id="ticker-tag">LIVE</div><div class="ticker-scroller"><div class="ticker-track" id="ticker-track"></div></div></div>
 <div class="social-ticker-wrap"><div class="social-ticker-tag">&#9830; SOCIAL</div><div class="social-ticker-scroller"><div class="social-ticker-track" id="social-ticker-track"></div></div></div>
@@ -664,14 +690,14 @@ body.pub-mode .hero-wrap{display:none}
 <!-- SPRINT 14: MAP PAGE -->
 <div class="map-page" id="map-page"><div class="map-page-hdr"><span class="map-page-title">&#9673; LIVE MAP</span><span class="map-page-count" id="map-page-count">0 VENUES</span><span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="map-page-zip">10001</span></div><div class="map-filter-bar"><button class="map-filter-pill active" onclick="setMapFilter('all',this)">ALL</button><button class="map-filter-pill" onclick="setMapFilter('afterdark',this)">&#127769; SOCIAL</button><button class="map-filter-pill" onclick="setMapFilter('themenu',this)">&#127829; FOOD</button><button class="map-filter-pill" onclick="setMapFilter('theladder',this)">&#9650; GIGS</button></div><div class="map-page-inner" id="map-page-inner"><div class="map-page-grid"></div><div id="map-page-dots"></div></div></div>
 <!-- SPRINT 14: MENU HUB -->
-<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary()"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">My Itinerary</div><div class="menu-hub-row-sub">Schedule &amp; .ics calendar export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div></div>
+<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div></div>
 <!-- SPRINT 14: EVENT DETAIL MODAL -->
 <div class="ev-detail-modal" id="ev-detail-modal"><div class="ev-detail-card"><div class="ev-detail-hdr"><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">EVENT DETAILS</div><button class="ev-detail-close" onclick="closeEvDetail()">&#10005;</button></div><div class="ev-detail-img" id="ev-detail-img">&#9651;</div><div class="ev-detail-body"><div class="ev-detail-title" id="ev-detail-title">&mdash;</div><div class="ev-detail-venue" id="ev-detail-venue">&mdash;</div><div class="ev-detail-grid" id="ev-detail-grid"></div><div class="ev-tags" id="ev-detail-tags" style="margin-bottom:12px"></div><div class="ev-detail-actions" id="ev-detail-actions"></div></div></div></div>
 <!-- BLOOMBERG BOTTOM NAV (Sprint 14: HL logo + MAP icon) -->
 <div class="bottom-nav" id="bottom-nav">
   <button class="bnav-item active" id="bnav-home" onclick="bnavGo('home',this)"><div class="bnav-icon"><div class="bnav-hl-logo">HL</div></div><span class="bnav-label">HOME</span></button>
   <button class="bnav-item" id="bnav-markets" onclick="bnavGo('map',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div><span class="bnav-label">MAP</span></button>
-  <button class="bnav-item" id="bnav-watch" onclick="bnavGo('watch',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/><circle cx="19" cy="7" r="3"/></svg></div><span class="bnav-label">FRIENDS</span></button>
+  <button class="bnav-item" id="bnav-friends" onclick="bnavGo('friends',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/><circle cx="19" cy="7" r="3"/></svg></div><span class="bnav-label">FRIENDS</span></button>
   <button class="bnav-item" id="bnav-stream" onclick="bnavGo('stream',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><span class="bnav-label">STREAM</span></button>
   <button class="bnav-item" id="bnav-menu" onclick="bnavGo('menu',this)"><div class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div><span class="bnav-label">MENU</span></button>
 </div>
@@ -679,6 +705,7 @@ body.pub-mode .hero-wrap{display:none}
 <div class="stream-panel" id="stream-panel"><div class="stream-hdr"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em">&#9654; HYPERLOCAL STREAM</div><button class="stream-close" onclick="closeStream()">&#10005;</button></div><div class="stream-body" id="stream-body"></div></div>
 <script>
 const TABS=["terminal","afterdark","themenu","theladder"];
+const ALL_TABS=["terminal","afterdark","themenu","theladder","mapview"];
 let currentTab="terminal",currentZip="10001",pulseOn=false;
 const ALL_EVENTS={"10001":[
 {id:1,name:"INDUSTRY TAKEOVER",venue:"Marquee NYC",addr:"289 10th Ave",hood:"Chelsea",time:"10:00 PM",price:"$45",avail:12,trending:true,featured:false,tags:["EDM","OPEN BAR"],genre:"Electronic",cap:800,vertical:"afterdark",source:"posh"},
@@ -737,7 +764,7 @@ function renderCard(ev){
   var shopBtn=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="shop-btn" onclick="event.stopPropagation();openShopModal('+ev.id+')">&#128722; SHOP</button>':'';
   var shareBtn='<button class="share-earn-btn" onclick="openShareEarn('+ev.id+')">&#8679; EARN</button>';
   var avHtml=isJob?'<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">APPLY ANYTIME</span>':'<div style="display:flex;align-items:center;gap:4px;margin-top:2px"><div class="avail-bar" style="width:50px"><div class="avail-fill" style="width:'+pct+'%;background:'+ac+'"></div></div><span class="avail-pct" style="color:'+ac+'">'+pct+'%</span></div>';
-  return '<div class="'+cardCls(ev)+'" onclick="openEvDetailById('+ev.id+')">'+'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'+'<div class="ev-r1"><div class="ev-name">'+ev.name+'</div></div>'+'<div class="ev-r2"><span class="ev-venue">'+ev.venue+'</span><span class="ev-time">'+ev.time+'</span></div>'+'<div class="ev-tags">'+tagsHtml+'</div>'+'<div class="ev-card-footer"><div class="ev-card-price-source"><div class="ev-card-price-val">'+ev.price+'</div></div><div class="ev-card-actions">'+(shopBtn?shopBtn:'')+shareBtn+'<button class="card-map-btn" onclick="event.stopPropagation();openMap(event,'+ev.id+')">MAP</button></div></div>'+'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank" onclick="event.stopPropagation()">'+(isJob?'APPLY NOW':'GET TICKET')+' →</a>'+'</div>';
+  return '<div class="'+cardCls(ev)+'" onclick="openEvDetailById('+ev.id+')">'+'<span class="source-badge '+srcCls+'">via '+ev.source+'</span>'+'<div class="ev-r1"><div class="ev-name">'+ev.name+'</div></div>'+'<div class="ev-r2"><span class="ev-venue">'+ev.venue+'</span><span class="ev-time">'+ev.time+'</span></div>'+'<div class="ev-tags">'+tagsHtml+'</div>'+'<div class="ev-card-footer"><div class="ev-card-price-source"><div class="ev-card-price-val">'+ev.price+'</div></div><div class="ev-card-actions">'+(shopBtn?shopBtn:'')+shareBtn+'</div></div>'+'<a class="ticket-btn" href="https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'))+'" target="_blank" onclick="event.stopPropagation()">'+(isJob?'APPLY NOW':'GET TICKET')+' →</a>'+'</div>';
 }// ── Render functions ──
 function renderEvList(tab,zip,pulse){
   var evs=getEvs(zip,tab,pulse);
@@ -822,10 +849,14 @@ function switchTab(tab,btn){
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   var tc=document.getElementById('tab-'+tab);
   if(tc){tc.classList.add('active');tc.classList.add('slide-in');setTimeout(function(){tc.classList.remove('slide-in');},300);}
-  renderAll(tab,currentZip,pulseOn);
-  var pcb=document.querySelectorAll('.pcb-seg');
-  var idx=TABS.indexOf(tab);
-  pcb.forEach(function(s,i){s.classList.toggle('active',i===idx);s.classList.toggle('inactive',i!==idx);});
+  if(tab==='mapview'){
+    renderDesktopMap(_desktopMapFilter||'all');
+  } else {
+    renderAll(tab,currentZip,pulseOn);
+    var pcb=document.querySelectorAll('.pcb-seg');
+    var idx=TABS.indexOf(tab);
+    pcb.forEach(function(s,i){s.classList.toggle('active',i===idx);s.classList.toggle('inactive',i!==idx);});
+  }
 }
 function togglePulse(){
   pulseOn=!pulseOn;
@@ -983,12 +1014,33 @@ function copyAff(){
   if(el)navigator.clipboard&&navigator.clipboard.writeText(el.textContent);
 }
 // ── Itinerary ──
+var _itinMode='tonight'; // 'tonight' | 'reunion'
 var _itinItems=[
-  {time:'7:00P',name:'Chef Table Pop-Up',venue:'Eleven Madison',live:false},
-  {time:'9:00P',name:'INDUSTRY TAKEOVER',venue:'Marquee NYC',live:true},
-  {time:'11:30P',name:'NEON DREAMS',venue:'Output Brooklyn',live:false}
+  {time:'7:00P',name:'Chef Table Pop-Up',venue:'Eleven Madison',live:false,cat:'FOOD',color:'var(--orange)'},
+  {time:'9:00P',name:'INDUSTRY TAKEOVER',venue:'Marquee NYC',live:true,cat:'SOCIAL',color:'var(--purple)'},
+  {time:'11:30P',name:'NEON DREAMS',venue:'Output Brooklyn',live:false,cat:'SOCIAL',color:'var(--purple)'}
 ];
-function openItinerary(){
+var _reunionDays=[
+  {day:'FRI · JUN 27',label:'ARRIVAL DAY',color:'var(--blue)',items:[
+    {time:'2:00P',name:'Hotel Check-In',venue:'Marriott Marquis, Times Square',cat:'LOGISTICS',color:'var(--text-dim)',live:false},
+    {time:'5:00P',name:'Welcome Drinks',venue:'Rooftop Bar — 1440 Broadway',cat:'SOCIAL',color:'var(--purple)',live:false},
+    {time:'7:30P',name:'Family Dinner (Private Room)',venue:'Carmine\'s Italian — 200 W 44th St',cat:'FOOD',color:'var(--orange)',live:true}
+  ]},
+  {day:'SAT · JUN 28',label:'MAIN EVENT',color:'var(--yellow)',items:[
+    {time:'10:00A',name:'Morning Brunch Spread',venue:'Bubby\'s Tribeca — 120 Hudson St',cat:'FOOD',color:'var(--orange)',live:false},
+    {time:'1:00P',name:'Central Park Picnic & Games',venue:'Sheep Meadow, Central Park',cat:'OUTDOOR',color:'var(--green)',live:false},
+    {time:'4:00P',name:'Family Photo Session',venue:'Bethesda Fountain, Central Park',cat:'PHOTO',color:'var(--blue)',live:false},
+    {time:'7:00P',name:'Reunion Gala Dinner',venue:'The Plaza Hotel, Ballroom',cat:'FORMAL',color:'var(--yellow)',live:true},
+    {time:'10:00P',name:'After Party — DJ & Dancing',venue:'230 Fifth Rooftop',cat:'SOCIAL',color:'var(--purple)',live:false}
+  ]},
+  {day:'SUN · JUN 29',label:'FAREWELL',color:'var(--green)',items:[
+    {time:'10:30A',name:'Farewell Brunch',venue:'Sarabeth\'s — 40 Central Park S',cat:'FOOD',color:'var(--orange)',live:false},
+    {time:'1:00P',name:'Museum Visit (Optional)',venue:'MoMA — 11 W 53rd St',cat:'CULTURE',color:'var(--blue)',live:false},
+    {time:'3:00P',name:'Final Goodbyes / Checkout',venue:'Marriott Marquis Lobby',cat:'LOGISTICS',color:'var(--text-dim)',live:false}
+  ]}
+];
+function openItinerary(mode){
+  if(mode)_itinMode=mode;
   document.getElementById('itinerary-panel').classList.add('open');
   document.getElementById('itin-overlay').style.display='block';
   renderItinerary();
@@ -999,7 +1051,60 @@ function closeItinerary(){
 }
 function renderItinerary(){
   var el=document.getElementById('itin-scroll');if(!el)return;
-  el.innerHTML='<div class="itin-day">TONIGHT &mdash; '+new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+'</div>'+_itinItems.map(function(i){return'<div class="itin-item'+(i.live?' live':'')+'"><span class="itin-time">'+i.time+'</span><div class="itin-dot"></div><div class="itin-body">'+(i.live?'<div class="itin-live-badge"><span class="live-dot" style="background:#000"></span>LIVE NOW</div>':'')+'<div class="itin-ev-name">'+i.name+'</div><div class="itin-venue">'+i.venue+'</div></div></div>';}).join('');
+  var titleEl=document.getElementById('itin-title');
+  var todayActive=(_itinMode==='tonight');
+  var reunionActive=(_itinMode==='reunion');
+  var btnBase='font-family:var(--mono);font-size:8px;font-weight:700;border:none;cursor:pointer;letter-spacing:.06em;flex:1;padding:8px 4px;';
+  var modeBar='<div style="display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0">'
+    +'<button data-itin-mode="tonight" style="'+btnBase+'border-bottom:2px solid '+(todayActive?'var(--blue)':'transparent')+';background:none;color:'+(todayActive?'var(--blue)':'var(--text-dim)')+'">&#9679; TONIGHT</button>'
+    +'<button data-itin-mode="reunion" style="'+btnBase+'border-bottom:2px solid '+(reunionActive?'var(--yellow)':'transparent')+';background:none;color:'+(reunionActive?'var(--yellow)':'var(--text-dim)')+'">&#9760; FAMILY REUNION</button>'
+    +'</div>';
+  if(_itinMode==='reunion'){
+    if(titleEl)titleEl.innerHTML='&#9783; FAMILY REUNION PLAN';
+    var html=modeBar;
+    _reunionDays.forEach(function(day){
+      html+='<div style="padding:6px 14px 3px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">'
+        +'<span style="font-family:var(--mono);font-size:7px;font-weight:700;letter-spacing:.12em;color:'+day.color+'">'+day.day+'</span>'
+        +'<span style="font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.08em">'+day.label+'</span>'
+        +'</div>';
+      day.items.forEach(function(i,idx){
+        var isLast=(idx===day.items.length-1);
+        html+='<div class="itin-item'+(i.live?' live':'')+'" style="position:relative">'
+          +'<span class="itin-time">'+i.time+'</span>'
+          +'<div style="display:flex;flex-direction:column;align-items:center;gap:0;width:7px;flex-shrink:0">'
+          +'<div style="width:7px;height:7px;border-radius:50%;background:'+(i.live?'var(--green)':i.color)+';border:1px solid '+(i.live?'var(--green)':'rgba(255,255,255,.2)')+';flex-shrink:0;'+(i.live?'animation:blink .8s infinite;':'')+'">'+'</div>'
+          +(!isLast?'<div style="width:1px;flex:1;min-height:16px;background:rgba(255,255,255,.08);margin-top:2px"></div>':'')
+          +'</div>'
+          +'<div class="itin-body" style="padding-bottom:4px">'
+          +(i.live?'<div class="itin-live-badge"><span class="live-dot" style="background:#000"></span>HAPPENING NOW</div>':'')
+          +'<div style="font-family:var(--mono);font-size:7px;color:'+i.color+';letter-spacing:.08em;text-transform:uppercase;margin-bottom:1px">'+i.cat+'</div>'
+          +'<div class="itin-ev-name">'+i.name+'</div>'
+          +'<div class="itin-venue">'+i.venue+'</div>'
+          +'</div></div>';
+      });
+    });
+    el.innerHTML=html;
+  } else {
+    if(titleEl)titleEl.innerHTML='&#9783; LIVE ITINERARY';
+    var html=modeBar+'<div class="itin-day">TONIGHT &mdash; '+new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+'</div>';
+    html+=_itinItems.map(function(i){
+      return'<div class="itin-item'+(i.live?' live':'')+'">'
+        +'<span class="itin-time">'+i.time+'</span><div class="itin-dot"></div>'
+        +'<div class="itin-body">'
+        +(i.live?'<div class="itin-live-badge"><span class="live-dot" style="background:#000"></span>LIVE NOW</div>':'')
+        +(i.cat?'<div style="font-family:var(--mono);font-size:7px;color:'+i.color+';letter-spacing:.08em;margin-bottom:1px">'+i.cat+'</div>':'')
+        +'<div class="itin-ev-name">'+i.name+'</div><div class="itin-venue">'+i.venue+'</div>'
+        +'</div></div>';
+    }).join('');
+    el.innerHTML=html;
+  }
+  // Wire up mode buttons with event delegation (no inline onclick needed)
+  setTimeout(function(){
+    var btns=el.querySelectorAll('[data-itin-mode]');
+    btns.forEach(function(btn){
+      btn.addEventListener('click',function(){openItinerary(this.getAttribute('data-itin-mode'));});
+    });
+  },50);
 }
 function exportICS(){
   var ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//HyperLocal//EN\n';
@@ -1161,7 +1266,8 @@ function renderListCard(ev){
   var isJob=ev.vertical==='theladder';
   return'<div class="ev-list-card" data-ev-id="'+ev.id+'" onclick="openEvDetailById('+ev.id+')">'+'<div class="ev-list-thumb">'+emoji+'</div>'+'<div class="ev-list-body"><div class="ev-list-name">'+ev.name+'</div><div class="ev-list-meta">'+ev.venue+' · '+ev.time+'</div>'+'<div class="ev-tags" style="margin-top:2px">'+ev.tags.slice(0,2).map(function(t){return'<span class="ev-tag '+tagCls(t)+'">'+t+'</span>';}).join('')+'</div></div>'+'<div class="ev-list-right"><div class="ev-list-price">'+ev.price+'</div><div class="ev-list-avail" style="color:'+ac+'">'+( isJob?'OPEN':pct+'% avail')+'</div></div>'+'</div>';
 }
-function buildSubNavHTML(){return'<div class="sub-nav"><button class="sub-nav-btn active" onclick="setSubNav(\"popular\",this)">Most Popular</button><button class="sub-nav-btn" onclick="setSubNav(\"latest\",this)">Latest</button><button class="sub-nav-btn" onclick="setSubNav(\"local\",this)">Local Market</button></div>';}
+function buildSubNavHTML(){return'<div class="sub-nav"><button class="sub-nav-btn active" data-filter="popular">Most Popular</button><button class="sub-nav-btn" data-filter="latest">Latest</button><button class="sub-nav-btn" data-filter="local">Local Market</button></div>';}
+
 function renderCarousel(tab,zip,pulse){
   var evs=getEvs(zip,tab,pulse);
   var filterFn=SUB_FILTERS[currentSubNav]||SUB_FILTERS.popular;
@@ -1170,7 +1276,20 @@ function renderCarousel(tab,zip,pulse){
   TABS.forEach(function(t){
     var el=document.getElementById('evlist-'+t);if(!el)return;
     var sn=document.getElementById('sub-nav-'+t);
-    if(!sn){sn=document.createElement('div');sn.id='sub-nav-'+t;sn.innerHTML=buildSubNavHTML();el.parentNode.insertBefore(sn,el);}
+    if(!sn){
+      sn=document.createElement('div');
+      sn.id='sub-nav-'+t;
+      sn.innerHTML=buildSubNavHTML();
+      el.parentNode.insertBefore(sn,el);
+      // Wire up filter buttons via delegation (avoids inline onclick quote issues)
+      sn.addEventListener('click',function(e){
+        var btn=e.target.closest('[data-filter]');
+        if(!btn)return;
+        sn.querySelectorAll('.sub-nav-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active');
+        setSubNav(btn.getAttribute('data-filter'),btn);
+      });
+    }
     if(t!==tab)return;
     if(filtered.length===0){el.innerHTML='<div style="padding:22px 14px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text-muted)"><div style="font-size:20px;margin-bottom:8px">&#9651;</div>NO EVENTS FOUND<div style="margin-top:6px;font-size:9px;line-height:1.5">Try a different ZIP<br/>or enable PULSE</div></div>';return;}
     var hero=renderHeroCard(filtered[0]);
@@ -1180,7 +1299,47 @@ function renderCarousel(tab,zip,pulse){
   var ct=document.getElementById('ev-count-'+tab);if(ct)ct.textContent=filtered.length+' FOUND';
   var tc=document.getElementById('count-'+tab);if(tc)tc.textContent=filtered.length;
 }
+
+// ── SPRINT 14.2: Bloomberg-Style Home Headlines ──
+function renderHomeHeadlines() {
+  var el = document.getElementById('news-terminal');
+  if (!el) return;
+  var evs = getEvs(currentZip, 'terminal', pulseOn);
+  var featured = evs.filter(function(e){ return e.featured || e.trending; }).slice(0, 3);
+  var rest = evs.filter(function(e){ return !e.featured && !e.trending; });
+  var all = featured.concat(rest);
+
+  // Panel header update
+  var hdr = document.querySelector('#tab-terminal .news-panel .panel-hdr-title');
+  if(hdr) hdr.textContent = 'Live In Your City';
+  var badge = document.querySelector('#tab-terminal .news-panel .panel-hdr-badge');
+  if(badge) { badge.textContent = all.length + ' EVENTS'; badge.style.color = 'var(--blue)'; }
+
+  var VERT_COLORS = {afterdark:'#C084FC',themenu:'var(--orange)',theladder:'var(--green)',terminal:'var(--blue)'};
+  var VERT_NAMES  = {afterdark:'SOCIAL',themenu:'FOOD',theladder:'GIGS',terminal:'ALL'};
+
+  el.innerHTML = all.map(function(ev, i) {
+    var pct = ev.avail;
+    var ac = pct < 20 ? 'low' : '';
+    var vc = VERT_COLORS[ev.vertical] || 'var(--blue)';
+    var vn = VERT_NAMES[ev.vertical] || ev.vertical.toUpperCase();
+    var isJob = ev.vertical === 'theladder';
+    return '<div class="hl-headline-card' + (i < 3 ? ' featured' : '') + '" onclick="openEvDetailById(' + ev.id + ')">'
+      + '<div class="hl-hc-label" style="color:' + vc + '">' + vn + ' &middot; ' + ev.hood + '</div>'
+      + '<div class="hl-hc-title">' + ev.name + '</div>'
+      + '<div class="hl-hc-meta">'
+      + '<span>' + ev.venue + '</span>'
+      + '<span>' + ev.time + '</span>'
+      + '<span class="hl-hc-price">' + ev.price + '</span>'
+      + (isJob ? '' : '<span class="hl-hc-avail ' + ac + '">' + pct + '% avail</span>')
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
 renderAll=function(tab,zip,pulse){
+  if(tab==='mapview'){renderDesktopMap(_desktopMapFilter||'all');return;}
+  if(tab==='terminal'){renderHomeHeadlines();}
   renderNews(tab);renderWeather(tab,zip);renderStats(tab);
   renderMapDots(tab,pulse);renderTicker(tab);setPulseCircles(tab,pulse);
   renderCarousel(tab,zip,pulse);
@@ -1348,6 +1507,56 @@ setTimeout(function(){
 },400);
 
 // ══════════════════════════════════════════════════════
+// SPRINT 14.2: Desktop Map Tab
+// ══════════════════════════════════════════════════════
+var _desktopMapFilter = 'all';
+function setDesktopMapFilter(filter, btn) {
+  _desktopMapFilter = filter;
+  document.querySelectorAll('#desktop-map-filter-bar .map-filter-pill').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  renderDesktopMap(filter);
+}
+function renderDesktopMap(filter) {
+  var container = document.getElementById('desktop-map-dots');
+  var listEl = document.getElementById('evlist-mapview');
+  if(!container) return;
+  container.innerHTML = '';
+  var dots = MAP_PAGE_DOTS[filter] || MAP_PAGE_DOTS.all;
+  dots.forEach(function(d) {
+    var size = d.r * 2;
+    var ring = document.createElement('div');
+    ring.className = 'map-pulse-ring';
+    ring.style.cssText = 'color:'+d.color+';width:'+(size+8)+'px;height:'+(size+8)+'px';
+    var dot = document.createElement('div');
+    dot.className = 'map-page-dot';
+    dot.style.cssText = 'left:'+d.x+';top:'+d.y+';width:'+size+'px;height:'+size+'px;background:'+d.color+';transform:translate(-50%,-50%);box-shadow:0 0 10px '+d.color;
+    dot.setAttribute('data-id', d.id);
+    dot.addEventListener('click', function(){ openEvDetailById(d.id); });
+    var lbl = document.createElement('div');
+    lbl.className = 'map-page-dot-label';
+    lbl.textContent = d.label;
+    lbl.style.cssText = 'left:calc('+d.x+' + '+(d.r+6)+'px);top:'+d.y+';transform:translateY(-50%)';
+    dot.appendChild(ring);
+    container.appendChild(dot);
+    container.appendChild(lbl);
+  });
+  var ct = document.getElementById('desktop-map-count');
+  if(ct) ct.textContent = dots.length + ' VENUES';
+  var zp = document.getElementById('desktop-map-zip');
+  if(zp) zp.textContent = currentZip;
+  // Render matched events in sidebar
+  if(listEl) {
+    var evs = getEvs(currentZip, filter === 'all' ? 'terminal' : filter, pulseOn);
+    if(filter !== 'all') evs = evs.filter(function(e){ return e.vertical === filter; });
+    var ct2 = document.getElementById('desktop-map-ev-count');
+    if(ct2) ct2.textContent = evs.length + ' FOUND';
+    listEl.innerHTML = evs.length === 0
+      ? '<div style="padding:20px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--text-muted)">No events found</div>'
+      : '<div class="ev-carousel">' + evs.slice(0,1).map(renderHeroCard).join('') + evs.slice(1).map(renderListCard).join('') + '</div>';
+  }
+}
+
+// ══════════════════════════════════════════════════════
 // SPRINT 14.1: UI Sync & Bug Squash
 // ══════════════════════════════════════════════════════
 
@@ -1376,46 +1585,55 @@ function syncTabLabels() {
 // Fix bnavGo: FRIENDS label consistency
 var _s141_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
 bnavGo = function(dest, btn) {
-  document.querySelectorAll('.bnav-item').forEach(function(b) { b.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
+  var friendsPanel = document.getElementById('friends-panel');
+  var streamPanel  = document.getElementById('stream-panel');
+  var menuHub      = document.getElementById('menu-hub');
+  var mapPage      = document.getElementById('map-page');
+
+  // Toggle: if already active, close it and go home
+  if (_bnavCurrent === dest && dest !== 'home') {
+    // Close whatever is open
+    if (dest === 'friends') { closeFriends(); }
+    if (dest === 'stream')  { closeStream(); }
+    if (dest === 'menu')    { if(menuHub) menuHub.classList.remove('active'); }
+    if (dest === 'map')     { if(mapPage) mapPage.classList.remove('active'); switchTab('terminal', document.querySelector('.tab-btn')); }
+    // Reset to home
+    document.querySelectorAll('.bnav-item').forEach(function(b){b.classList.remove('active');});
+    var homeBtn = document.getElementById('bnav-home');
+    if(homeBtn) homeBtn.classList.add('active');
+    _bnavCurrent = 'home';
+    return;
+  }
+
+  // Not toggling — activate destination
+  document.querySelectorAll('.bnav-item').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
   _bnavCurrent = dest;
 
-  if (dest === 'home') {
-    closeStream();
-    ['friends-panel','stream-panel','menu-hub'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.remove('open');
-    });
-    ['ft-overlay','pp-overlay','itin-overlay'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
-    if (typeof closeMapPage === 'function') closeMapPage();
-  } else if (dest === 'map') {
-    if (typeof renderMapPage === 'function') renderMapPage();
-    else if (typeof openMapPage === 'function') openMapPage();
-  } else if (dest === 'watch' || dest === 'friends') {
+  // Close all overlays first
+  if(friendsPanel) friendsPanel.classList.remove('open');
+  if(streamPanel)  streamPanel.classList.remove('open');
+  if(menuHub)      menuHub.classList.remove('active');
+  if(mapPage)      mapPage.classList.remove('active');
+  ['ft-overlay','pp-overlay','itin-overlay'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+
+  if(dest === 'home') {
+    // Home: switch to terminal tab, nothing else
+    var firstTab = document.querySelector('.tab-btn');
+    if(currentTab !== 'terminal') switchTab('terminal', firstTab);
+  } else if(dest === 'map') {
+    // Map: switch to mapview tab (desktop) or show map page (mobile)
+    var mapTabBtn = document.getElementById('tab-btn-map');
+    switchTab('mapview', mapTabBtn);
+    if(mapPage) mapPage.classList.add('active');
+  } else if(dest === 'friends') {
     openFriends();
-    setTimeout(function() {
-      var nh = document.getElementById('bnav-home');
-      if (nh) nh.classList.add('active');
-      if (btn) btn.classList.remove('active');
-      _bnavCurrent = 'home';
-    }, 200);
-  } else if (dest === 'stream') {
+  } else if(dest === 'stream') {
     openStream();
-  } else if (dest === 'menu') {
-    if (typeof openMenuHub === 'function') {
-      openMenuHub();
-    } else {
-      openPartner();
-    }
-    setTimeout(function() {
-      var nh = document.getElementById('bnav-home');
-      if (nh) nh.classList.add('active');
-      if (btn) btn.classList.remove('active');
-      _bnavCurrent = 'home';
-    }, 200);
+  } else if(dest === 'menu') {
+    if(menuHub) menuHub.classList.add('active');
   }
 };
 
@@ -1468,13 +1686,54 @@ setTimeout(function() {
 
 }, 800);
 
-// Hydration-safe: run all init in DOMContentLoaded guard
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { syncTabLabels(); });
-} else {
-  // Already loaded — sync on next tick
-  setTimeout(syncTabLabels, 100);
+// ── SPRINT 14.2: Hydration & Detail Title Fix ──
+// Ensure all DOM-dependent init runs after mount
+function s142_onReady(fn) {
+  if (document.readyState !== 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
 }
+
+s142_onReady(function() {
+  // Sync tab labels
+  syncTabLabels();
+
+  // Fix ev-detail-title: ensure it's never empty on open
+  var origOpenEvDetail = window.openEvDetail;
+  if (typeof origOpenEvDetail === 'function') {
+    window.openEvDetail = function(ev) {
+      // Clear stale state first
+      var titleEl = document.getElementById('ev-detail-title');
+      if (titleEl) titleEl.textContent = 'Loading...';
+      // Defer to next microtask to allow DOM settle
+      requestAnimationFrame(function() {
+        origOpenEvDetail(ev);
+      });
+    };
+  }
+
+  // Ensure bnav FRIENDS label is correct everywhere
+  ['bnav-watch', 'bnav-friends'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    btn.setAttribute('onclick', "bnavGo('friends',this)");
+    var lbl = btn.querySelector('.bnav-label');
+    if (lbl) lbl.textContent = 'FRIENDS';
+  });
+
+  // HL logo on HOME is always the default
+  var homeBtn = document.getElementById('bnav-home');
+  if (homeBtn) homeBtn.classList.add('active');
+
+  // Mark app as ready (hydration complete)
+  var app = document.getElementById('app');
+  if (app) { app.classList.remove('hl-pending'); app.classList.add('hl-ready'); }
+
+  // Init desktop map if on mapview tab
+  if (currentTab === 'mapview') renderDesktopMap(_desktopMapFilter);
+});
 
 </script>
 </body>
