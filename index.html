@@ -564,10 +564,55 @@ body.pub-mode .hero-wrap{display:none}
   .bottom-nav { z-index: 9999 !important; }
   .stream-panel { bottom: 58px !important; z-index: 180 !important; }
 }
+
+/* ════ SPRINT 15: Privacy Vault, Data Ingestion, White-Label ════ */
+.ghost-mode-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg2);cursor:pointer;user-select:none}
+.ghost-mode-bar.active{background:rgba(155,93,229,.08)}
+.ghost-icon{font-size:13px;flex-shrink:0}
+.ghost-label{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text-dim);flex:1}
+.ghost-label.active{color:#C084FC}
+.ghost-track{width:32px;height:16px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);position:relative;transition:background .2s,border-color .2s;flex-shrink:0}
+.ghost-track.on{background:rgba(155,93,229,.3);border-color:#9B5DE5}
+.ghost-thumb{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--text-dim);transition:transform .2s,background .2s}
+.ghost-track.on .ghost-thumb{transform:translateX(16px);background:#C084FC}
+.ghost-status{font-family:var(--mono);font-size:7px;letter-spacing:.08em;color:var(--text-muted)}
+.ghost-status.on{color:#C084FC}
+.privacy-section{padding:14px 16px;border-bottom:1px solid var(--border)}
+.privacy-section-title{font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.privacy-stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px}
+.privacy-stat-row:last-of-type{border-bottom:none}
+.privacy-stat-label{color:var(--text-dim)}
+.privacy-stat-val{color:var(--text);font-weight:600}
+.privacy-loc-item{padding:4px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:8px;color:var(--text-dim);display:flex;justify-content:space-between}
+.privacy-loc-item:last-child{border-bottom:none}
+.wipe-btn{width:100%;padding:10px;background:rgba(255,51,85,.1);border:1px solid rgba(255,51,85,.35);color:var(--red);font-family:var(--mono);font-size:9px;font-weight:700;border-radius:2px;cursor:pointer;letter-spacing:.06em;margin-top:10px;transition:background .15s}
+.wipe-btn:hover{background:rgba(255,51,85,.2)}
+.wipe-btn.confirm{background:var(--red);color:#fff}
+.privacy-badge{font-family:var(--mono);font-size:7px;background:rgba(0,71,255,.12);color:var(--blue);border:1px solid rgba(0,71,255,.25);padding:1px 5px;border-radius:1px;letter-spacing:.06em}
+.curator-badge{display:none;position:fixed;top:0;left:0;right:0;z-index:31;background:linear-gradient(90deg,rgba(155,93,229,.18),rgba(0,71,255,.12));border-bottom:1px solid rgba(155,93,229,.35);padding:4px 14px;align-items:center;gap:10px;font-family:var(--mono);font-size:9px}
+.curator-badge.active{display:flex}
+.curator-avatar{width:20px;height:20px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;border:1px solid rgba(155,93,229,.5)}
+.curator-name{color:#C084FC;font-weight:700;letter-spacing:.08em}
+.curator-hl{color:var(--text-dim)}
+.curator-pill{font-family:var(--mono);font-size:7px;background:rgba(155,93,229,.18);color:#C084FC;border:1px solid rgba(155,93,229,.3);padding:1px 5px;border-radius:1px;letter-spacing:.06em;margin-left:auto}
+.bnav-hl-logo.curator-mode{background:linear-gradient(135deg,var(--yellow),#FF9900)!important;color:#000!important;font-size:7px!important;letter-spacing:-.3px!important}
+.webhook-status{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:7px;padding:1px 5px;border-radius:1px;letter-spacing:.06em}
+.webhook-status.live{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.25)}
+.webhook-status.pending{background:rgba(250,204,21,.1);color:var(--yellow);border:1px solid rgba(250,204,21,.25)}
+.webhook-status-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink .9s infinite}
+.src-ingested{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.22)}
+.map-blur-ring{position:absolute;border-radius:50%;border:1px dashed rgba(155,93,229,.4);pointer-events:none;transform:translate(-50%,-50%)}
 </style>
 
 </head>
 <body>
+<!-- SPRINT 15: CURATOR WHITE-LABEL BADGE -->
+<div class="curator-badge" id="curator-badge">
+  <div class="curator-avatar" id="curator-avatar">&#127775;</div>
+  <span class="curator-name" id="curator-name">MAAL</span>
+  <span class="curator-hl">&nbsp;&times;&nbsp;HyperLocal</span>
+  <span class="curator-pill" id="curator-pill">&#9733; CURATOR PICKS</span>
+</div>
 <div id="app">
 <div class="topbar">
   <div class="topbar-row1">
@@ -676,7 +721,16 @@ body.pub-mode .hero-wrap{display:none}
 <div class="partner-panel" id="partner-panel"><div class="pp-hdr"><div class="pp-hdr-row"><div class="pp-hdr-title">$ PARTNER PORTAL</div><button class="pp-close" onclick="closePartner()">&#10005;</button></div><div class="rep-row"><div><div class="rep-num" id="rep-score">847</div><div class="rep-meta">REP SCORE</div></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7px;color:var(--text-muted);margin-bottom:2px"><span>PARTNER</span><span>1000=INFLUENCER</span></div><div class="rep-bar"><div class="rep-bar-fill" style="width:84.7%"></div></div></div></div></div><div class="pp-scroll"><div class="pp-section"><div class="pp-section-title">LIVE EARNINGS</div><div class="earn-total" id="earn-total">$1,247.50</div><div class="earn-split"><div class="earn-split-item"><div class="earn-split-label">AFFILIATE</div><div class="earn-split-val" id="earn-aff">$623.75</div></div><div class="earn-split-item"><div class="earn-split-label">TICKETS</div><div class="earn-split-val">$498.00</div></div><div class="earn-split-item"><div class="earn-split-label">MERCH</div><div class="earn-split-val">$125.75</div></div></div></div><div class="pp-section"><div class="pp-section-title">MILESTONES</div><div id="ms-list"></div></div><div class="pp-section"><div class="pp-section-title">AFFILIATE LINK</div><div class="aff-box"><span class="aff-text" id="aff-link">hyperlocal.app/ref=user123</span><button class="aff-copy" onclick="copyAff()">COPY</button></div></div><div class="pp-section"><div class="pp-section-title">CONVERSIONS</div><table class="dtable" id="conv-table"></table></div></div></div>
 <div id="pp-overlay" style="display:none;position:fixed;inset:0;z-index:219;background:rgba(0,0,0,.2)" onclick="closePartner()"></div>
 <!-- FRIENDS -->
-<div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span></div><div class="ft-scroll" id="friends-scroll"></div></div>
+<div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><!-- SPRINT 15: GHOST MODE -->
+<div class="ghost-mode-bar" id="ghost-mode-bar" onclick="toggleGhostMode()">
+  <span class="ghost-icon">&#128123;</span>
+  <div style="flex:1">
+    <div class="ghost-label" id="ghost-label">GHOST MODE</div>
+    <div class="ghost-status" id="ghost-status">Location visible to friends</div>
+  </div>
+  <div class="ghost-track" id="ghost-track"><div class="ghost-thumb"></div></div>
+</div>
+<div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span></div><div class="ft-scroll" id="friends-scroll"></div></div>
 <div id="ft-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.2)" onclick="closeFriends()"></div>
 <!-- LOOKBOOK -->
 <div class="lookbook-modal" id="lookbook-modal"><div class="lookbook-sidecar"><div class="lb-hdr"><div><div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em">&#127381; SHOP THE LOOK</div></div><button class="lb-close" onclick="closeLookbook()">&#10005;</button></div><div class="lb-scroll" id="lb-products"></div></div></div>
@@ -690,7 +744,41 @@ body.pub-mode .hero-wrap{display:none}
 <!-- SPRINT 14: MAP PAGE -->
 <div class="map-page" id="map-page"><div class="map-page-hdr"><span class="map-page-title">&#9673; LIVE MAP</span><span class="map-page-count" id="map-page-count">0 VENUES</span><span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim)" id="map-page-zip">10001</span></div><div class="map-filter-bar"><button class="map-filter-pill active" onclick="setMapFilter('all',this)">ALL</button><button class="map-filter-pill" onclick="setMapFilter('afterdark',this)">&#127769; SOCIAL</button><button class="map-filter-pill" onclick="setMapFilter('themenu',this)">&#127829; FOOD</button><button class="map-filter-pill" onclick="setMapFilter('theladder',this)">&#9650; GIGS</button></div><div class="map-page-inner" id="map-page-inner"><div class="map-page-grid"></div><div id="map-page-dots"></div></div></div>
 <!-- SPRINT 14: MENU HUB -->
-<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div></div>
+<div class="menu-hub" id="menu-hub"><div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div>
+<!-- SPRINT 15: PRIVACY DASHBOARD -->
+<div class="privacy-section" id="privacy-section">
+  <div class="privacy-section-title">&#128274; Data Management</div>
+  <div class="privacy-stat-row"><span class="privacy-stat-label">Ghost Mode</span><span class="privacy-stat-val" id="priv-ghost-status">OFF</span></div>
+  <div class="privacy-stat-row"><span class="privacy-stat-label">Location Points Stored</span><span class="privacy-stat-val" id="priv-loc-count">12 pts</span></div>
+  <div class="privacy-stat-row"><span class="privacy-stat-label">Last Seen</span><span class="privacy-stat-val" id="priv-last-seen">Just now</span></div>
+  <div style="margin-top:8px;margin-bottom:4px;font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.08em">RECENT LOCATIONS</div>
+  <div id="priv-loc-history">
+    <div class="privacy-loc-item"><span>Marquee NYC · Chelsea</span><span>9:42 PM</span></div>
+    <div class="privacy-loc-item"><span>230 Fifth · Flatiron</span><span>8:15 PM</span></div>
+    <div class="privacy-loc-item"><span>Village Vanguard · W.Village</span><span>7:30 PM</span></div>
+  </div>
+  <button class="wipe-btn" id="wipe-btn" onclick="wipeMyData()">&#128465; WIPE MY DATA</button>
+</div>
+<!-- SPRINT 15: WEBHOOK INFRASTRUCTURE STATUS -->
+<div class="privacy-section">
+  <div class="privacy-section-title">&#9889; Data Sources</div>
+  <div style="display:flex;flex-direction:column;gap:7px" id="webhook-status-list">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Eventbrite <span style="color:var(--text-muted)">Org 73195697223</span></div>
+      <span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Posh <span style="color:var(--text-muted)">davis-pemberton-family-reunion</span></div>
+      <span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:var(--mono);font-size:8px;color:var(--text)">Supabase Edge <span style="color:var(--text-muted)">webhook-ingest</span></div>
+      <span class="webhook-status pending"><span class="webhook-status-dot"></span>CONFIGURED</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-family:var(--mono);font-size:7px;color:var(--text-muted)">Last sync: <span id="last-sync-time">Just now</span> &middot; <span id="ingested-count">0</span> events ingested</div>
+</div>
+</div>
 <!-- SPRINT 14: EVENT DETAIL MODAL -->
 <div class="ev-detail-modal" id="ev-detail-modal"><div class="ev-detail-card"><div class="ev-detail-hdr"><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">EVENT DETAILS</div><button class="ev-detail-close" onclick="closeEvDetail()">&#10005;</button></div><div class="ev-detail-img" id="ev-detail-img">&#9651;</div><div class="ev-detail-body"><div class="ev-detail-title" id="ev-detail-title">&mdash;</div><div class="ev-detail-venue" id="ev-detail-venue">&mdash;</div><div class="ev-detail-grid" id="ev-detail-grid"></div><div class="ev-tags" id="ev-detail-tags" style="margin-bottom:12px"></div><div class="ev-detail-actions" id="ev-detail-actions"></div></div></div></div>
 <!-- BLOOMBERG BOTTOM NAV (Sprint 14: HL logo + MAP icon) -->
@@ -1734,6 +1822,268 @@ s142_onReady(function() {
   // Init desktop map if on mapview tab
   if (currentTab === 'mapview') renderDesktopMap(_desktopMapFilter);
 });
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 15: Privacy Vault, Data Ingestion, White-Label
+// ══════════════════════════════════════════════════════
+
+// ── 1. Ghost Mode ──
+var _ghostMode = false;
+function toggleGhostMode() {
+  _ghostMode = !_ghostMode;
+  var track = document.getElementById('ghost-track');
+  var label = document.getElementById('ghost-label');
+  var status = document.getElementById('ghost-status');
+  var bar   = document.getElementById('ghost-mode-bar');
+  if (track) track.classList.toggle('on', _ghostMode);
+  if (label) { label.classList.toggle('active', _ghostMode); label.textContent = _ghostMode ? 'GHOST MODE ON' : 'GHOST MODE'; }
+  if (status) { status.classList.toggle('on', _ghostMode); status.textContent = _ghostMode ? 'Hidden from friends' : 'Location visible to friends'; }
+  if (bar) bar.classList.toggle('active', _ghostMode);
+  // Sync privacy dashboard status
+  var pg = document.getElementById('priv-ghost-status');
+  if (pg) { pg.textContent = _ghostMode ? 'ON' : 'OFF'; pg.style.color = _ghostMode ? '#C084FC' : 'var(--text)'; }
+  // Simulate writing is_visible: false to DB
+  console.log('[HyperLocal] Ghost mode:', _ghostMode ? 'is_visible=false' : 'is_visible=true');
+}
+
+// ── 2. Proximity Blur — jitter friend coordinates (50–100m radius) ──
+function proximityJitter(lat, lng) {
+  // 1 degree lat ≈ 111km, so 100m ≈ 0.0009 degrees
+  var maxJitter = 0.0009; // ~100m
+  var minJitter = 0.00045; // ~50m
+  var magnitude = minJitter + Math.random() * (maxJitter - minJitter);
+  var angle = Math.random() * 2 * Math.PI;
+  return {
+    lat: lat + magnitude * Math.cos(angle),
+    lng: lng + magnitude * Math.sin(angle)
+  };
+}
+
+// Enhanced renderFriends with ghost mode + proximity blur indicators
+var _origRenderFriends = typeof renderFriends === 'function' ? renderFriends : null;
+renderFriends = function() {
+  var el = document.getElementById('friends-scroll');
+  if (!el) return;
+  // Show ghost banner if active
+  var ghostBanner = _ghostMode
+    ? '<div style="margin:6px 12px;padding:6px 10px;background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.3);border-radius:2px;font-family:var(--mono);font-size:8px;color:#C084FC;display:flex;align-items:center;gap:6px"><span>&#128123;</span> You are invisible to friends</div>'
+    : '';
+  el.innerHTML = ghostBanner + _friendsData.map(function(f) {
+    var blurNote = f.live ? '<span style="font-family:var(--mono);font-size:7px;color:rgba(155,93,229,.7);margin-left:4px">&#128280; ~±75m</span>' : '';
+    return '<div class="friend-row">'
+      + '<div class="friend-avatar' + (f.live ? ' golive' : '') + '">' + f.emoji + '</div>'
+      + '<div style="flex:1;min-width:0"><div class="friend-name">' + f.name + '</div>'
+      + '<div class="friend-status">' + f.status + blurNote + '</div></div>'
+      + (f.live ? '<span class="friend-live-tag">LIVE</span><button class="friend-join-btn">JOIN</button>' : '')
+      + '</div>';
+  }).join('');
+};
+
+// ── 3. Privacy Dashboard / Wipe My Data ──
+var _locationHistory = [
+  {place: 'Marquee NYC · Chelsea',    time: '9:42 PM'},
+  {place: '230 Fifth · Flatiron',     time: '8:15 PM'},
+  {place: 'Village Vanguard · W.Village', time: '7:30 PM'},
+  {place: 'Le Bain · Meatpacking',    time: '6:00 PM'},
+  {place: 'SOBs · SoHo',             time: '4:30 PM'}
+];
+
+function renderPrivacyDashboard() {
+  var locEl = document.getElementById('priv-loc-history');
+  var countEl = document.getElementById('priv-loc-count');
+  var ghostEl = document.getElementById('priv-ghost-status');
+  if (countEl) countEl.textContent = _locationHistory.length + ' pts';
+  if (ghostEl) { ghostEl.textContent = _ghostMode ? 'ON' : 'OFF'; ghostEl.style.color = _ghostMode ? '#C084FC' : 'var(--text)'; }
+  if (locEl) {
+    if (_locationHistory.length === 0) {
+      locEl.innerHTML = '<div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);padding:8px 0">No location data stored.</div>';
+    } else {
+      locEl.innerHTML = _locationHistory.slice(0, 5).map(function(l) {
+        return '<div class="privacy-loc-item"><span>' + l.place + '</span><span>' + l.time + '</span></div>';
+      }).join('');
+    }
+  }
+}
+
+var _wipeConfirm = false;
+function wipeMyData() {
+  var btn = document.getElementById('wipe-btn');
+  if (!_wipeConfirm) {
+    _wipeConfirm = true;
+    if (btn) { btn.textContent = '&#9888; CONFIRM — TAP AGAIN TO WIPE'; btn.classList.add('confirm'); }
+    setTimeout(function() {
+      _wipeConfirm = false;
+      if (btn) { btn.textContent = '&#128465; WIPE MY DATA'; btn.classList.remove('confirm'); }
+    }, 4000);
+    return;
+  }
+  // Confirmed — wipe
+  _locationHistory = [];
+  _wipeConfirm = false;
+  renderPrivacyDashboard();
+  if (btn) { btn.textContent = '&#10003; DATA WIPED'; btn.style.color = 'var(--green)'; btn.style.borderColor = 'rgba(0,230,118,.35)'; }
+  setTimeout(function() {
+    if (btn) { btn.textContent = '&#128465; WIPE MY DATA'; btn.style.color = ''; btn.style.borderColor = ''; }
+  }, 2500);
+  console.log('[HyperLocal] User data wiped — location history cleared');
+}
+
+// ── 4. Webhook Infrastructure — Event Mapping Logic ──
+var WEBHOOK_CATEGORY_MAP = [
+  {keywords: ['dinner','brunch','omakase','tasting','prix fixe','lunch'],  vertical: 'themenu',   label: 'FOOD'},
+  {keywords: ['party','social','club','lounge','rooftop','rave','gala','bar hop'], vertical: 'afterdark', label: 'SOCIAL'},
+  {keywords: ['performance','show','concert','comedy','open mic','dj set','live music','drag'], vertical: 'afterdark', label: 'SOCIAL'},
+  {keywords: ['hiring','job','bartender','server','host','cook','freelance','gig'],  vertical: 'theladder', label: 'GIGS'}
+];
+
+function categorizeWebhookEvent(eventName, eventTags) {
+  var combined = (eventName + ' ' + (eventTags || []).join(' ')).toLowerCase();
+  for (var i = 0; i < WEBHOOK_CATEGORY_MAP.length; i++) {
+    var rule = WEBHOOK_CATEGORY_MAP[i];
+    for (var j = 0; j < rule.keywords.length; j++) {
+      if (combined.indexOf(rule.keywords[j]) !== -1) {
+        return {vertical: rule.vertical, label: rule.label};
+      }
+    }
+  }
+  return {vertical: 'terminal', label: 'ALL'};
+}
+
+// Simulated live-ingested events from Eventbrite org 73195697223 + Posh slug
+var _ingestedEvents = [
+  {id:500, name:"Davis Pemberton Family Reunion — Welcome Dinner", venue:"Carmine's Italian Restaurant", addr:"200 W 44th St", hood:"Midtown", time:"7:00 PM", price:"$0", avail:85, trending:false, featured:true,  tags:["DINNER","FAMILY","PRIVATE"], genre:"Fine Dining", cap:200, source:"eventbrite", ingested:true},
+  {id:501, name:"Davis Pemberton Reunion — Saturday Gala",         venue:"The Plaza Hotel Ballroom",  addr:"768 5th Ave",    hood:"Midtown", time:"7:30 PM", price:"$0", avail:90, trending:true,  featured:true,  tags:["PARTY","SOCIAL","FORMAL"],  genre:"Social",      cap:300, source:"posh",        ingested:true},
+  {id:502, name:"Davis Pemberton Reunion — Sunday Farewell Brunch",venue:"Sarabeth's Central Park S", addr:"40 Central Park S",hood:"Midtown",time:"10:30 AM",price:"$0", avail:80, trending:false, featured:false, tags:["BRUNCH","FAMILY"],           genre:"Brunch",      cap:150, source:"eventbrite", ingested:true}
+];
+
+// Auto-categorize ingested events
+_ingestedEvents.forEach(function(ev) {
+  var cat = categorizeWebhookEvent(ev.name, ev.tags);
+  ev.vertical = cat.vertical;
+});
+
+// Inject ingested events into the ALL_EVENTS pool
+(function injectWebhookEvents() {
+  if (!ALL_EVENTS['10001']) ALL_EVENTS['10001'] = [];
+  _ingestedEvents.forEach(function(ev) {
+    var exists = ALL_EVENTS['10001'].some(function(e){ return e.id === ev.id; });
+    if (!exists) ALL_EVENTS['10001'].push(ev);
+  });
+  // Update ingested count display
+  var el = document.getElementById('ingested-count');
+  if (el) el.textContent = _ingestedEvents.length;
+  // Update last sync
+  var ls = document.getElementById('last-sync-time');
+  if (ls) ls.textContent = 'Just now';
+})();
+
+// ── 5. Curator ?curator= URL Parameter Logic ──
+var _curatorSlug = null;
+var _curatorProfiles = {
+  'maal':     {name: 'MAAL',     emoji: '&#127775;', picks: [500, 501, 502, 1, 4, 7]},
+  'jade':     {name: 'JADE',     emoji: '&#128081;', picks: [3, 6, 2, 11]},
+  'marco':    {name: 'MARCO',    emoji: '&#127919;', picks: [4, 1, 5, 15]},
+  'hyperlocal':{name: 'HL STAFF', emoji: '&#9672;',  picks: [1,2,3,4,5,6,7,8]}
+};
+
+function initCurator() {
+  var params = new URLSearchParams(window.location.search);
+  _curatorSlug = params.get('curator');
+  if (!_curatorSlug) return;
+
+  var profile = _curatorProfiles[_curatorSlug.toLowerCase()];
+  if (!profile) return;
+
+  // Show curator badge
+  var badge = document.getElementById('curator-badge');
+  var avatar = document.getElementById('curator-avatar');
+  var nameEl = document.getElementById('curator-name');
+  var pillEl = document.getElementById('curator-pill');
+  if (badge) badge.classList.add('active');
+  if (avatar) avatar.innerHTML = profile.emoji;
+  if (nameEl) nameEl.textContent = profile.name;
+  if (pillEl) pillEl.textContent = '&#9733; ' + profile.name + "'s PICKS";
+
+  // Offset app top by curator badge height
+  var app = document.getElementById('app');
+  if (app) app.style.paddingTop = '30px';
+
+  // Brand logo: swap to curator mode
+  document.querySelectorAll('.bnav-hl-logo').forEach(function(el) {
+    el.classList.add('curator-mode');
+    el.innerHTML = profile.emoji.replace('&#','').replace(';','') ? profile.emoji : 'HL';
+    el.style.fontSize = '14px';
+    el.style.letterSpacing = '0';
+  });
+
+  // Inject curator_picks flag onto events
+  var evPool = ALL_EVENTS['10001'] || [];
+  evPool.forEach(function(ev) {
+    ev.curatorPick = profile.picks.indexOf(ev.id) !== -1;
+  });
+
+  // Re-render with curator sort (picks first)
+  var origGetEvs = getEvs;
+  window.getEvs = function(zip, tab, pulse) {
+    var evs = origGetEvs(zip, tab, pulse);
+    // Sort curator picks to top
+    return evs.sort(function(a, b) {
+      return (b.curatorPick ? 1 : 0) - (a.curatorPick ? 1 : 0);
+    });
+  };
+
+  // Update hero title to show curator
+  setTimeout(function() {
+    document.querySelectorAll('.hero-title').forEach(function(el) {
+      if (el.textContent.indexOf('Live Now') !== -1) {
+        el.innerHTML = profile.name + "'s Picks &mdash; Live Now";
+      }
+    });
+    renderAll(currentTab, currentZip, pulseOn);
+    renderAllCounts(currentZip, pulseOn);
+  }, 600);
+
+  console.log('[HyperLocal] Curator mode:', _curatorSlug, '| Picks:', profile.picks);
+}
+
+// ── 6. Enhanced renderCard — show ingested badge + curator pick badge ──
+var _origRenderCard = typeof renderCard === 'function' ? renderCard.toString() : null;
+(function() {
+  var origRenderCard = renderCard;
+  renderCard = function(ev) {
+    var html = origRenderCard(ev);
+    // Inject curator pick badge after source-badge
+    if (ev.curatorPick && _curatorSlug) {
+      var profile = _curatorProfiles[_curatorSlug.toLowerCase()];
+      if (profile) {
+        var badge = '<span style="position:absolute;top:5px;left:8px;font-family:var(--mono);font-size:7px;background:rgba(155,93,229,.18);color:#C084FC;border:1px solid rgba(155,93,229,.3);padding:1px 4px;border-radius:1px;letter-spacing:.05em">' + profile.emoji + ' PICK</span>';
+        html = html.replace('<span class="source-badge', badge + '<span class="source-badge');
+      }
+    }
+    // Show ingested indicator
+    if (ev.ingested) {
+      html = html.replace('>via ' + ev.source + '</span>', ' src-ingested">LIVE via ' + ev.source + '</span>');
+    }
+    return html;
+  };
+})();
+
+// ── 7. Update renderFriends with proximity blur + ghost mode ──
+// (already done above, but wire up open function to also render privacy dashboard)
+var _origOpenFriends = openFriends;
+openFriends = function() {
+  _origOpenFriends();
+  renderPrivacyDashboard(); // keep privacy stats fresh
+};
+
+// ── 8. Boot sequence ──
+setTimeout(function() {
+  renderPrivacyDashboard();
+  initCurator();
+}, 500);
+
 
 </script>
 </body>
