@@ -96,7 +96,7 @@ html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-fa
 .ad-text{font-family:var(--mono);font-size:9px;color:var(--text-dim)}
 .ad-cta{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--yellow);background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);padding:3px 9px;border-radius:2px;cursor:pointer;text-decoration:none}
 .sidebar{width:250px;flex-shrink:0;background:var(--bg1);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.ev-list{flex:1;overflow-y:auto;padding:2px 0}
+.ev-list{flex:1;overflow-y:auto;padding:2px 0 120px}
 .ev-list::-webkit-scrollbar{width:2px}
 .ev-card{padding:8px 11px;border:1px solid var(--border);display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background .12s;position:relative;margin-bottom:1px}
 .ev-card:hover{background:var(--bg3)}
@@ -1012,6 +1012,101 @@ body.metro-miami { --metro-color: #00E676; }
 
 /* DMV metro sublabel */
 .metro-sublabel { font-family:var(--mono); font-size:7px; color:var(--text-muted); letter-spacing:.06em; margin-left:2px; }
+
+/* ════ SPRINT 20-22: Geo, Dashboard, Content ════ */
+
+/* GPS arrow button in zip bar */
+
+
+
+/* Friends panel split sections */
+.friends-section-hdr {
+  padding: 5px 12px;
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  letter-spacing: .12em; color: var(--text-muted);
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  text-transform: uppercase; flex-shrink: 0;
+}
+.friend-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  transition: background .12s;
+}
+.friend-row:hover { background: var(--bg2); }
+.friend-msg-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); font-size: 12px; padding: 4px;
+  opacity: .6; transition: opacity .15s, color .15s;
+  flex-shrink: 0; min-width: 28px; min-height: 28px;
+  display: flex; align-items: center; justify-content: center;
+}
+.friend-msg-btn:hover { opacity: 1; color: var(--blue); }
+.influencer-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .12s;
+}
+.influencer-row:hover { background: var(--bg2); }
+.influencer-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(250,204,21,.1); border: 1px solid rgba(250,204,21,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.influencer-handle { font-family: var(--mono); font-size: 8px; color: var(--yellow); font-weight: 700; }
+.influencer-platform { font-family: var(--mono); font-size: 7px; color: var(--text-muted); }
+
+/* Desktop 3-col itinerary (triple column) */
+.ud-triple-wrap {
+  display: none;
+  flex-direction: row;
+  flex: 1; overflow: hidden; min-height: 0;
+}
+@media(min-width:768px) {
+  #ud-itin-col { flex-direction: column; }
+  #ud-itin-col .ud-itin-list { display: none; }
+  .ud-triple-wrap { display: flex; }
+}
+.ud-triple-col {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; min-height: 0;
+  border-right: 1px solid var(--border);
+}
+.ud-triple-col:last-child { border-right: none; }
+.ud-triple-hdr {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  letter-spacing: .1em; color: var(--text-muted);
+  padding: 5px 10px; background: var(--bg2);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+  text-transform: uppercase;
+}
+.ud-triple-list { overflow-y: auto; flex: 1; min-height: 0; }
+.ud-triple-item {
+  padding: 6px 10px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .12s;
+}
+.ud-triple-item:hover { background: var(--bg2); }
+.ud-triple-item.live-now { background: rgba(0,230,118,.04); border-left: 2px solid var(--green); }
+.ud-triple-time { font-family: var(--mono); font-size: 7px; color: var(--text-dim); margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
+.ud-triple-name { font-size: 9px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.ud-triple-sub { font-family: var(--mono); font-size: 7px; color: var(--text-muted); }
+.live-pulse-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  animation: blink .8s infinite;
+}
+
+/* Pro & Faith event cards */
+.ev-card-pro { border-left: 2px solid #7AABFF; }
+.ev-card-faith { border-left: 2px solid #C084FC; }
+.cat-tag-pro {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  color: #7AABFF; letter-spacing: .08em;
+}
+.cat-tag-faith {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  color: #C084FC; letter-spacing: .08em;
+}
 </style>
 
 </head>
@@ -1028,7 +1123,7 @@ body.metro-miami { --metro-color: #00E676; }
   <div class="topbar-row2">
     <span class="metro-label">NY METRO</span>
     <span class="zip-label" style="margin-left:4px">ZIP</span>
-    <input class="zip-input" id="zip-m" value="10001" maxlength="5" type="text" style="width:66px"/>
+    <input class="zip-input" id="zip-m" value="10001" placeholder="ZIP or city" type="text" style="width:80px"/>
     <div class="pulse-toggle-wrap" onclick="togglePulse()" style="margin-left:2px"><span class="pulse-label" id="pll-m">PULSE</span><div class="toggle-track" id="ptt-m"><div class="toggle-thumb"></div></div></div>
     <div class="vp-countdown" id="vp-countdown-m"><svg class="vp-ring" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--border)" stroke-width="2"/><circle id="vp-arc-m" cx="8" cy="8" r="6" fill="none" stroke="var(--blue)" stroke-width="2" stroke-dasharray="37.7" stroke-dashoffset="37.7" stroke-linecap="round" transform="rotate(-90 8 8)"/></svg><span id="vp-sec-m">30</span>s</div>
     <div style="margin-left:auto;display:flex;gap:4px;align-items:center"><button class="itin-btn" onclick="openItinerary()">&#9783;</button><button class="pp-btn" onclick="openPartner()">$</button><button class="ft-btn" onclick="openFriends()">&#9899;</button></div>
@@ -1040,7 +1135,7 @@ body.metro-miami { --metro-color: #00E676; }
   <div class="zip-pulse-group">
     <span class="metro-label">NY METRO</span>
     <span class="zip-label">ZIP</span>
-    <input class="zip-input" id="zip-input" value="10001" maxlength="5" type="text"/>
+    <input class="zip-input" id="zip-input" value="10001" placeholder="ZIP or city" type="text"/>
     <div class="tb-div"></div>
     <div class="pulse-toggle-wrap" onclick="togglePulse()"><span class="pulse-label" id="pulse-label">PULSE</span><div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div></div>
   </div>
@@ -1116,8 +1211,22 @@ body.metro-miami { --metro-color: #00E676; }
     </div>
   </div>
 </div>
-<div class="tab-content" id="tab-professional"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:40px 24px;min-height:300px"><div style="font-size:36px;opacity:.4">&#9670;</div><div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:.08em">PROFESSIONAL</div><div style="font-family:var(--mono);font-size:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);padding:2px 8px;letter-spacing:.1em">COMING SOON</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center;line-height:1.6;max-width:260px">Networking mixers, industry galas, career panels, and professional development events.</div></div></div>
-<div class="tab-content" id="tab-worship"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:40px 24px;min-height:300px"><div style="font-size:36px;opacity:.4">&#9788;</div><div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:.08em">WORSHIP &amp; COMMUNITY</div><div style="font-family:var(--mono);font-size:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);padding:2px 8px;letter-spacing:.1em">COMING SOON</div><div style="font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center;line-height:1.6;max-width:260px">Religious services, community gatherings, and faith-based programming near you.</div></div></div>
+<div class="tab-content" id="tab-professional">
+  <div class="main-body">
+    <div class="sidebar" id="sidebar-professional">
+      <div class="panel-hdr"><span class="panel-hdr-title">&#9670; PRO &amp; NETWORKING</span><span class="panel-hdr-badge" id="ev-count-professional">6</span></div>
+      <div class="ev-list" id="evlist-professional"></div>
+    </div>
+  </div>
+</div>
+<div class="tab-content" id="tab-worship">
+  <div class="main-body">
+    <div class="sidebar" id="sidebar-worship">
+      <div class="panel-hdr"><span class="panel-hdr-title">&#9788; FAITH &amp; COMMUNITY</span><span class="panel-hdr-badge" id="ev-count-worship">5</span></div>
+      <div class="ev-list" id="evlist-worship"></div>
+    </div>
+  </div>
+</div>
 <div class="ticker-wrap"><div class="ticker-tag" id="ticker-tag">LIVE</div><div class="ticker-scroller"><div class="ticker-track" id="ticker-track"></div></div></div>
 <div class="social-ticker-wrap"><div class="social-ticker-tag">&#9830; SOCIAL</div><div class="social-ticker-scroller"><div class="social-ticker-track" id="social-ticker-track"></div></div></div>
 </div>
@@ -1152,7 +1261,6 @@ body.metro-miami { --metro-color: #00E676; }
 <div id="pp-overlay" style="display:none;position:fixed;inset:0;z-index:219;background:rgba(0,0,0,.2)" onclick="closePartner()"></div>
 <!-- FRIENDS -->
 <div class="friends-panel" id="friends-panel"><div class="ft-hdr"><div class="ft-title">&#9899; FRIENDS TERMINAL</div><button class="ft-close" onclick="closeFriends()">&#10005;</button></div><div class="ghost-mode-bar" id="ghost-mode-bar" onclick="toggleGhostMode()"><span class="ghost-icon">&#128123;</span><div style="flex:1"><div class="ghost-label" id="ghost-label">GHOST MODE</div><div class="ghost-status" id="ghost-status">Location visible to friends</div></div><div class="ghost-track" id="ghost-track"><div class="ghost-thumb"></div></div></div>
-<div class="ghost-mode-bar" id="ghost-mode-bar" onclick="toggleGhostMode()"><span style="font-size:13px">&#128123;</span><div style="flex:1"><div class="ghost-label" id="ghost-label">GHOST MODE</div><div class="ghost-status" id="ghost-status">Location visible to friends</div></div><div class="ghost-track" id="ghost-track"><div class="ghost-thumb"></div></div></div>
 <div class="golive-toggle" onclick="toggleGoLive()"><div class="golive-track" id="gl-track"><div class="golive-thumb"></div></div><span style="font-family:var(--mono);font-size:9px;font-weight:600" id="gl-label">GO LIVE</span></div><div class="ft-scroll" id="friends-scroll"></div></div>
 <div id="ft-overlay" style="display:none;position:fixed;inset:0;z-index:149;background:rgba(0,0,0,.2)" onclick="closeFriends()"></div>
 <!-- LOOKBOOK -->
@@ -1355,11 +1463,7 @@ function handleZip(val){
   renderAll(currentTab,z,pulseOn);renderAllCounts(z,pulseOn);
   if(typeof updateWeather==='function')updateWeather(z);
 }
-document.querySelectorAll('.zip-input').forEach(function(inp){
-  inp.addEventListener('keydown',function(e){if(e.key==='Enter')handleZip(this.value);});
-  inp.addEventListener('blur',function(){handleZip(this.value);});
-  inp.addEventListener('input',function(){if(this.value.length===5)handleZip(this.value);});
-});
+// zip input listeners set in Sprint 20 block below
 // Clock
 function updateClock(){
   var d=new Date();
@@ -2541,7 +2645,8 @@ function applyMetro(zip) {
   var cfg = METRO_CONFIG[metroKey];
   _currentMetro = metroKey;
 
-  // Update all metro-label elements
+  // Update all metro-label elements — remove stale sublabels first
+  document.querySelectorAll('.metro-sublabel').forEach(function(s) { s.remove(); });
   document.querySelectorAll('.metro-label').forEach(function(el) {
     el.classList.add('switching');
     setTimeout(function() {
@@ -2690,6 +2795,17 @@ var _gmapApiKey = localStorage.getItem('hl_gmap_key') || '';
 var _gmapLoaded = false;
 
 function initGoogleMapsShell() {
+  // Re-check env key each time (may have been set after resolveGmapKey ran)
+  if (!_gmapApiKey) {
+    var metaTag = document.querySelector('meta[name="gmap-key"]');
+    if (metaTag && metaTag.content) _gmapApiKey = metaTag.content;
+  }
+  if (!_gmapApiKey) {
+    // Try NEXT_PUBLIC env via data attribute on body
+    var bodyKey = document.body.getAttribute('data-gmap-key');
+    if (bodyKey) { _gmapApiKey = bodyKey; localStorage.setItem('hl_gmap_key', bodyKey); }
+  }
+
   // Show API key prompt if no key saved
   ['gmap-mobile','gmap-desktop'].forEach(function(id) {
     var container = document.getElementById(id);
@@ -3334,16 +3450,15 @@ applyMetro = function(zip) {
       });
       document.body.classList.add('metro-dc');
     }
-    // Update all metro-label elements with sub-metro label
+    // Update all metro-label elements with sub-metro label — clear old ones first
+    document.querySelectorAll('.metro-sublabel').forEach(function(s) { s.remove(); });
     document.querySelectorAll('.metro-label').forEach(function(el) {
       el.classList.add('switching');
       setTimeout(function() {
-        // Main label
-        el.textContent = dmvLabel.split('|')[0].trim();
+        var parts = dmvLabel.split('|');
+        el.textContent = parts[0].trim();
         el.style.color = '#00B4D8';
         el.classList.remove('switching');
-        // Add sublabel if it has a pipe
-        var parts = dmvLabel.split('|');
         if (parts[1]) {
           var sub = document.createElement('span');
           sub.className = 'metro-sublabel';
@@ -3593,6 +3708,389 @@ setTimeout(function() {
   termTab.appendChild(itinCol);
   termTab.appendChild(socialCol);
 })();
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINTS 20-22: Geo Engine, Dashboard, Content
+// ══════════════════════════════════════════════════════
+
+// ── SPRINT 20: Hampton Roads + City Name Search ──
+
+// Extend DMV_SUB_METRO with Hampton Roads ZIPs
+var HR_ZIPS = {};
+// 236xx - Hampton, Newport News, Hampton Roads
+['23601','23602','23603','23604','23605','23606','23607','23608','23609',
+ '23630','23651','23661','23662','23663','23664','23665','23666','23667','23668','23669'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Hampton';});
+['23500','23501','23502','23503','23504','23505','23506','23507','23508','23509',
+ '23510','23511','23512','23513','23514','23515','23516','23517','23518','23519',
+ '23520','23523','23529','23541','23551'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Norfolk';});
+['23185','23186','23187','23188','23189'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Williamsburg';});
+['23320','23321','23322','23323','23324','23325','23326','23327','23328'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Chesapeake';});
+['23434','23435','23436','23437','23438','23439'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Suffolk';});
+['23451','23452','23453','23454','23455','23456','23457','23458','23459',
+ '23460','23461','23462','23463','23464'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Virginia Beach';});
+['23701','23702','23703','23704','23705','23707','23708','23709'].forEach(function(z){HR_ZIPS[z]='Hampton Roads | Portsmouth';});
+
+METRO_CONFIG.hampton_roads = {
+  label: 'HR METRO', zips: ['236','235','233','234'],
+  color: '#00B4D8', bodyClass: 'metro-dc',
+  lat: 36.8508, lng: -76.2859, dataKey: '23510'
+};
+
+// Hampton Roads sample events
+if (!ALL_EVENTS['23510']) ALL_EVENTS['23510'] = [
+  {id:700,name:"Norfolk Jazz & Seafood Fest",venue:"Town Point Park",addr:"1 Waterside Dr",hood:"Downtown Norfolk",time:"6:00 PM",price:"$35",avail:60,trending:true,featured:true,tags:["JAZZ","OUTDOOR","SEAFOOD"],genre:"Jazz",cap:2000,vertical:"afterdark",source:"eventbrite"},
+  {id:701,name:"Virginia Beach Rooftop Sessions",venue:"The Oceanfront Boardwalk",addr:"Atlantic Ave",hood:"VB Oceanfront",time:"9:00 PM",price:"$25",avail:45,trending:true,featured:false,tags:["ROOFTOP","DJ"],genre:"House",cap:500,vertical:"afterdark",source:"posh"},
+  {id:702,name:"Williamsburg Craft Beer Crawl",venue:"Colonial Williamsburg",addr:"DOG St",hood:"Williamsburg",time:"2:00 PM",price:"$40",avail:70,trending:false,featured:true,tags:["BEER","CRAWL"],genre:"Social",cap:300,vertical:"themenu",source:"eventbrite"},
+  {id:703,name:"Hampton Crab Boil & Live Music",venue:"Mill Point Park",addr:"1 Mill Point Park",hood:"Hampton",time:"4:00 PM",price:"$28",avail:55,trending:true,featured:false,tags:["SEAFOOD","LIVE"],genre:"Casual",cap:400,vertical:"themenu",source:"luma"},
+  {id:704,name:"Portsmouth Art Walk",venue:"Olde Towne Portsmouth",addr:"High St",hood:"Olde Towne",time:"5:00 PM",price:"Free",avail:90,trending:false,featured:false,tags:["ART","WALK","FREE"],genre:"Culture",cap:1000,vertical:"afterdark",source:"eventbrite"},
+  {id:705,name:"Event Coordinator",venue:"Norfolk Scope Arena",addr:"201 E Brambleton Ave",hood:"Downtown Norfolk",time:"WEEKENDS",price:"$20/hr",avail:100,trending:false,featured:false,tags:["EVENTS","PART-TIME"],genre:"Hospitality",cap:1,vertical:"theladder",source:"eventbrite"}
+];
+
+// ── City name → ZIP mapping ──
+var CITY_TO_ZIP = {
+  'waldorf': '20601', 'bowie': '20715', 'laurel': '20707',
+  'greenbelt': '20770', 'hyattsville': '20781', 'arlington': '22201',
+  'alexandria': '22301', 'reston': '20190', 'ashburn': '20147',
+  'sterling': '20164', 'chicago': '60601', 'dc': '20001',
+  'washington': '20001', 'manhattan': '10001', 'brooklyn': '11201',
+  'queens': '11354', 'bronx': '10451', 'miami': '33101',
+  'los angeles': '90210', 'la': '90210', 'houston': '77001',
+  'norfolk': '23510', 'virginia beach': '23451', 'hampton': '23661',
+  'newport news': '23601', 'chesapeake': '23320', 'portsmouth': '23701',
+  'williamsburg': '23185', 'suffolk': '23434',
+  'nyc': '10001', 'new york': '10001', 'new york city': '10001'
+};
+
+// Patch handleZip to accept city names too
+var _s20_origHandleZip = handleZip;
+handleZip = function(val) {
+  var v = val.trim().toLowerCase();
+  // Try city lookup first
+  var mappedZip = CITY_TO_ZIP[v];
+  if (mappedZip) {
+    // Update all zip inputs
+    document.querySelectorAll('.zip-input').forEach(function(inp) {
+      inp.value = mappedZip;
+    });
+    _s20_origHandleZip(mappedZip);
+    if (typeof applyMetro === 'function') applyMetro(mappedZip);
+    return;
+  }
+  // Fall through to normal zip handling
+  _s20_origHandleZip(val);
+  // Check Hampton Roads sub-metro
+  var hrLabel = HR_ZIPS[val.trim()];
+  if (hrLabel) {
+    _currentMetro = 'hampton_roads';
+    document.querySelectorAll('.metro-sublabel').forEach(function(s) { s.remove(); });
+    document.querySelectorAll('.metro-label').forEach(function(el) {
+      el.classList.add('switching');
+      setTimeout(function() {
+        var parts = hrLabel.split('|');
+        el.textContent = parts[0].trim();
+        el.style.color = '#00B4D8';
+        el.classList.remove('switching');
+        if (parts[1]) {
+          var sub = document.createElement('span');
+          sub.className = 'metro-sublabel';
+          sub.textContent = '| ' + parts[1].trim();
+          el.parentNode.insertBefore(sub, el.nextSibling);
+        }
+      }, 150);
+    });
+    // Use HR event data
+    currentZip = val.trim();
+    if (typeof renderAll === 'function') renderAll(currentTab, val.trim(), pulseOn);
+    if (typeof renderAllCounts === 'function') renderAllCounts(val.trim(), pulseOn);
+  }
+};
+
+// Wire up zip inputs — debounced, no re-entry loops
+var _lastZipSearched = '';
+document.querySelectorAll('.zip-input').forEach(function(inp) {
+  inp.removeAttribute('maxlength'); // allow city names
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var v = this.value.trim();
+      if (v && v !== _lastZipSearched) { _lastZipSearched = v; handleZip(v); }
+    }
+  });
+  inp.addEventListener('blur', function() {
+    var v = this.value.trim();
+    if (v && v !== _lastZipSearched && v.length >= 3) {
+      _lastZipSearched = v;
+      handleZip(v);
+    }
+  });
+});
+
+
+// ── SPRINT 21: Friends panel split ──
+function renderFriendsPanel() {
+  var scroll = document.getElementById('friends-scroll');
+  if (!scroll) return;
+
+  var friends = typeof _friendsData !== 'undefined' ? _friendsData : [];
+  var liveFriends = friends.filter(function(f) { return f.live; });
+  var offlineFriends = friends.filter(function(f) { return !f.live; });
+
+  var influencers = typeof _followingProfiles !== 'undefined' ? _followingProfiles : [];
+
+  var html = '';
+
+  // Section 1: Direct friends
+  html += '<div class="friends-section-hdr">DIRECT FRIENDS (' + friends.length + ')</div>';
+  html += friends.map(function(f) {
+    return '<div class="friend-row">'
+      + '<div class="friend-avatar' + (f.live ? ' golive' : '') + '">' + f.emoji + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div class="friend-name">' + f.name + '</div>'
+      + '<div class="friend-status">' + f.status
+      + (f.live ? ' <span style="font-family:var(--mono);font-size:7px;color:rgba(155,93,229,.7)">&#128280; ±75m</span>' : '')
+      + '</div></div>'
+      + (f.live ? '<span class="friend-live-tag">LIVE</span>' : '')
+      + '<button class="friend-msg-btn" title="Message ' + f.name + '" onclick="event.stopPropagation()">&#128172;</button>'
+      + '</div>';
+  }).join('');
+
+  // Section 2: Following — curators and brands
+  html += '<div class="friends-section-hdr" style="margin-top:4px">FOLLOWING (' + influencers.length + ')</div>';
+  html += influencers.map(function(p) {
+    return '<div class="influencer-row" onclick="void(0)">'
+      + '<div class="influencer-avatar">' + p.emoji + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div class="influencer-handle">' + p.handle + '</div>'
+      + '<div class="influencer-platform">' + p.platform + '</div>'
+      + '</div>'
+      + '<button class="friend-msg-btn" title="Message ' + p.handle + '" onclick="event.stopPropagation()">&#128172;</button>'
+      + '</div>';
+  }).join('');
+
+  scroll.innerHTML = html;
+}
+
+// Hook openFriends to render split panel
+var _s21_origOpenFriends = typeof openFriends === 'function' ? openFriends : function(){};
+openFriends = function() {
+  _s21_origOpenFriends();
+  setTimeout(renderFriendsPanel, 100);
+};
+
+// ── SPRINT 21: Desktop triple-column itinerary ──
+function initTripleItin() {
+  var itinCol = document.getElementById('ud-itin-col');
+  if (!itinCol || document.getElementById('ud-triple-wrap')) return;
+
+  var wrap = document.createElement('div');
+  wrap.className = 'ud-triple-wrap';
+  wrap.id = 'ud-triple-wrap';
+  wrap.innerHTML =
+    '<div class="ud-triple-col">'
+      + '<div class="ud-triple-hdr">&#9789; YOUR UPCOMING</div>'
+      + '<div class="ud-triple-list" id="ud-triple-upcoming"></div>'
+    + '</div>'
+    + '<div class="ud-triple-col">'
+      + '<div class="ud-triple-hdr">&#9899; FRIENDS OVERLAP</div>'
+      + '<div class="ud-triple-list" id="ud-triple-friends"></div>'
+    + '</div>'
+    + '<div class="ud-triple-col">'
+      + '<div class="ud-triple-hdr">&#9733; FOLLOWING</div>'
+      + '<div class="ud-triple-list" id="ud-triple-following"></div>'
+    + '</div>';
+
+  itinCol.appendChild(wrap);
+  renderTripleItin();
+}
+
+function renderTripleItin() {
+  // Upcoming
+  var upEl = document.getElementById('ud-triple-upcoming');
+  var evPool = ALL_EVENTS[currentZip] || ALL_EVENTS['10001'] || [];
+  var myIds = typeof _myEventIds !== 'undefined' ? _myEventIds : [1,4,7,500,501];
+  var myEvs = evPool.filter(function(ev) { return myIds.indexOf(ev.id) !== -1; })
+    .sort(function(a,b) {
+      var ta = typeof parseEventTime === 'function' ? parseEventTime(a.time) : null;
+      var tb = typeof parseEventTime === 'function' ? parseEventTime(b.time) : null;
+      if (!ta && !tb) return 0; if (!ta) return 1; if (!tb) return -1; return ta - tb;
+    });
+
+  if (upEl) {
+    upEl.innerHTML = myEvs.length === 0
+      ? '<div style="padding:12px;font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center">No upcoming events</div>'
+      : myEvs.map(function(ev) {
+          var status = typeof getLiveStatus === 'function' ? getLiveStatus(ev) : null;
+          var isLive = status === 'live';
+          return '<div class="ud-triple-item' + (isLive ? ' live-now' : '') + '" onclick="openEvDetailById(' + ev.id + ')">'
+            + '<div class="ud-triple-time">'
+            + (isLive ? '<span class="live-pulse-dot"></span>' : '')
+            + ev.time + '</div>'
+            + '<div class="ud-triple-name">' + ev.name + '</div>'
+            + '<div class="ud-triple-sub">' + ev.venue + '</div>'
+            + '</div>';
+        }).join('');
+  }
+
+  // Friends overlap
+  var frEl = document.getElementById('ud-triple-friends');
+  if (frEl) {
+    var friends = typeof _friendsData !== 'undefined' ? _friendsData : [];
+    var liveVenues = friends.filter(function(f){return f.live;}).map(function(f){return f.status.toLowerCase();});
+    var overlap = evPool.filter(function(ev) {
+      return liveVenues.some(function(v) { return ev.venue.toLowerCase().indexOf(v) !== -1 || v.indexOf(ev.venue.toLowerCase()) !== -1; });
+    });
+    frEl.innerHTML = overlap.length === 0
+      ? '<div style="padding:12px;font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center">No friend overlaps</div>'
+      : overlap.map(function(ev) {
+          var who = friends.filter(function(f){return f.live && (ev.venue.toLowerCase().indexOf(f.status.toLowerCase()) !== -1 || f.status.toLowerCase().indexOf(ev.venue.toLowerCase()) !== -1);});
+          return '<div class="ud-triple-item" onclick="openEvDetailById(' + ev.id + ')">'
+            + '<div class="ud-triple-time" style="color:#C084FC">' + who.map(function(f){return f.emoji;}).join('') + ' going</div>'
+            + '<div class="ud-triple-name">' + ev.name + '</div>'
+            + '<div class="ud-triple-sub">' + ev.venue + '</div>'
+            + '</div>';
+        }).join('');
+  }
+
+  // Following picks
+  var foEl = document.getElementById('ud-triple-following');
+  if (foEl) {
+    var profiles = typeof _followingProfiles !== 'undefined' ? _followingProfiles : [];
+    var picks = [];
+    profiles.forEach(function(p) {
+      var ev = evPool.find(function(e) { return p.picks.indexOf(e.id) !== -1; });
+      if (ev) picks.push({ev:ev, profile:p});
+    });
+    foEl.innerHTML = picks.length === 0
+      ? '<div style="padding:12px;font-family:var(--mono);font-size:8px;color:var(--text-muted);text-align:center">Follow curators to see picks</div>'
+      : picks.map(function(item) {
+          return '<div class="ud-triple-item" onclick="openEvDetailById(' + item.ev.id + ')">'
+            + '<div class="ud-triple-time" style="color:var(--yellow)">' + item.profile.emoji + ' ' + item.profile.handle + '</div>'
+            + '<div class="ud-triple-name">' + item.ev.name + '</div>'
+            + '<div class="ud-triple-sub">' + item.ev.venue + '</div>'
+            + '</div>';
+        }).join('');
+  }
+}
+
+// ── SPRINT 22: Pro & Faith event data ──
+var PRO_EVENTS = [
+  {id:800,name:"BEYA STEM Conference 2025",venue:"Washington Marriott Wardman",addr:"2660 Woodley Rd NW",hood:"Woodley Park",time:"9:00 AM",price:"$150",avail:35,trending:true,featured:true,tags:["STEM","NETWORKING","CONFERENCE"],genre:"Professional",cap:3000,vertical:"professional",source:"eventbrite",cat:"&#128188;"},
+  {id:801,name:"Black Tech Networking Mixer",venue:"WeWork Penn Quarter",addr:"655 K St NW",hood:"Penn Quarter",time:"6:30 PM",price:"$25",avail:60,trending:true,featured:false,tags:["TECH","NETWORKING","MIXER"],genre:"Networking",cap:200,vertical:"professional",source:"luma",cat:"&#128188;"},
+  {id:802,name:"Women in Finance Gala",venue:"The Mayflower Hotel",addr:"1127 Connecticut Ave NW",hood:"Dupont Circle",time:"7:00 PM",price:"$85",avail:40,trending:false,featured:true,tags:["FINANCE","GALA","WOMEN"],genre:"Gala",cap:400,vertical:"professional",source:"eventbrite",cat:"&#128188;"},
+  {id:803,name:"Startup Pitch Night — DMV",venue:"1776 Crystal City",addr:"2231 Crystal Dr",hood:"Crystal City",time:"6:00 PM",price:"Free",avail:75,trending:true,featured:false,tags:["STARTUP","PITCH","VC"],genre:"Entrepreneurship",cap:250,vertical:"professional",source:"posh",cat:"&#128188;"},
+  {id:804,name:"Howard University Career Fair",venue:"Blackburn Center",addr:"2397 6th St NW",hood:"LeDroit Park",time:"10:00 AM",price:"Free",avail:90,trending:false,featured:false,tags:["CAREER","HBCU","JOBS"],genre:"Career",cap:500,vertical:"professional",source:"eventbrite",cat:"&#128188;"},
+  {id:805,name:"Tech PM — Product Role Open",venue:"Amazon HQ2",addr:"222 Main St",hood:"Arlington",time:"FULL TIME",price:"$145k",avail:100,trending:true,featured:false,tags:["TECH","PM","REMOTE-OK"],genre:"Jobs",cap:1,vertical:"professional",source:"luma",cat:"&#128188;"}
+];
+
+var FAITH_EVENTS = [
+  {id:900,name:"Sunday Service — Praise & Worship",venue:"Alfred Street Baptist Church",addr:"301 S Alfred St",hood:"Alexandria",time:"10:30 AM",price:"Free",avail:70,trending:false,featured:true,tags:["WORSHIP","BAPTIST","WEEKLY"],genre:"Service",cap:2000,vertical:"worship",source:"eventbrite",cat:"&#9788;"},
+  {id:901,name:"Gospel Choir Concert",venue:"Metropolitan AME Church",addr:"1518 M St NW",hood:"Dupont Circle",time:"7:00 PM",price:"$15",avail:55,trending:true,featured:false,tags:["GOSPEL","CHOIR","CONCERT"],genre:"Music",cap:800,vertical:"worship",source:"posh",cat:"&#9788;"},
+  {id:902,name:"Community Outreach & Food Drive",venue:"Union Temple Baptist",addr:"1225 W St SE",hood:"Anacostia",time:"9:00 AM",price:"Free",avail:90,trending:false,featured:false,tags:["COMMUNITY","OUTREACH","VOLUNTEER"],genre:"Service",cap:300,vertical:"worship",source:"eventbrite",cat:"&#9788;"},
+  {id:903,name:"Interfaith Peace Walk",venue:"National Mall",addr:"National Mall",hood:"The Mall",time:"8:00 AM",price:"Free",avail:95,trending:true,featured:true,tags:["INTERFAITH","WALK","PEACE"],genre:"Community",cap:1000,vertical:"worship",source:"luma",cat:"&#9788;"},
+  {id:904,name:"Youth Ministry Game Night",venue:"Shiloh Baptist Church",addr:"1500 9th St NW",hood:"Shaw",time:"6:00 PM",price:"Free",avail:80,trending:false,featured:false,tags:["YOUTH","GAMES","FELLOWSHIP"],genre:"Fellowship",cap:150,vertical:"worship",source:"eventbrite",cat:"&#9788;"}
+];
+
+// Inject Pro + Faith events into ALL_EVENTS pools
+(function injectProFaith() {
+  ['10001','20001','23510','60601','90210'].forEach(function(zip) {
+    if (!ALL_EVENTS[zip]) ALL_EVENTS[zip] = [];
+    PRO_EVENTS.concat(FAITH_EVENTS).forEach(function(ev) {
+      if (!ALL_EVENTS[zip].some(function(e){return e.id===ev.id;})) {
+        ALL_EVENTS[zip].push(ev);
+      }
+    });
+  });
+})();
+
+// Render Pro tab
+function renderProTab() {
+  var el = document.getElementById('evlist-professional');
+  if (!el) return;
+  var evs = PRO_EVENTS;
+  var html = '<div class="ev-carousel">' + evs.map(function(ev,i) {
+    if (i === 0) {
+      return '<div class="ev-card ev-card-pro" onclick="openEvDetailById('+ev.id+')" style="padding:16px;cursor:pointer">'
+        + '<div style="font-family:var(--mono);font-size:8px;color:#7AABFF;margin-bottom:4px">' + ev.cat + ' ' + ev.genre.toUpperCase() + '</div>'
+        + '<div style="font-size:16px;font-weight:700;margin-bottom:4px">' + ev.name + '</div>'
+        + '<div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">' + ev.venue + ' · ' + ev.time + ' · ' + ev.hood + '</div>'
+        + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+        + ev.tags.map(function(t){return '<span class="ev-tag">'+t+'</span>';}).join('')
+        + '</div>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">'
+        + '<span style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--yellow)">' + ev.price + '</span>'
+        + '<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">' + ev.avail + '% avail</span>'
+        + '</div></div>';
+    }
+    return '<div class="ev-list-card ev-card-pro" onclick="openEvDetailById('+ev.id+')">'
+      + '<div class="ev-list-thumb" style="color:#7AABFF;font-size:20px">' + ev.cat + '</div>'
+      + '<div class="ev-list-body">'
+      + '<div class="ev-list-name">' + ev.name + '</div>'
+      + '<div class="ev-list-meta">' + ev.venue + ' · ' + ev.time + '</div>'
+      + '<div style="margin-top:2px">' + ev.tags.slice(0,2).map(function(t){return '<span class="ev-tag cat-tag-pro">'+t+'</span> ';}).join('') + '</div>'
+      + '</div>'
+      + '<div class="ev-list-right"><div class="ev-list-price">' + ev.price + '</div><div class="ev-list-avail">' + ev.avail + '% avail</div></div>'
+      + '</div>';
+  }).join('') + '</div>';
+  el.innerHTML = html;
+}
+
+// Render Faith tab
+function renderFaithTab() {
+  var el = document.getElementById('evlist-worship');
+  if (!el) return;
+  var evs = FAITH_EVENTS;
+  var html = '<div class="ev-carousel">' + evs.map(function(ev,i) {
+    if (i === 0) {
+      return '<div class="ev-card ev-card-faith" onclick="openEvDetailById('+ev.id+')" style="padding:16px;cursor:pointer">'
+        + '<div style="font-family:var(--mono);font-size:8px;color:#C084FC;margin-bottom:4px">' + ev.cat + ' ' + ev.genre.toUpperCase() + '</div>'
+        + '<div style="font-size:16px;font-weight:700;margin-bottom:4px">' + ev.name + '</div>'
+        + '<div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);margin-bottom:8px">' + ev.venue + ' · ' + ev.time + ' · ' + ev.hood + '</div>'
+        + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+        + ev.tags.map(function(t){return '<span class="ev-tag">'+t+'</span>';}).join('')
+        + '</div>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">'
+        + '<span style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--yellow)">' + ev.price + '</span>'
+        + '<span style="font-family:var(--mono);font-size:8px;color:var(--text-muted)">' + ev.avail + '% avail</span>'
+        + '</div></div>';
+    }
+    return '<div class="ev-list-card ev-card-faith" onclick="openEvDetailById('+ev.id+')">'
+      + '<div class="ev-list-thumb" style="color:#C084FC;font-size:20px">' + ev.cat + '</div>'
+      + '<div class="ev-list-body">'
+      + '<div class="ev-list-name">' + ev.name + '</div>'
+      + '<div class="ev-list-meta">' + ev.venue + ' · ' + ev.time + '</div>'
+      + '<div style="margin-top:2px">' + ev.tags.slice(0,2).map(function(t){return '<span class="ev-tag cat-tag-faith">'+t+'</span> ';}).join('') + '</div>'
+      + '</div>'
+      + '<div class="ev-list-right"><div class="ev-list-price">' + ev.price + '</div><div class="ev-list-avail">' + ev.avail + '% avail</div></div>'
+      + '</div>';
+  }).join('') + '</div>';
+  el.innerHTML = html;
+}
+
+// ── Extend switchTab to render Pro/Faith content ──
+var _s22_origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
+switchTab = function(tab, btn) {
+  if (_s22_origSwitchTab) _s22_origSwitchTab(tab, btn);
+  if (tab === 'professional') { setTimeout(renderProTab, 50); }
+  if (tab === 'worship')      { setTimeout(renderFaithTab, 50); }
+};
+
+// ── Boot ──
+setTimeout(function() {
+  // Init triple itinerary column
+  initTripleItin();
+  // Pre-render Pro/Faith if currently on those tabs
+  if (currentTab === 'professional') renderProTab();
+  if (currentTab === 'worship')      renderFaithTab();
+  // Render triple if on terminal
+  if (currentTab === 'terminal') renderTripleItin();
+  // Update renderUnifiedDashboard to also refresh triple
+  if (typeof renderUnifiedDashboard === 'function') {
+    var origUD = renderUnifiedDashboard;
+    renderUnifiedDashboard = function() { origUD(); renderTripleItin(); };
+  }
+}, 1200);
 
 </script>
 </body>
