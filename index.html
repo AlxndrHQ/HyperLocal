@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#0047FF;--yellow:#FACC15;--bg0:#040810;--bg1:#080E1C;--bg2:#0D1525;--bg3:#141F33;--bg4:#1A2740;--border:rgba(255,255,255,0.07);--border-blue:rgba(0,71,255,0.35);--text:#E4E8F4;--text-dim:#6B7A99;--text-muted:#3D4F6E;--mono:'Roboto Mono',monospace;--sans:'Space Grotesk',sans-serif;--red:#FF3355;--green:#00E676;--orange:#FF8C00;--purple:#9B5DE5;--glass:rgba(8,14,28,0.80)}
+:root{--blue:#0047FF;--lime:#A8FF3E;--yellow:#FACC15;--bg0:#0D0D0D;--bg1:#121212;--bg2:#1A1A1A;--bg3:#222222;--bg4:#2A2A2A;--border:rgba(255,255,255,0.08);--border-blue:rgba(0,71,255,0.35);--text:#F0F0F0;--text-dim:#808080;--text-muted:#484848;--mono:'Roboto Mono',monospace;--sans:'Space Grotesk',sans-serif;--red:#FF3355;--green:#00E676;--orange:#FF8C00;--purple:#9B5DE5;--glass:rgba(18,18,18,0.82)}
 html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-family:var(--sans);overflow:hidden}
 #app{display:flex;flex-direction:column;height:100vh;width:100%}
 .topbar{display:flex;align-items:center;gap:10px;padding:0 14px;height:42px;background:var(--bg0);border-bottom:1px solid var(--border);flex-shrink:0;z-index:20}
@@ -682,11 +682,7 @@ body.pub-mode .hero-wrap{display:none}
 .friend-pin-label.ghost { color: var(--text-muted); }
 
 /* Google Maps container — replaces blank map grid */
-.gmap-container {
-  position: absolute;
-  inset: 0;
-  background: var(--bg2);
-}
+/* gmap-container orig consolidated */
 .gmap-container iframe,
 .gmap-container #gmap-canvas {
   width: 100% !important;
@@ -1382,13 +1378,9 @@ body.metro-miami { --metro-color: #00E676; }
 .vibe-pill.faith.active   { background: var(--purple); border-color: var(--purple); color: #fff; }
 
 /* Sprint 31: Map fix — ensure map fills container */
-.map-panel { position: relative; }
-.map-inner { position: absolute; inset: 0; overflow: hidden; }
-.gmap-container {
-  position: absolute !important; inset: 0 !important;
-  width: 100% !important; height: 100% !important;
-  z-index: 2 !important; background: var(--bg2);
-}
+/* map-panel consolidated */
+/* map-inner consolidated */
+/* gmap-container rules consolidated below */
 #tab-mapview .map-page-grid { position: relative; }
 #gmap-desktop, #gmap-mobile { width: 100% !important; height: 100% !important; }
 
@@ -1432,6 +1424,430 @@ body.metro-miami { --metro-color: #00E676; }
 .ev-list-card { background: var(--bg1) !important; }
 .ev-list-card:hover { background: var(--bg3) !important; }
 /* Scrollbar */
+
+/* ════ SPRINT 33: Supabase Auth & Social Architecture ════ */
+
+/* Profile social counts row */
+.profile-social-counts {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; padding: 12px 0; border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.profile-count-btn {
+  flex: 1; background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 12px; transition: background .12s; border-radius: 3px;
+}
+.profile-count-btn:hover { background: var(--bg3); }
+.profile-count-num {
+  font-family: var(--mono); font-size: 18px; font-weight: 700;
+  color: var(--text); line-height: 1;
+}
+.profile-count-label {
+  font-family: var(--mono); font-size: 7px; color: var(--text-dim);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.profile-count-divider {
+  width: 1px; height: 32px; background: var(--border); flex-shrink: 0;
+}
+
+/* Auth status badge */
+.profile-auth-status {
+  padding: 6px 16px; font-family: var(--mono); font-size: 8px;
+  color: var(--text-muted); text-align: center;
+  min-height: 24px;
+}
+.auth-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 2px; letter-spacing: .07em;
+  font-size: 8px; font-weight: 700;
+}
+.auth-badge.verified { background: rgba(0,230,118,.1); color: var(--green); border: 1px solid rgba(0,230,118,.25); }
+.auth-badge.local    { background: rgba(250,204,21,.08); color: var(--yellow); border: 1px solid rgba(250,204,21,.2); }
+.auth-badge.supabase { background: rgba(62,207,142,.1); color: #3ECF8E; border: 1px solid rgba(62,207,142,.3); }
+
+/* Profile sections */
+.profile-section-hdr {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  letter-spacing: .14em; color: var(--text-muted);
+  padding: 10px 16px 5px; text-transform: uppercase;
+}
+.profile-my-events { padding: 0 0 8px; max-height: 220px; overflow-y: auto; }
+.profile-event-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .12s;
+}
+.profile-event-row:hover { background: var(--bg3); }
+.profile-event-icon {
+  width: 28px; height: 28px; border-radius: 2px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; background: var(--bg3);
+}
+.profile-event-name { font-size: 10px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.profile-event-meta { font-family: var(--mono); font-size: 8px; color: var(--text-dim); }
+.profile-event-status {
+  margin-left: auto; flex-shrink: 0;
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  padding: 2px 7px; border-radius: 1px;
+}
+.profile-event-status.live    { background: rgba(255,51,85,.1); color: var(--red); border: 1px solid rgba(255,51,85,.25); }
+.profile-event-status.upcoming{ background: rgba(0,71,255,.1); color: var(--blue); border: 1px solid rgba(0,71,255,.25); }
+.profile-event-status.ended   { color: var(--text-muted); }
+.profile-empty {
+  padding: 16px; text-align: center; font-family: var(--mono);
+  font-size: 8px; color: var(--text-muted); font-style: italic;
+}
+
+/* Connections list */
+.connections-list { max-height: 260px; overflow-y: auto; }
+.connection-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px; border-bottom: 1px solid var(--border);
+}
+.connection-avatar {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.connection-name { font-size: 10px; font-weight: 600; color: var(--text); }
+.connection-sub  { font-family: var(--mono); font-size: 7px; color: var(--text-dim); }
+.connection-add-btn {
+  margin-left: auto; flex-shrink: 0;
+  background: none; border: 1px solid var(--border); color: var(--text-dim);
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  padding: 4px 10px; border-radius: 2px; cursor: pointer; letter-spacing: .06em;
+  transition: all .15s;
+}
+.connection-add-btn:hover { border-color: var(--green); color: var(--green); }
+.connection-add-btn.added { border-color: var(--green); color: var(--green); opacity: .6; cursor: default; }
+.profile-back-btn {
+  width: 100%; padding: 10px; background: none; border: none;
+  border-top: 1px solid var(--border); color: var(--blue);
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  cursor: pointer; letter-spacing: .08em; text-align: left; padding-left: 16px;
+}
+
+/* ════ MAP FIX: Definitive sizing rules ════ */
+
+/* tab-mapview must fill the full app height */
+#tab-mapview {
+  display: none; /* hidden by default */
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+#tab-mapview.active { display: flex !important; }
+
+/* Map page grid fills tab */
+.map-page-grid {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  position: relative !important;
+}
+
+/* Map inner: fill the page grid, give it explicit height */
+.map-inner {
+  flex: 1 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 300px !important;  /* fallback height so it's never 0 */
+  width: 100% !important;
+}
+
+/* Google Map container fills map-inner */
+.gmap-container {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 5 !important;
+  background: var(--bg2);
+}
+
+/* Hide the dot grid when Google Maps is active */
+.gmap-container.gmap-loaded ~ .map-grid,
+.gmap-container.gmap-loaded ~ .map-dots-layer,
+.gmap-active .map-grid,
+.gmap-active .map-dots-layer { display: none !important; }
+
+/* Map grid sits below google map */
+.map-grid { z-index: 1 !important; }
+.map-dots-layer { z-index: 2 !important; }
+.map-scan-line { z-index: 3 !important; }
+.friend-pins-layer { z-index: 6 !important; }
+
+/* Mobile map tab */
+@media(max-width:767px) {
+  #tab-mapview.active { flex: 1 !important; }
+  .map-page-grid { min-height: 100% !important; }
+}
+
+/* ════ SPRINTS 34-36: Influencer, DMs, iOS ════ */
+
+/* Sprint 34: Curator page */
+.curator-page {
+  display: none; position: fixed; inset: 0; z-index: 350;
+  background: var(--bg0); flex-direction: column; overflow: hidden;
+}
+.curator-page.open { display: flex; }
+.curator-topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  background: var(--bg1); flex-shrink: 0;
+}
+.curator-avatar-lg {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.curator-name-lg { font-size: 15px; font-weight: 800; color: var(--text); font-family: var(--sans); }
+.curator-tagline { font-family: var(--mono); font-size: 8px; color: var(--text-dim); letter-spacing: .08em; }
+.curator-close-btn {
+  margin-left: auto; background: none; border: none;
+  color: var(--text-dim); font-size: 18px; cursor: pointer; padding: 4px 8px;
+}
+.curator-audio-bar {
+  display: none; align-items: center; gap: 10px;
+  padding: 8px 16px; background: var(--bg2);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.curator-audio-bar.visible { display: flex; }
+.curator-play-btn {
+  background: var(--purple); border: none; color: #fff;
+  font-family: var(--mono); font-size: 8px; font-weight: 700;
+  padding: 5px 12px; border-radius: 2px; cursor: pointer;
+  display: flex; align-items: center; gap: 5px; letter-spacing: .06em;
+  transition: opacity .15s;
+}
+.curator-play-btn:hover { opacity: .85; }
+.curator-track-name { font-family: var(--mono); font-size: 8px; color: var(--text-dim); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.curator-stats-bar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 8px 16px; flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg1);
+}
+.curator-stat { font-family: var(--mono); font-size: 8px; color: var(--text-dim); }
+.curator-stat strong { color: var(--text); font-size: 11px; display: block; }
+.curator-feed { flex: 1; overflow-y: auto; padding: 8px 0; }
+.curator-section-hdr {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  letter-spacing: .14em; color: var(--text-muted);
+  padding: 10px 16px 4px; text-transform: uppercase;
+}
+.curator-aff-badge {
+  font-family: var(--mono); font-size: 7px; color: var(--purple);
+  background: rgba(155,93,229,.1); border: 1px solid rgba(155,93,229,.2);
+  padding: 1px 6px; border-radius: 1px; letter-spacing: .06em;
+  margin-left: auto; flex-shrink: 0;
+}
+
+/* Sprint 35: DM chat window */
+.chat-window {
+  display: none; position: fixed; bottom: 58px; left: 0; right: 0;
+  height: 60dvh; max-height: 480px; z-index: 340;
+  background: var(--bg1); border-top: 1px solid var(--border);
+  flex-direction: column; border-radius: 12px 12px 0 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transform: translateY(100%); transition: transform .28s cubic-bezier(.32,0,.67,0);
+}
+.chat-window.open {
+  display: flex; transform: translateY(0);
+  transition: transform .28s cubic-bezier(.33,1,.68,1);
+}
+.chat-hdr {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.chat-hdr-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--blue); display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700; color: #fff;
+}
+.chat-hdr-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.chat-hdr-status { font-family: var(--mono); font-size: 7px; color: var(--green); }
+.chat-close-btn { margin-left: auto; background: none; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.chat-bubble {
+  max-width: 75%; padding: 8px 12px; border-radius: 12px;
+  font-size: 13px; line-height: 1.4; word-wrap: break-word;
+}
+.chat-bubble.mine {
+  background: var(--blue); color: #fff;
+  align-self: flex-end; border-bottom-right-radius: 3px;
+}
+.chat-bubble.theirs {
+  background: var(--bg3); color: var(--text);
+  align-self: flex-start; border-bottom-left-radius: 3px;
+}
+.chat-bubble-meta {
+  font-family: var(--mono); font-size: 7px; color: var(--text-muted);
+  margin-top: 2px;
+}
+.chat-input-row {
+  display: flex; gap: 8px; padding: 10px 12px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+  background: var(--bg1);
+}
+.chat-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); font-size: 13px; padding: 8px 12px;
+  border-radius: 20px; outline: none; font-family: inherit;
+}
+.chat-input:focus { border-color: var(--blue); }
+.chat-send-btn {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--blue);
+  border: none; color: #fff; font-size: 14px; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .15s;
+}
+.chat-send-btn:hover { opacity: .85; }
+
+/* Sprint 35: Group itinerary */
+.group-itin-invite {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border: 1px dashed var(--border);
+  border-radius: 3px; margin: 8px 12px; cursor: pointer;
+  transition: border-color .15s; font-family: var(--mono); font-size: 8px; color: var(--text-dim);
+}
+.group-itin-invite:hover { border-color: var(--blue); color: var(--blue); }
+.vote-btn {
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  padding: 3px 10px; border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--border); background: none; color: var(--text-dim);
+  transition: all .15s;
+}
+.vote-btn:hover, .vote-btn.voted { background: var(--green); border-color: var(--green); color: #000; }
+
+/* Sprint 36: Vibe search bar on home */
+.home-search-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-shrink: 0;
+}
+.home-search-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--mono); font-size: 9px;
+  padding: 7px 12px; border-radius: 2px; outline: none;
+}
+.home-search-input:focus { border-color: var(--blue); }
+.home-search-ai-btn {
+  background: rgba(155,93,229,.15); border: 1px solid rgba(155,93,229,.3);
+  color: #C084FC; font-family: var(--mono); font-size: 8px; font-weight: 700;
+  padding: 6px 12px; border-radius: 2px; cursor: pointer; letter-spacing: .06em;
+  white-space: nowrap; transition: background .15s;
+}
+.home-search-ai-btn:hover { background: rgba(155,93,229,.25); }
+.home-search-results {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+  background: var(--bg1); border: 1px solid var(--border);
+  border-radius: 0 0 3px 3px; overflow: hidden; display: none;
+}
+.home-search-results.visible { display: block; }
+.search-result-row {
+  padding: 9px 14px; border-bottom: 1px solid var(--border);
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 9px; color: var(--text);
+  transition: background .1s;
+}
+.search-result-row:hover { background: var(--bg3); }
+.search-result-icon { font-size: 14px; flex-shrink: 0; }
+.search-result-sub { font-size: 7px; color: var(--text-dim); }
+
+/* iOS share button */
+.share-btn {
+  font-family: var(--mono); font-size: 8px; font-weight: 700;
+  color: var(--blue); background: none; border: 1px solid rgba(0,71,255,.3);
+  padding: 5px 12px; border-radius: 2px; cursor: pointer;
+  display: flex; align-items: center; gap: 5px; letter-spacing: .06em;
+  transition: background .15s;
+}
+.share-btn:hover { background: rgba(0,71,255,.1); }
+
+/* ════ SPRINTS 37-38: Auth Debug, Fuzzy Search, Column Persist ════ */
+
+/* Sprint 37: Auth debug toast */
+.auth-debug-toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+  background: var(--bg4); border: 1px solid rgba(255,51,85,.4);
+  color: var(--red); font-family: var(--mono); font-size: 8px;
+  padding: 8px 16px; border-radius: 3px; z-index: 999;
+  letter-spacing: .06em; max-width: 320px; text-align: center;
+  animation: fadeInUp .25s ease; box-shadow: 0 4px 20px rgba(0,0,0,.4);
+}
+.auth-debug-toast .auth-debug-link {
+  display: block; color: var(--blue); text-decoration: underline;
+  margin-top: 4px; cursor: pointer;
+}
+@keyframes fadeInUp {
+  from { opacity:0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Sprint 37: Demo mode chat badge */
+.chat-demo-badge {
+  background: rgba(250,204,21,.1); border-bottom: 1px solid rgba(250,204,21,.2);
+  font-family: var(--mono); font-size: 7px; color: var(--yellow);
+  padding: 4px 12px; text-align: center; letter-spacing: .06em; flex-shrink: 0;
+}
+
+/* Sprint 38: Column resize handle */
+.col-resize-handle {
+  position: absolute; top: 0; right: -3px; bottom: 0; width: 6px;
+  cursor: col-resize; z-index: 10;
+  background: transparent; transition: background .15s;
+}
+.col-resize-handle:hover,
+.col-resize-handle.dragging {
+  background: rgba(0,71,255,.25);
+}
+.col-resize-handle::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 2px; height: 24px; border-radius: 1px;
+  background: rgba(0,71,255,.4);
+  opacity: 0; transition: opacity .15s;
+}
+.col-resize-handle:hover::after { opacity: 1; }
+
+/* Sprint 38: Fuse.js search result highlight */
+.search-highlight { color: var(--yellow); font-weight: 700; }
+.search-result-score {
+  font-family: var(--mono); font-size: 7px; color: var(--text-muted);
+  margin-left: auto; flex-shrink: 0;
+}
+
+/* Map grid: ensure pointer-events none so map is clickable */
+.map-grid, .map-dots-layer, .map-scan-line, .pulse-overlay, .map-scan,
+.friend-pins-layer, .friend-pins-desktop, .friend-pins-mobile {
+  pointer-events: none !important;
+}
+.map-inner .gmap-container { pointer-events: auto !important; }
+
+/* Techno-Luxe: Cyber Lime accents */
+.live-pill { background: var(--red) !important; }
+.live-pill .live-dot { background: #fff !important; }
+.tab-btn.active { color: var(--lime) !important; border-bottom-color: var(--lime) !important; }
+.pcb-seg.active { opacity: 1 !important; }
+.panel-hdr-badge { background: rgba(168,255,62,.12) !important; color: var(--lime) !important; border-color: rgba(168,255,62,.25) !important; }
+.vibe-pill:hover, .vibe-pill.active { background: var(--lime) !important; color: #0D0D0D !important; border-color: var(--lime) !important; }
+.ev-detail-ticket-btn { background: var(--blue) !important; }
+
+/* Map explicit sizing — ensure tiles render */
+#tab-mapview { min-height: 400px; }
+.map-page-grid { min-height: 400px; }
+#gmap-desktop, #gmap-mobile {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px !important;
+}
 </style>
 
 </head>
@@ -1484,6 +1900,15 @@ body.metro-miami { --metro-color: #00E676; }
   <button class="tab-btn" onclick="switchTab('professional',this)">&#9670; PRO <span class="tab-count" id="count-professional">0</span></button>
   <button class="tab-btn" onclick="switchTab('worship',this)">&#9788; FAITH <span class="tab-count" id="count-worship">0</span></button></div>
 <div class="pulse-cycle-bar" id="pulse-cycle-bar"><div class="pcb-seg inactive" id="pcb-0" style="background:#0047FF"></div><div class="pcb-seg inactive" id="pcb-1" style="background:#9B5DE5"></div><div class="pcb-seg inactive" id="pcb-2" style="background:#FF8C00"></div><div class="pcb-seg inactive" id="pcb-3" style="background:#00E676"></div></div>
+<div class="home-search-bar" id="home-search-bar" style="position:relative">
+  <span style="font-family:var(--mono);font-size:9px;color:var(--text-muted);flex-shrink:0">&#9670;</span>
+  <input class="home-search-input" id="home-search-input" type="text" placeholder="Search events, vibes, artists, venues..." 
+    oninput="homeSearchInput(this.value)" onkeydown="if(event.key==='Enter')homeSearchSubmit(this.value)"
+    onfocus="document.getElementById('home-search-results').classList.add('visible')"
+    onblur="setTimeout(function(){document.getElementById('home-search-results').classList.remove('visible')},200)"/>
+  <button class="home-search-ai-btn" onclick="homeSearchSubmit(document.getElementById('home-search-input').value)">&#9675; AI SEARCH</button>
+  <div class="home-search-results" id="home-search-results"></div>
+</div>
 <div class="tab-content active slide-in" id="tab-terminal">
   <div class="news-panel"><div class="panel-hdr"><span class="panel-hdr-title">All Events</span><span class="panel-hdr-badge">LIVE</span></div><div class="news-scroll" id="news-terminal"></div><div class="weather-box" id="weather-terminal"></div></div>
   <div class="center-stage" onclick="bnavGo('map',document.getElementById('bnav-markets'))" title="View full map"><div class="hero-wrap"><div class="hero-aspect" id="hero-terminal"><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-scan"></div><div class="hero-overlay"><div class="anchor-chip"><span class="live-pill" style="font-size:8px;padding:1px 5px"><span class="live-dot"></span>LIVE</span><span class="anchor-name">HYPERLOCAL LIVE</span></div><div class="hero-title">All Events &mdash; Live Now</div><div class="hero-sub">SOCIAL &middot; FOOD &middot; GIGS</div></div></div></div><div class="stats-bar" id="stats-terminal"></div><div style="flex:1;display:flex;overflow:hidden"><div class="map-panel"><div class="panel-hdr"><span class="panel-hdr-title">Venue Map &mdash; <span id="map-zip">10001</span></span><span class="panel-hdr-badge" id="map-count">0 ACTIVE</span></div><div class="map-inner"><div class="map-grid"></div><div class="map-dots-layer" id="map-dots-terminal"></div><div style="position:absolute;bottom:0;left:0;right:0;z-index:10;font-family:var(--mono);font-size:8px;font-weight:700;color:rgba(255,255,255,.75);background:linear-gradient(transparent,rgba(0,0,0,.7));padding:14px 10px 4px;letter-spacing:.08em;pointer-events:none;text-align:center">&#9673; TAP TO OPEN FULL MAP</div><div class="pulse-overlay"><div class="pulse-circles" id="pc-terminal"><div class="pulse-c"></div><div class="pulse-c"></div><div class="pulse-c"></div></div></div></div><div class="map-bottom"><div class="map-bottom-inner"><div class="ad-text">Posh VIP &mdash; Skip every line</div><a href="https://posh.vip" target="_blank" class="ad-cta">GET ACCESS</a></div></div></div></div></div>
@@ -1616,7 +2041,7 @@ body.metro-miami { --metro-color: #00E676; }
     <span class="menu-hub-chevron">&rsaquo;</span>
   </div>
 </div>
-<div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('reunion')"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.28);font-size:18px">&#9760;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title" style="color:var(--yellow)">Family Reunion Plan</div><div class="menu-hub-row-sub">Jun 27–29 · NYC Weekend</div></div><span class="menu-hub-chevron" style="color:var(--yellow)">&rsaquo;</span></div><div class="menu-hub-row" onclick="bnavGo('stream_from_menu',this)"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9654;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Stream</div><div class="menu-hub-row-sub">Live videos &amp; creator content</div></div><span class="menu-hub-chevron">&rsaquo;</span></div>
+<div class="menu-hub-hdr"><div class="menu-hub-title">&#9776; HYPERLOCAL MENU</div><div class="menu-hub-subtitle">Partner Portal &middot; Itinerary &middot; Analytics</div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Sales Overview</div><div class="menu-hub-stats"><div class="menu-hub-stat"><div class="menu-hub-stat-label">This Month</div><div class="menu-hub-stat-val" id="mh-earn">$1,247</div><div class="menu-hub-stat-sub">Total earnings</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Rep Score</div><div class="menu-hub-stat-val" style="color:var(--blue)">847</div><div class="menu-hub-stat-sub">Top 12%</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">Tickets Sold</div><div class="menu-hub-stat-val" style="color:var(--yellow)">34</div><div class="menu-hub-stat-sub">+8 today</div></div><div class="menu-hub-stat"><div class="menu-hub-stat-label">CTR</div><div class="menu-hub-stat-val" style="color:var(--orange)">4.2%</div><div class="menu-hub-stat-sub">Above avg</div></div></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Quick Access</div><div class="menu-hub-row" onclick="openPartner()"><div class="menu-hub-icon" style="background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);font-size:18px;font-weight:700;font-family:var(--mono);color:var(--green)">$</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Partner Portal</div><div class="menu-hub-row-sub">Earnings, referrals &amp; affiliate tools</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="openItinerary('tonight')"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9783;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Tonight's Itinerary</div><div class="menu-hub-row-sub">Live schedule &amp; .ics export</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="bnavGo('stream_from_menu',this)"><div class="menu-hub-icon" style="background:rgba(0,71,255,.12);border:1px solid rgba(0,71,255,.25);font-size:18px">&#9654;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Stream</div><div class="menu-hub-row-sub">Live videos &amp; creator content</div></div><span class="menu-hub-chevron">&rsaquo;</span></div>
 <div class="menu-hub-row" onclick="openFriends()"><div class="menu-hub-icon" style="background:rgba(155,93,229,.1);border:1px solid rgba(155,93,229,.25);font-size:18px">&#9899;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Friends Terminal</div><div class="menu-hub-row-sub">Live locations &amp; coordination</div></div><span class="menu-hub-chevron">&rsaquo;</span></div><div class="menu-hub-row" onclick="toggleTerminalMode()"><div class="menu-hub-icon" style="background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);font-size:18px">&#9651;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Terminal Mode</div><div class="menu-hub-row-sub">Toggle Pro / Public view</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="menu-hub-section"><div class="menu-hub-section-title">Settings</div><div class="menu-hub-row" onclick="toggleTheme()"><div class="menu-hub-icon" style="background:var(--bg3);border:1px solid var(--border);font-size:18px">&#9680;</div><div class="menu-hub-row-text"><div class="menu-hub-row-title">Dark / Light Mode</div><div class="menu-hub-row-sub">Switch display theme</div></div><span class="menu-hub-chevron">&rsaquo;</span></div></div><div class="privacy-section" id="privacy-section"><div class="privacy-section-title">&#128274; Data Management</div><div class="privacy-stat-row"><span class="privacy-stat-label">Ghost Mode</span><span class="privacy-stat-val" id="priv-ghost-status">OFF</span></div><div class="privacy-stat-row"><span class="privacy-stat-label">Location Points Stored</span><span class="privacy-stat-val" id="priv-loc-count">0 pts</span></div><div id="priv-loc-history"></div><button class="wipe-btn" id="wipe-btn" onclick="wipeMyData()">&#128465; WIPE MY DATA</button></div><div class="privacy-section"><div class="privacy-section-title">&#9889; Data Sources</div><div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--mono);font-size:8px">Eventbrite <span style="color:var(--text-muted)">73195697223</span></span><span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span></div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--mono);font-size:8px">Posh <span style="color:var(--text-muted)">davis-pemberton</span></span><span class="webhook-status live"><span class="webhook-status-dot"></span>LIVE</span></div></div><div style="margin-top:6px;font-family:var(--mono);font-size:7px;color:var(--text-muted)">Last sync: <span id="last-sync-time">Just now</span> &middot; <span id="ingested-count">0</span> events ingested</div></div></div>
 <!-- SPRINT 14: EVENT DETAIL MODAL -->
 <div class="ev-detail-modal" id="ev-detail-modal"><div class="ev-detail-card"><div class="ev-detail-hdr"><div style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">EVENT DETAILS</div><button class="ev-detail-close" onclick="closeEvDetail()">&#10005;</button></div><div class="ev-detail-img" id="ev-detail-img">&#9651;</div><div class="ev-detail-body"><div class="ev-detail-title" id="ev-detail-title">&mdash;</div><div class="ev-detail-venue" id="ev-detail-venue">&mdash;</div><div class="ev-detail-grid" id="ev-detail-grid"></div><div class="ev-tags" id="ev-detail-tags" style="margin-bottom:12px"></div><div class="ev-detail-actions" id="ev-detail-actions"></div></div></div></div>
@@ -1661,20 +2086,98 @@ body.metro-miami { --metro-color: #00E676; }
         <button class="login-submit-btn" id="login-submit" onclick="handleLoginSubmit()">CONTINUE</button>
       </div>
       <div id="login-user-profile" style="display:none">
+        <!-- Profile header -->
         <div class="login-profile-row">
           <div class="login-avatar" id="profile-avatar">?</div>
-          <div>
+          <div style="flex:1;min-width:0">
             <div class="login-username-disp" id="profile-username">@user</div>
             <div class="login-email-disp" id="profile-email">Not signed in</div>
           </div>
           <button class="login-signout-btn" onclick="signOut()">SIGN OUT</button>
         </div>
-        <div class="login-saved-events" id="saved-events-list"></div>
+        <!-- Social counts -->
+        <div class="profile-social-counts">
+          <button class="profile-count-btn" onclick="openConnectionsView('followers')">
+            <span class="profile-count-num" id="profile-followers-count">0</span>
+            <span class="profile-count-label">Followers</span>
+          </button>
+          <div class="profile-count-divider"></div>
+          <button class="profile-count-btn" onclick="openConnectionsView('following')">
+            <span class="profile-count-num" id="profile-following-count">0</span>
+            <span class="profile-count-label">Following</span>
+          </button>
+          <div class="profile-count-divider"></div>
+          <button class="profile-count-btn" onclick="openConnectionsView('friends')">
+            <span class="profile-count-num" id="profile-friends-count">0</span>
+            <span class="profile-count-label">Friends</span>
+          </button>
+        </div>
+        <!-- Supabase auth status -->
+        <div class="profile-auth-status" id="profile-auth-status"></div>
+        <!-- My Events -->
+        <div class="profile-section-hdr">MY EVENTS</div>
+        <div id="my-events-list" class="profile-my-events">
+          <div class="profile-empty">Loading your events...</div>
+        </div>
+        <!-- Connections modal (inline) -->
+        <div id="connections-view" style="display:none">
+          <div class="profile-section-hdr" id="connections-view-title">FOLLOWERS</div>
+          <div id="connections-list" class="connections-list"></div>
+          <button class="profile-back-btn" onclick="closeConnectionsView()">&#8592; BACK</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <div id="login-overlay" style="display:none;position:fixed;inset:0;z-index:399;background:rgba(0,0,0,.5)" onclick="closeLoginModal()"></div>
+<!-- SPRINT 34: CURATOR PAGE -->
+<div class="curator-page" id="curator-page">
+  <div class="curator-topbar">
+    <div class="curator-avatar-lg" id="curator-avatar-lg">&#127775;</div>
+    <div>
+      <div class="curator-name-lg" id="curator-name-lg">MAAL</div>
+      <div class="curator-tagline" id="curator-tagline">Weekend Picks · NYC</div>
+    </div>
+    <button class="curator-close-btn" onclick="closeCuratorPage()">&#10005;</button>
+  </div>
+  <div class="curator-audio-bar" id="curator-audio-bar">
+    <button class="curator-play-btn" id="curator-play-btn" onclick="toggleCuratorAudio()">&#9654; PLAY VIBE</button>
+    <span class="curator-track-name" id="curator-track-name">Loading...</span>
+    <audio id="curator-audio" style="display:none"></audio>
+  </div>
+  <div class="curator-stats-bar">
+    <div class="curator-stat"><strong id="curator-followers-count">0</strong>Followers</div>
+    <div class="curator-stat"><strong id="curator-picks-count">0</strong>Picks</div>
+    <div class="curator-stat"><strong id="curator-saves-count">0</strong>Saves</div>
+    <div style="margin-left:auto">
+      <button class="share-btn" onclick="shareProfile()">&#8679; SHARE</button>
+    </div>
+  </div>
+  <div class="curator-feed" id="curator-feed">
+    <div class="curator-section-hdr">&#9733; TOP PICKS</div>
+    <div id="curator-picks-list"></div>
+    <div class="curator-section-hdr" style="margin-top:8px">&#9670; UPCOMING</div>
+    <div id="curator-upcoming-list"></div>
+  </div>
+</div>
+<!-- SPRINT 35: DM CHAT WINDOW -->
+<div class="chat-window" id="chat-window">
+  <div class="chat-hdr">
+    <div class="chat-hdr-avatar" id="chat-avatar">?</div>
+    <div>
+      <div class="chat-hdr-name" id="chat-name">Friend</div>
+      <div class="chat-hdr-status" id="chat-status">&#9679; Online</div>
+    </div>
+    <button class="chat-close-btn" onclick="closeChatWindow()">&#8964;</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-input" type="text" placeholder="Message..." 
+      onkeydown="if(event.key==='Enter')sendChatMessage()"/>
+    <button class="chat-send-btn" onclick="sendChatMessage()">&#9654;</button>
+  </div>
+</div>
+<div id="chat-overlay" onclick="closeChatWindow()" style="display:none;position:fixed;inset:0;z-index:339;background:rgba(0,0,0,.3)"></div>
 <!-- BLOOMBERG BOTTOM NAV (Sprint 14: HL logo + MAP icon) -->
 <div class="bottom-nav" id="bottom-nav">
   <button class="bnav-item active" id="bnav-home" onclick="bnavGo('home',this)"><div class="bnav-icon"><div class="bnav-hl-logo">HL</div></div><span class="bnav-label">HOME</span></button>
@@ -2448,7 +2951,11 @@ function openEvDetail(ev){
   var tagsEl=document.getElementById('ev-detail-tags');if(tagsEl)tagsEl.innerHTML=ev.tags.map(function(t){return'<span class="ev-tag '+tagCls(t)+'">'+t+'</span>';}).join('');
   var actEl=document.getElementById('ev-detail-actions');
   if(actEl){
-    var ticketUrl='https://posh.vip/e/'+encodeURIComponent(ev.name.toLowerCase().replace(/\s+/g,'-'));
+    var _curatorRef = (typeof applyCuratorMode !== 'undefined' && new URLSearchParams(window.location.search).get('curator')) || '';
+    var _aff = _curatorRef || 'hyperlocal';
+    var ticketUrl = ev.ticketUrl || (ev.source === 'posh'
+      ? 'https://posh.vip/e/'+encodeURIComponent((ev.poshSlug||ev.name).toLowerCase().replace(/\s+/g,'-'))+'?ref='+_aff
+      : 'https://www.eventbrite.com/e/'+(ev.name||'event').toLowerCase().replace(/\s+/g,'-')+'?aff='+_aff);
     var shopBtnHtml=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="ev-detail-shop-btn" onclick="closeEvDetail();openShopModal('+ev.id+')">&#128722; SHOP THE LOOK — '+ev.name+'</button>':'';
     actEl.innerHTML='<a class="ev-detail-ticket-btn" href="'+ticketUrl+'" target="_blank">'+(isJob?'&#128084; APPLY NOW':'&#127915; GET TICKET — '+ev.price)+'</a>'+shopBtnHtml+'<div style="display:flex;gap:6px;margin-top:2px"><a class="ev-detail-transport-btn uber-btn" href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]='+encodeURIComponent((ev.addr||ev.venue)+', '+(ev.hood||''))+'" target="_blank" rel="noopener">&#9650; UBER</a><a class="ev-detail-transport-btn lyft-btn" href="https://lyft.com/ride?destination[address]='+encodeURIComponent(ev.addr||ev.venue)+'" target="_blank" rel="noopener">&#9670; LYFT</a></div><button style="width:100%;padding:10px;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.28);color:#7AABFF;font-family:var(--mono);font-size:9px;font-weight:600;border-radius:2px;cursor:pointer;min-height:44px;" onclick="closeEvDetail();openMap(null,'+ev.id+')">&#9673; VIEW ON MAP</button>'
     +'<div style="display:flex;gap:6px;margin-top:6px"><button class="ev-social-btn add-friend-btn" onclick="addFriendFromEvent(event,'+ev.id+')">&#128101; ADD FRIEND</button><button class="ev-social-btn follow-btn" onclick="followFromEvent(event,'+ev.id+')">&#10010; FOLLOW</button></div>';
@@ -2929,7 +3436,8 @@ function fetchLiveWeather(zip) {
   else if (zip === '33101') { lat = 25.7617; lng = -80.1918; }
   var url = 'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lng+'&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph';
   fetch(url)
-    .then(function(r){ return r.json(); })
+    .then(function(r){ if (!r.ok) throw new Error('EB HTTP '+r.status); return r.text(); })
+    .then(function(text){ return JSON.parse(text); })
     .then(function(data){
       if (data && data.current_weather) {
         var temp = Math.round(data.current_weather.temperature);
@@ -3193,15 +3701,32 @@ var _gmapApiKey = localStorage.getItem('hl_gmap_key') || '';
 var _gmapLoaded = false;
 
 function initGoogleMapsShell() {
-  // Re-check env key each time (may have been set after resolveGmapKey ran)
+  // Key resolution chain — check all possible injection points
   if (!_gmapApiKey) {
-    var metaTag = document.querySelector('meta[name="gmap-key"]');
-    if (metaTag && metaTag.content) _gmapApiKey = metaTag.content;
+    // 1. Netlify env injection via global window.ENV (set by build plugin)
+    if (window.ENV && window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+      _gmapApiKey = window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+      localStorage.setItem('hl_gmap_key', _gmapApiKey);
+    }
   }
   if (!_gmapApiKey) {
-    // Try NEXT_PUBLIC env via data attribute on body
+    // 2. Meta tag: <meta name="gmap-key" content="...">
+    var metaTag = document.querySelector('meta[name="gmap-key"]');
+    if (metaTag && metaTag.content && metaTag.content !== '{{GMAP_KEY}}') {
+      _gmapApiKey = metaTag.content;
+    }
+  }
+  if (!_gmapApiKey) {
+    // 3. Body data attribute (set from build step)
     var bodyKey = document.body.getAttribute('data-gmap-key');
-    if (bodyKey) { _gmapApiKey = bodyKey; localStorage.setItem('hl_gmap_key', bodyKey); }
+    if (bodyKey && bodyKey !== 'undefined' && bodyKey !== '{{GMAP_KEY}}') {
+      _gmapApiKey = bodyKey;
+      localStorage.setItem('hl_gmap_key', bodyKey);
+    }
+  }
+  if (!_gmapApiKey) {
+    // 4. localStorage (manually set or previously saved)
+    _gmapApiKey = localStorage.getItem('hl_gmap_key') || '';
   }
 
   // Show API key prompt if no key saved
@@ -3273,7 +3798,28 @@ window._onGmapReady = function() {
 
 function _createGmapInstance(container) {
   var cfg = METRO_CONFIG[_currentMetro] || METRO_CONFIG.nyc;
-  container.innerHTML = '<div id="gmap-canvas-' + container.id + '" style="width:100%;height:100%"></div>';
+
+  // Ensure container has explicit dimensions
+  container.style.width = '100%';
+  container.style.height = '100%';
+  container.style.display = 'block';
+  container.style.position = 'absolute';
+  container.style.inset = '0';
+
+  // Hide the grid overlay — Google Map is taking over
+  var mapInner = container.closest ? container.closest('.map-inner') : null;
+  if (mapInner) {
+    mapInner.classList.add('gmap-active');
+    // Explicitly hide grid + dots
+    var grid = mapInner.querySelector('.map-grid');
+    var dots = mapInner.querySelector('.map-dots-layer');
+    var scan = mapInner.querySelector('.map-scan-line');
+    if (grid) grid.style.display = 'none';
+    if (dots) dots.style.display = 'none';
+    if (scan) scan.style.display = 'none';
+  }
+
+  container.innerHTML = '<div id="gmap-canvas-' + container.id + '" style="width:100%;height:100%;min-height:300px"></div>';
 
   var mapDiv = container.querySelector('[id^=gmap-canvas]');
   if (!mapDiv || !window.google) return;
@@ -5610,6 +6156,1406 @@ switchTab = function(tab, btn) {
   if (_s32_origSwitchTab) _s32_origSwitchTab(tab, btn);
   setTimeout(injectBundleBadges, 300);
 };
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 33: Supabase Auth & Social Architecture
+// ══════════════════════════════════════════════════════
+
+// ── Supabase client setup ──
+// To activate: set your project URL + anon key in localStorage or via env
+// localStorage.setItem('hl_sb_url', 'https://YOUR_PROJECT.supabase.co')
+// localStorage.setItem('hl_sb_key', 'YOUR_ANON_KEY')
+
+var _supabase = null;
+var _sbSession = null;
+
+function initSupabase() {
+  var url = localStorage.getItem('hl_sb_url') || '';
+  var key = localStorage.getItem('hl_sb_key') || '';
+  if (!url || !key) {
+    console.log('[HL] Supabase: no credentials — using local auth. Set hl_sb_url + hl_sb_key to activate.');
+    return false;
+  }
+  // Lazy-load Supabase JS SDK
+  if (window.supabase) {
+    _supabase = window.supabase.createClient(url, key);
+    console.log('[HL] Supabase client ready');
+    return true;
+  }
+  // Load SDK dynamically
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.onload = function() {
+    _supabase = window.supabase.createClient(url, key);
+    console.log('[HL] Supabase client ready (lazy loaded)');
+    restoreSupabaseSession();
+  };
+  document.head.appendChild(script);
+  return true;
+}
+
+// ── PostGIS connections table schema ──
+// Run this in Supabase SQL editor to set up the schema:
+var SUPABASE_MIGRATIONS = {
+  connections: `
+    CREATE TABLE IF NOT EXISTS connections (
+      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+      follower_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+      following_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+      type text CHECK (type IN ('follow','friend_request','friend')) DEFAULT 'follow',
+      status text CHECK (status IN ('active','pending','blocked')) DEFAULT 'active',
+      created_at timestamptz DEFAULT now(),
+      UNIQUE(follower_id, following_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_connections_follower ON connections(follower_id);
+    CREATE INDEX IF NOT EXISTS idx_connections_following ON connections(following_id);
+  `,
+  user_events: `
+    CREATE TABLE IF NOT EXISTS user_events (
+      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+      user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+      event_id text NOT NULL,
+      event_name text,
+      event_date text,
+      event_time text,
+      venue text,
+      source text DEFAULT 'manual',
+      ticket_url text,
+      created_at timestamptz DEFAULT now(),
+      UNIQUE(user_id, event_id)
+    );
+  `,
+  profiles: `
+    CREATE TABLE IF NOT EXISTS profiles (
+      id uuid REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+      username text UNIQUE,
+      display_name text,
+      avatar_url text,
+      bio text,
+      is_pro boolean DEFAULT false,
+      created_at timestamptz DEFAULT now()
+    );
+    ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY "Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
+    CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+  `
+};
+
+// ── Supabase auth functions ──
+async function signInWithGoogle_sb() {
+  if (!_supabase) { handleSocialAuth('google'); return; }
+  var { data, error } = await _supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+  if (error) console.error('[HL] Google auth error:', error.message);
+}
+
+async function signInWithEmail_sb(email, password, isSignup) {
+  if (!_supabase) { handleLoginSubmit(); return; }
+  var result;
+  if (isSignup) {
+    result = await _supabase.auth.signUp({ email, password });
+  } else {
+    result = await _supabase.auth.signInWithPassword({ email, password });
+  }
+  if (result.error) {
+    showAuthError(result.error.message);
+    return;
+  }
+  _sbSession = result.data.session;
+  var sbUser = result.data.user;
+  _currentUser = {
+    id: sbUser.id,
+    username: '@' + email.split('@')[0],
+    identifier: email,
+    avatar: email.charAt(0).toUpperCase(),
+    savedEvents: [], following: [], friends: [], isPro: false,
+    sbVerified: true
+  };
+  localStorage.setItem('hl_user', JSON.stringify(_currentUser));
+  refreshLoginView();
+  refreshUserAvatar();
+  loadUserProfile();
+  closeLoginModal();
+}
+
+async function restoreSupabaseSession() {
+  if (!_supabase) return;
+  var { data: { session } } = await _supabase.auth.getSession();
+  if (session) {
+    _sbSession = session;
+    var sbUser = session.user;
+    _currentUser = JSON.parse(localStorage.getItem('hl_user') || 'null') || {
+      id: sbUser.id,
+      username: sbUser.user_metadata.full_name
+        ? '@' + sbUser.user_metadata.full_name.replace(/\s+/g,'_').toLowerCase()
+        : '@' + sbUser.email.split('@')[0],
+      identifier: sbUser.email,
+      avatar: (sbUser.user_metadata.full_name || sbUser.email).charAt(0).toUpperCase(),
+      savedEvents: [], following: [], friends: [], isPro: false,
+      sbVerified: true
+    };
+    localStorage.setItem('hl_user', JSON.stringify(_currentUser));
+    refreshLoginView();
+    refreshUserAvatar();
+    loadUserProfile();
+    console.log('[HL] Session restored:', _currentUser.username);
+  }
+  // Listen for auth changes
+  _supabase.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_OUT') { _currentUser = null; _sbSession = null; refreshLoginView(); refreshUserAvatar(); }
+    if (event === 'SIGNED_IN' && session) restoreSupabaseSession();
+  });
+}
+
+function showAuthError(msg) {
+  var statusEl = document.getElementById('profile-auth-status');
+  if (statusEl) {
+    statusEl.innerHTML = '<span style="color:var(--red);font-family:var(--mono);font-size:8px">&#9888; ' + msg + '</span>';
+    setTimeout(function(){ statusEl.innerHTML = ''; }, 4000);
+  }
+}
+
+// ── Patch handleSocialAuth to use Supabase when available ──
+var _s33_origSocialAuth = handleSocialAuth;
+handleSocialAuth = function(provider) {
+  if (_supabase && provider === 'google') {
+    signInWithGoogle_sb();
+    return;
+  }
+  _s33_origSocialAuth(provider);
+};
+
+// ── Patch handleLoginSubmit to use Supabase when available ──
+var _s33_origLoginSubmit = handleLoginSubmit;
+handleLoginSubmit = function() {
+  if (_supabase) {
+    var emailEl = document.getElementById('login-identifier') || document.getElementById('login-email');
+    var passEl = document.getElementById('login-password');
+    if (emailEl && passEl && emailEl.value.includes('@')) {
+      signInWithEmail_sb(emailEl.value.trim(), passEl.value, _loginMode === 'signup');
+      return;
+    }
+  }
+  _s33_origLoginSubmit();
+};
+
+// ── Patch signOut to also clear Supabase session ──
+var _s33_origSignOut = signOut;
+signOut = function() {
+  if (_supabase && _sbSession) {
+    _supabase.auth.signOut();
+  }
+  _s33_origSignOut();
+};
+
+// ── Connections engine ──
+async function getConnections(type) {
+  // type: 'followers' | 'following' | 'friends'
+  if (_supabase && _sbSession && _currentUser) {
+    var col = type === 'followers' ? 'following_id' : 'follower_id';
+    var matchId = _currentUser.id;
+    var { data, error } = await _supabase
+      .from('connections')
+      .select('*')
+      .eq(col, matchId)
+      .eq('status', 'active');
+    if (!error && data) return data;
+  }
+  // Local fallback
+  var graph = typeof _socialGraph !== 'undefined' ? _socialGraph : {};
+  if (type === 'following') return Object.keys(graph.following || {}).map(function(id){ return {id:id, type:'follow'}; });
+  if (type === 'friends')   return Object.keys(graph.friends || {}).map(function(id){ return {id:id, type:'friend'}; });
+  if (type === 'followers') {
+    // Simulated followers for demo
+    return _demoFollowers;
+  }
+  return [];
+}
+
+async function addConnection(targetId, type) {
+  if (_supabase && _sbSession && _currentUser) {
+    var { error } = await _supabase.from('connections').upsert({
+      follower_id: _currentUser.id,
+      following_id: targetId,
+      type: type || 'follow',
+      status: 'active'
+    });
+    if (error) console.error('[HL] Connection error:', error.message);
+  }
+  // Also update local graph
+  if (type === 'friend_request' || type === 'friend') {
+    if (typeof sendFriendRequest === 'function') sendFriendRequest(targetId);
+  } else {
+    if (typeof followUser === 'function') followUser(targetId, 'user');
+  }
+}
+
+async function getConnectionCounts() {
+  if (!_currentUser) return { followers: 0, following: 0, friends: 0 };
+  var followers = await getConnections('followers');
+  var following = await getConnections('following');
+  var friends   = await getConnections('friends');
+  return {
+    followers: followers.length,
+    following: following.length,
+    friends: friends.length
+  };
+}
+
+// Demo followers data (shown before real Supabase data loads)
+var _demoFollowers = [
+  { id: 'u1', username: '@jade_nyc',     avatar: 'J', mutual: true,  eventsShared: 3 },
+  { id: 'u2', username: '@marco_v',      avatar: 'M', mutual: false, eventsShared: 1 },
+  { id: 'u3', username: '@riley_k',      avatar: 'R', mutual: true,  eventsShared: 2 },
+  { id: 'u4', username: '@sox_alex',     avatar: 'A', mutual: false, eventsShared: 0 },
+  { id: 'u5', username: '@bri_moore',    avatar: 'B', mutual: true,  eventsShared: 4 },
+];
+
+// ── Connections view (followers/following list) ──
+function openConnectionsView(type) {
+  var view = document.getElementById('connections-view');
+  var mainProfile = document.getElementById('login-body');
+  var titleEl = document.getElementById('connections-view-title');
+  var listEl = document.getElementById('connections-list');
+  if (!view || !listEl) return;
+
+  view.style.display = 'block';
+  // Hide main profile body below the profile row
+  var countsEl = document.querySelector('.profile-social-counts');
+  var authEl   = document.getElementById('profile-auth-status');
+  var myEvEl   = document.querySelector('.profile-my-events');
+  var myHdrEl  = document.querySelector('.profile-section-hdr');
+  [countsEl, authEl, myEvEl, myHdrEl].forEach(function(el){ if(el) el.style.display='none'; });
+
+  var labels = { followers:'FOLLOWERS', following:'FOLLOWING', friends:'FRIENDS' };
+  if (titleEl) titleEl.textContent = labels[type] || type.toUpperCase();
+
+  listEl.innerHTML = '<div class="profile-empty">Loading...</div>';
+
+  getConnections(type).then(function(list) {
+    if (!list || list.length === 0) {
+      listEl.innerHTML = '<div class="profile-empty">No ' + type + ' yet</div>';
+      return;
+    }
+    listEl.innerHTML = list.map(function(conn) {
+      var name = conn.username || conn.display_name || ('@user_' + String(conn.id||'').substring(0,5));
+      var av   = conn.avatar || name.charAt(1).toUpperCase() || '?';
+      var sub  = conn.mutual ? 'Mutual friend' : (conn.eventsShared ? conn.eventsShared + ' events in common' : 'Follows you');
+      var btnId = 'conn-btn-' + (conn.id || name);
+      var isAdded = typeof _socialGraph !== 'undefined' && (_socialGraph.friends[conn.id] || _socialGraph.pendingOut[conn.id]);
+      return '<div class="connection-row">'
+        + '<div class="connection-avatar">' + av + '</div>'
+        + '<div style="flex:1;min-width:0"><div class="connection-name">' + name + '</div>'
+        + '<div class="connection-sub">' + sub + '</div></div>'
+        + '<button id="' + btnId + '" class="connection-add-btn' + (isAdded ? ' added' : '') + '" '
+        + 'onclick="addConnectionFromList(\'' + conn.id + '\',\'' + name + '\',\'' + btnId + '\')">'
+        + (isAdded ? '✓ ADDED' : '+ ADD') + '</button>'
+        + '</div>';
+    }).join('');
+  });
+}
+
+function addConnectionFromList(id, name, btnId) {
+  addConnection(id, 'friend_request');
+  var btn = document.getElementById(btnId);
+  if (btn) { btn.textContent = '✓ ADDED'; btn.classList.add('added'); }
+}
+
+function closeConnectionsView() {
+  var view = document.getElementById('connections-view');
+  if (view) view.style.display = 'none';
+  // Restore hidden elements
+  var countsEl = document.querySelector('.profile-social-counts');
+  var authEl   = document.getElementById('profile-auth-status');
+  var myEvEl   = document.querySelector('.profile-my-events');
+  var myHdrEl  = document.querySelector('.profile-section-hdr');
+  [countsEl, authEl, myEvEl, myHdrEl].forEach(function(el){ if(el) el.style.display=''; });
+}
+
+// ── My Events — fetch from Posh/Eventbrite + local saved ──
+async function loadUserProfile() {
+  if (!_currentUser) return;
+  // Update counts
+  var counts = await getConnectionCounts();
+  var fEl  = document.getElementById('profile-followers-count');
+  var foEl = document.getElementById('profile-following-count');
+  var frEl = document.getElementById('profile-friends-count');
+  if (fEl)  fEl.textContent  = counts.followers;
+  if (foEl) foEl.textContent = counts.following;
+  if (frEl) frEl.textContent = counts.friends;
+
+  // Auth status badge
+  var statusEl = document.getElementById('profile-auth-status');
+  if (statusEl) {
+    if (_sbSession) {
+      statusEl.innerHTML = '<span class="auth-badge supabase">&#9654; Supabase Verified</span>';
+    } else if (_currentUser.sbVerified) {
+      statusEl.innerHTML = '<span class="auth-badge verified">&#10003; Verified</span>';
+    } else {
+      statusEl.innerHTML = '<span class="auth-badge local">&#9679; Local Session</span>';
+    }
+  }
+
+  // Load my events
+  loadMyEvents();
+}
+
+async function loadMyEvents() {
+  var listEl = document.getElementById('my-events-list');
+  if (!listEl) return;
+
+  var myIds = typeof _myEventIds !== 'undefined' ? _myEventIds : [];
+  var savedFromUser = _currentUser && _currentUser.savedEvents ? _currentUser.savedEvents : [];
+  var allIds = myIds.concat(savedFromUser.map(function(e){ return typeof e === 'object' ? e.id : e; }));
+
+  // Try Supabase first
+  var sbEvents = [];
+  if (_supabase && _sbSession && _currentUser && _currentUser.id) {
+    var { data } = await _supabase.from('user_events').select('*').eq('user_id', _currentUser.id);
+    if (data && data.length) sbEvents = data;
+  }
+
+  // Fallback to local event pool
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(pool) { evPool = evPool.concat(pool); });
+  var allProFaith = (typeof PRO_EVENTS !== 'undefined' ? PRO_EVENTS : []).concat(typeof FAITH_EVENTS !== 'undefined' ? FAITH_EVENTS : []);
+  evPool = evPool.concat(allProFaith);
+
+  var myEvs = evPool.filter(function(ev){ return allIds.indexOf(ev.id) !== -1; });
+
+  // Merge Supabase events
+  sbEvents.forEach(function(sbEv) {
+    if (!myEvs.some(function(e){ return String(e.id) === String(sbEv.event_id); })) {
+      myEvs.push({ id: sbEv.event_id, name: sbEv.event_name, time: sbEv.event_time, date: sbEv.event_date, venue: sbEv.venue, source: sbEv.source });
+    }
+  });
+
+  if (!myEvs.length) {
+    listEl.innerHTML = '<div class="profile-empty">No tickets yet. Grab your first event!</div>';
+    return;
+  }
+
+  var now = new Date();
+  listEl.innerHTML = myEvs.map(function(ev) {
+    var status = typeof getLiveStatus === 'function' ? getLiveStatus(ev) : null;
+    var statusBadge = status === 'live' ? '<span class="profile-event-status live">LIVE NOW</span>'
+      : status === 'soon' ? '<span class="profile-event-status upcoming">SOON</span>'
+      : status === 'upcoming' ? '<span class="profile-event-status upcoming">UPCOMING</span>'
+      : status === 'ended' ? '<span class="profile-event-status ended">ENDED</span>' : '';
+    var icon = ev.vertical === 'themenu' ? '🍽' : ev.vertical === 'afterdark' ? '🌙' : ev.vertical === 'theladder' ? '🎵' : ev.vertical === 'professional' ? '💼' : ev.vertical === 'worship' ? '⛅' : '🎟';
+    return '<div class="profile-event-row" onclick="closeLoginModal();openEvDetailById(' + ev.id + ')">'
+      + '<div class="profile-event-icon">' + icon + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div class="profile-event-name">' + ev.name + '</div>'
+      + '<div class="profile-event-meta">' + (ev.venue || '') + (ev.time ? ' · ' + ev.time : '') + '</div>'
+      + '</div>' + statusBadge + '</div>';
+  }).join('');
+}
+
+// ── Patch refreshLoginView to call loadUserProfile ──
+var _s33_origRefreshLogin = refreshLoginView;
+refreshLoginView = function() {
+  _s33_origRefreshLogin();
+  if (_currentUser) {
+    setTimeout(loadUserProfile, 100);
+  }
+};
+
+// ── Boot Sprint 33 ──
+setTimeout(function() {
+  initSupabase();
+  if (_currentUser) loadUserProfile();
+}, 600);
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINTS 34-36: Influencer Feeds, DMs, iOS
+// ══════════════════════════════════════════════════════
+
+// ── SPRINT 34: Curator page ──
+
+// Extend _curatorProfiles with audio + follower data
+(function extendCuratorProfiles() {
+  var ext = {
+    'maal':       { followers: 4821, audio: 'https://soundcloud.com/maal/weekend-vibes', audioLabel: 'Weekend Vibes Mix', bio: 'NYC nightlife curator. Hip-hop. Afrobeats.' },
+    'jade':       { followers: 2304, audio: '', bio: 'Event photographer & curator. NYC/ATL.' },
+    'marco':      { followers: 1180, audio: 'https://open.spotify.com/playlist/example', audioLabel: 'Marco\'s Playlist', bio: 'Food & culture. DMV based.' },
+    'hyperlocal': { followers: 9999, audio: '', bio: 'Official HyperLocal staff picks.' },
+  };
+  if (typeof _curatorProfiles === 'undefined') return;
+  Object.keys(ext).forEach(function(k) {
+    if (_curatorProfiles[k]) Object.assign(_curatorProfiles[k], ext[k]);
+  });
+})();
+
+function openCuratorPage(curatorKey) {
+  var p = typeof _curatorProfiles !== 'undefined' ? _curatorProfiles[curatorKey] : null;
+  if (!p) return;
+
+  // Populate header
+  var nameEl = document.getElementById('curator-name-lg');
+  var tagEl  = document.getElementById('curator-tagline');
+  var avEl   = document.getElementById('curator-avatar-lg');
+  if (nameEl) nameEl.textContent = p.name;
+  if (tagEl)  tagEl.textContent  = p.bio || 'Curator';
+  if (avEl)   avEl.innerHTML = p.emoji || '★';
+
+  // Stats
+  var fEl = document.getElementById('curator-followers-count');
+  var pkEl = document.getElementById('curator-picks-count');
+  var svEl = document.getElementById('curator-saves-count');
+  if (fEl)  fEl.textContent  = p.followers ? p.followers.toLocaleString() : '0';
+  if (pkEl) pkEl.textContent = p.picks ? p.picks.length : '0';
+  if (svEl) svEl.textContent = Math.floor((p.followers || 100) * 0.12);
+
+  // Audio bar
+  var audioBar = document.getElementById('curator-audio-bar');
+  var trackName = document.getElementById('curator-track-name');
+  var audioEl   = document.getElementById('curator-audio');
+  if (audioBar && p.audio) {
+    audioBar.classList.add('visible');
+    if (trackName) trackName.textContent = p.audioLabel || 'Event Vibe Mix';
+    if (audioEl && p.audio.includes('soundcloud')) {
+      // SoundCloud doesn't allow direct audio src — show link instead
+      audioBar.querySelector('.curator-play-btn').onclick = function() { window.open(p.audio, '_blank'); };
+      audioBar.querySelector('.curator-play-btn').innerHTML = '&#9654; OPEN SOUNDCLOUD';
+    } else if (audioEl && p.audio.includes('spotify')) {
+      audioBar.querySelector('.curator-play-btn').onclick = function() { window.open(p.audio, '_blank'); };
+      audioBar.querySelector('.curator-play-btn').innerHTML = '&#9654; OPEN SPOTIFY';
+    }
+  } else if (audioBar) {
+    audioBar.classList.remove('visible');
+  }
+
+  // Build picks feed
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(pool){ evPool = evPool.concat(pool); });
+  var picks = (p.picks || []).map(function(id){ return evPool.find(function(e){ return e.id===id; }); }).filter(Boolean);
+
+  // Affiliate tag
+  var aff = curatorKey.toLowerCase();
+
+  var picksEl = document.getElementById('curator-picks-list');
+  if (picksEl) {
+    picksEl.innerHTML = picks.slice(0,3).map(function(ev) {
+      var affUrl = ev.ticketUrl
+        ? ev.ticketUrl + (ev.ticketUrl.includes('?') ? '&' : '?') + 'aff=' + aff
+        : 'https://www.eventbrite.com/e/' + (ev.name||'event').toLowerCase().replace(/\s+/g,'-') + '?aff=' + aff;
+      return '<div class="ev-list-card" onclick="closeCuratorPage();openEvDetailById(' + ev.id + ')" style="cursor:pointer">'
+        + '<div class="ev-list-thumb">' + (ev.vertical === 'afterdark' ? '🌙' : ev.vertical === 'themenu' ? '🍽' : '🎵') + '</div>'
+        + '<div class="ev-list-body">'
+        + '<div class="ev-list-name">' + ev.name + '</div>'
+        + '<div class="ev-list-meta">' + ev.venue + ' · ' + ev.time + '</div>'
+        + '</div>'
+        + '<div class="ev-list-right">'
+        + '<div class="ev-list-price">' + ev.price + '</div>'
+        + '<span class="curator-aff-badge">&#9670; PICK</span>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Upcoming picks
+  var now = new Date();
+  var upcomingEl = document.getElementById('curator-upcoming-list');
+  if (upcomingEl) {
+    upcomingEl.innerHTML = picks.slice(3).map(function(ev) {
+      return '<div class="ev-list-card" onclick="closeCuratorPage();openEvDetailById(' + ev.id + ')" style="cursor:pointer">'
+        + '<div class="ev-list-thumb">' + (ev.vertical === 'afterdark' ? '🌙' : '🎟') + '</div>'
+        + '<div class="ev-list-body"><div class="ev-list-name">' + ev.name + '</div>'
+        + '<div class="ev-list-meta">' + ev.time + ' · ' + ev.hood + '</div></div>'
+        + '<div class="ev-list-right"><div class="ev-list-price">' + ev.price + '</div></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  document.getElementById('curator-page').classList.add('open');
+  // Lock scroll on body
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCuratorPage() {
+  var page = document.getElementById('curator-page');
+  if (page) page.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Wire curator rows in friends panel to open curator page
+var _s34_origRenderFriends = typeof renderFriendsPanel === 'function' ? renderFriendsPanel : null;
+renderFriendsPanel = function() {
+  if (_s34_origRenderFriends) _s34_origRenderFriends();
+  // Add onclick to following rows
+  setTimeout(function() {
+    document.querySelectorAll('.influencer-row').forEach(function(row) {
+      var handle = (row.querySelector('.influencer-handle') || {}).textContent || '';
+      var key = handle.replace('@','').toLowerCase();
+      if (typeof _curatorProfiles !== 'undefined' && _curatorProfiles[key]) {
+        row.onclick = function() { openCuratorPage(key); };
+        row.style.cursor = 'pointer';
+      }
+    });
+  }, 200);
+};
+
+// ── SPRINT 35: DM Chat window ──
+
+var _chatHistory = {}; // {userId: [{from, text, time}]}
+var _activeChatUser = null;
+var _chatChannel = null; // Supabase realtime channel
+
+function openChatWindow(userId, name, avatar) {
+  _activeChatUser = { id: userId, name: name, avatar: avatar };
+  var avEl   = document.getElementById('chat-avatar');
+  var nameEl = document.getElementById('chat-name');
+  var statEl = document.getElementById('chat-status');
+  if (avEl)   avEl.textContent = avatar || name.charAt(0).toUpperCase();
+  if (nameEl) nameEl.textContent = name;
+  if (statEl) {
+    // Check if friend is "live" at an event
+    var friends = typeof _friendsData !== 'undefined' ? _friendsData : [];
+    var friend  = friends.find(function(f){ return f.name === name; });
+    statEl.textContent = friend && friend.live ? '● Live at ' + friend.status : '● Online';
+    statEl.style.color = friend && friend.live ? 'var(--green)' : 'var(--text-dim)';
+  }
+
+  renderChatMessages(userId);
+
+  document.getElementById('chat-window').classList.add('open');
+  document.getElementById('chat-overlay').style.display = 'block';
+  document.getElementById('chat-input').focus();
+
+  // Subscribe to Supabase realtime if available
+  if (typeof _supabase !== 'undefined' && _supabase && typeof _currentUser !== 'undefined' && _currentUser) {
+    var channelName = 'dm_' + [_currentUser.id, userId].sort().join('_');
+    _chatChannel = _supabase.channel(channelName)
+      .on('broadcast', { event: 'message' }, function(payload) {
+        var msg = payload.payload;
+        if (!_chatHistory[userId]) _chatHistory[userId] = [];
+        _chatHistory[userId].push(msg);
+        renderChatMessages(userId);
+      })
+      .subscribe();
+  }
+}
+
+function closeChatWindow() {
+  document.getElementById('chat-window').classList.remove('open');
+  document.getElementById('chat-overlay').style.display = 'none';
+  if (_chatChannel && typeof _supabase !== 'undefined' && _supabase) {
+    _supabase.removeChannel(_chatChannel);
+    _chatChannel = null;
+  }
+  _activeChatUser = null;
+}
+
+function sendChatMessage() {
+  var input = document.getElementById('chat-input');
+  var text  = input ? input.value.trim() : '';
+  if (!text || !_activeChatUser) return;
+  input.value = '';
+  var msg = { from: 'me', text: text, time: new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) };
+  var uid = _activeChatUser.id;
+  if (!_chatHistory[uid]) _chatHistory[uid] = [];
+  _chatHistory[uid].push(msg);
+  renderChatMessages(uid);
+  // Broadcast via Supabase realtime
+  if (_chatChannel) { _chatChannel.send({ type:'broadcast', event:'message', payload: msg }); }
+  // Simulate reply (demo only)
+  setTimeout(function() {
+    var replies = ['Sounds good!', 'I\'ll be there 🔥', 'What time are you heading?', 'Let\'s link up!', 'Already got my ticket 🎟'];
+    var reply = { from: uid, text: replies[Math.floor(Math.random()*replies.length)], time: new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) };
+    _chatHistory[uid].push(reply);
+    renderChatMessages(uid);
+  }, 800 + Math.random()*1200);
+}
+
+function renderChatMessages(userId) {
+  var el  = document.getElementById('chat-messages');
+  if (!el) return;
+  var msgs = _chatHistory[userId] || [];
+  el.innerHTML = msgs.length === 0
+    ? '<div style="text-align:center;font-family:var(--mono);font-size:8px;color:var(--text-muted);padding:20px">Start a conversation...</div>'
+    : msgs.map(function(m) {
+        var isMe = m.from === 'me';
+        return '<div style="display:flex;flex-direction:column;align-items:' + (isMe ? 'flex-end' : 'flex-start') + '">'
+          + '<div class="chat-bubble ' + (isMe ? 'mine' : 'theirs') + '">' + m.text + '</div>'
+          + '<div class="chat-bubble-meta">' + m.time + '</div>'
+          + '</div>';
+      }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+// Patch friend-msg-btn clicks to open chat
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.friend-msg-btn');
+  if (!btn) return;
+  var row = btn.closest('.friend-row, .connection-row');
+  if (!row) return;
+  var nameEl = row.querySelector('.friend-name, .connection-name');
+  var name = nameEl ? nameEl.textContent : 'Friend';
+  openChatWindow('user_' + name.replace(/\s+/g,'_').toLowerCase(), name, name.charAt(0).toUpperCase());
+});
+
+// ── Sprint 35: Group Itinerary invite ──
+var _groupItinInvites = {}; // {userId: [evIds]}
+
+function inviteToItinerary(userId, evId) {
+  if (!_groupItinInvites[userId]) _groupItinInvites[userId] = [];
+  if (_groupItinInvites[userId].indexOf(evId) === -1) {
+    _groupItinInvites[userId].push(evId);
+  }
+  // Show confirmation
+  var el = document.getElementById('itin-group-status');
+  if (el) el.textContent = 'Invite sent! ✓';
+  console.log('[HL] Group itinerary invite sent:', userId, evId);
+}
+
+function voteOnEvent(evId, btn) {
+  btn.classList.toggle('voted');
+  btn.textContent = btn.classList.contains('voted') ? '✓ GOING' : 'VOTE';
+  console.log('[HL] Voted for event:', evId);
+}
+
+// ── Sprint 35: Posh/Luma fetch (with webhook fallback) ──
+var _poshFetched = {}, _lumaFetched = {};
+
+function fetchPoshEvents(slug, zip, callback) {
+  if (_poshFetched[slug]) { callback([]); return; }
+  _poshFetched[slug] = true;
+  // Posh doesn't have a public API — use their embed JSON endpoint
+  var url = 'https://posh.vip/api/organizers/' + slug + '/events?limit=10';
+  fetch(url, { headers: { 'Accept': 'application/json' } })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(text){ if (!text || !text.trim().startsWith('{') && !text.trim().startsWith('[')) throw new Error('Non-JSON'); return JSON.parse(text); })
+    .then(function(data) {
+      var events = Array.isArray(data) ? data : (data.events || []);
+      var mapped = events.map(function(ev, i) {
+        return {
+          id: 9000 + i,
+          name: ev.name || ev.title || 'Event',
+          venue: ev.venue_name || ev.venue || 'Venue TBD',
+          hood: ev.city || zip,
+          time: ev.start_time ? new Date(ev.start_time).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : 'TBA',
+          price: ev.min_price ? '$' + ev.min_price : 'Free',
+          avail: 50, trending: false, featured: false,
+          tags: ['POSH'], genre: 'Social', cap: 500,
+          vertical: 'afterdark', source: 'posh',
+          poshSlug: ev.slug || '',
+          ticketUrl: 'https://posh.vip/e/' + (ev.slug || '')
+        };
+      });
+      if (mapped.length && ALL_EVENTS[zip]) {
+        mapped.forEach(function(ev){ if(!ALL_EVENTS[zip].find(function(e){return e.id===ev.id;})) ALL_EVENTS[zip].push(ev); });
+      }
+      callback(mapped);
+    })
+    .catch(function(){ callback([]); }); // Fail silently
+}
+
+function fetchLumaEvents(query, zip, callback) {
+  if (_lumaFetched[query]) { callback([]); return; }
+  _lumaFetched[query] = true;
+  // Lu.ma public API
+  var url = 'https://api.lu.ma/public/v1/calendar/list-events?pagination_limit=10';
+  fetch(url, { headers: { 'accept': 'application/json' } })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(text) { if (!text || !text.trim().startsWith('{') && !text.trim().startsWith('[')) throw new Error('Non-JSON response'); return JSON.parse(text); })
+    .then(function(data) {
+      var events = data.entries || [];
+      var mapped = events.slice(0,5).map(function(item, i) {
+        var ev = item.event || item;
+        return {
+          id: 9500 + i,
+          name: ev.name || 'Luma Event',
+          venue: (item.geo_address_info && item.geo_address_info.address) || 'Online',
+          hood: zip,
+          time: ev.start_at ? new Date(ev.start_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : 'TBA',
+          price: ev.ticket_info && ev.ticket_info.is_free ? 'Free' : '$' + (ev.ticket_info && ev.ticket_info.min_ticket_price || '?'),
+          avail: 60, trending: false, featured: false,
+          tags: ['LUMA'], genre: 'Networking', cap: 200,
+          vertical: 'professional', source: 'luma',
+          ticketUrl: 'https://lu.ma/' + (ev.url || ev.id || '')
+        };
+      });
+      callback(mapped);
+    })
+    .catch(function(){ callback([]); });
+}
+
+// ── Sprint 36: Home search (AI-powered vibe + event search) ──
+var _searchDebounce = null;
+
+function homeSearchInput(val) {
+  clearTimeout(_searchDebounce);
+  if (!val || val.length < 2) {
+    document.getElementById('home-search-results').classList.remove('visible');
+    return;
+  }
+  _searchDebounce = setTimeout(function(){ homeSearchQuery(val); }, 250);
+}
+
+function homeSearchQuery(query) {
+  var q = query.toLowerCase().trim();
+  var resultsEl = document.getElementById('home-search-results');
+  if (!resultsEl) return;
+
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(pool){ evPool = evPool.concat(pool); });
+
+  // Check vibe keywords first
+  var vibeKeys = typeof VIBE_MAP !== 'undefined' ? Object.keys(VIBE_MAP) : [];
+  var matchedVibe = vibeKeys.find(function(k){ return q.includes(k); });
+
+  var results = [];
+
+  // Vibe match
+  if (matchedVibe) {
+    results.push({ type: 'vibe', label: '✨ ' + matchedVibe.toUpperCase() + ' VIBE', sub: 'Filter by mood', key: matchedVibe });
+  }
+
+  // Event name match
+  evPool.filter(function(ev){
+    return ev.name && ev.name.toLowerCase().includes(q);
+  }).slice(0,4).forEach(function(ev){
+    results.push({ type: 'event', label: ev.name, sub: ev.venue + ' · ' + ev.time, id: ev.id });
+  });
+
+  // Venue match
+  evPool.filter(function(ev){
+    return ev.venue && ev.venue.toLowerCase().includes(q) && !results.some(function(r){ return r.id===ev.id; });
+  }).slice(0,2).forEach(function(ev){
+    results.push({ type: 'venue', label: '📍 ' + ev.venue, sub: ev.hood, id: ev.id });
+  });
+
+  // City/metro match
+  if (typeof CITY_TO_ZIP !== 'undefined') {
+    Object.keys(CITY_TO_ZIP).filter(function(city){ return city.includes(q); }).slice(0,2).forEach(function(city){
+      results.push({ type: 'city', label: '🗺 ' + city.charAt(0).toUpperCase()+city.slice(1), sub: 'Switch metro', zip: CITY_TO_ZIP[city] });
+    });
+  }
+
+  if (!results.length) {
+    resultsEl.innerHTML = '<div class="search-result-row"><span class="search-result-icon">🔍</span><span>No results for "'+query+'"</span></div>';
+    resultsEl.classList.add('visible');
+    return;
+  }
+
+  resultsEl.innerHTML = results.map(function(r) {
+    var onclick = '';
+    if (r.type === 'vibe')  onclick = 'setVibe(\'' + r.key + '\');document.getElementById(\'home-search-results\').classList.remove(\'visible\')';
+    if (r.type === 'event' || r.type === 'venue') onclick = 'openEvDetailById(' + r.id + ');document.getElementById(\'home-search-results\').classList.remove(\'visible\')';
+    if (r.type === 'city')  onclick = 'handleZip(\'' + r.zip + '\');document.getElementById(\'home-search-results\').classList.remove(\'visible\')';
+    return '<div class="search-result-row" onclick="' + onclick + '">'
+      + '<span class="search-result-icon">' + (r.type==='event'?'🎟':r.type==='vibe'?'✨':r.type==='venue'?'📍':'🗺') + '</span>'
+      + '<div style="flex:1;min-width:0"><div style="font-weight:600">' + r.label + '</div>'
+      + '<div class="search-result-sub">' + r.sub + '</div></div>'
+      + '</div>';
+  }).join('');
+  resultsEl.classList.add('visible');
+}
+
+function homeSearchSubmit(val) {
+  if (!val) return;
+  var q = val.toLowerCase().trim();
+  // Try vibe
+  if (typeof VIBE_MAP !== 'undefined' && VIBE_MAP[q]) { setVibe(q); return; }
+  // Try city
+  if (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q]) { handleZip(CITY_TO_ZIP[q]); return; }
+  // Try zip
+  if (/^\d{5}$/.test(q)) { handleZip(q); return; }
+  // Fall back to geo lookup
+  if (typeof handleZip === 'function') handleZip(val);
+  document.getElementById('home-search-results').classList.remove('visible');
+}
+
+// ── Sprint 36: Web Share API ──
+function shareProfile(curatorKey) {
+  var url = window.location.origin + window.location.pathname + (curatorKey ? '?curator=' + curatorKey : '');
+  var title = curatorKey
+    ? ((typeof _curatorProfiles !== 'undefined' && _curatorProfiles[curatorKey]) ? _curatorProfiles[curatorKey].name + '\'s HyperLocal Picks' : 'HyperLocal Picks')
+    : 'HyperLocal — Your City, Live';
+  var text = curatorKey ? 'Check out ' + title + ' on HyperLocal' : 'Discover what\'s happening in your city tonight';
+
+  if (navigator.share) {
+    navigator.share({ title: title, text: text, url: url })
+      .catch(function(err){ if (err.name !== 'AbortError') console.log('[HL] Share error:', err); });
+  } else {
+    // Fallback: copy to clipboard
+    navigator.clipboard && navigator.clipboard.writeText(url)
+      .then(function(){ showToast('Link copied! ✓'); })
+      .catch(function(){ prompt('Copy this link:', url); });
+  }
+}
+
+function shareEvent(evId) {
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool=evPool.concat(p); });
+  var ev = evPool.find(function(e){ return e.id === evId; });
+  if (!ev) return;
+  var url = window.location.origin + '?ev=' + evId;
+  var text = ev.name + ' @ ' + ev.venue + ' · ' + ev.time;
+  if (navigator.share) {
+    navigator.share({ title: ev.name, text: text, url: url });
+  } else {
+    navigator.clipboard && navigator.clipboard.writeText(url)
+      .then(function(){ showToast('Event link copied! ✓'); });
+  }
+}
+
+function showToast(msg) {
+  var toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg4);color:var(--text);font-family:var(--mono);font-size:9px;padding:8px 16px;border-radius:3px;z-index:999;border:1px solid var(--border);letter-spacing:.06em';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function(){ toast.remove(); }, 2500);
+}
+
+// ── Sprint 36: /api/v1/ios JSON endpoint (client-side simulation) ──
+// In production this would be a Next.js API route at pages/api/v1/ios.js
+window.HyperLocalAPI = {
+  version: 'v1',
+  getLiveNowFeed: function(zip, options) {
+    var opts = options || {};
+    var pool = ALL_EVENTS[zip] || ALL_EVENTS['10001'] || [];
+    var now = new Date();
+    var events = pool
+      .filter(function(ev) {
+        var status = typeof getLiveStatus === 'function' ? getLiveStatus(ev) : null;
+        if (opts.filter === 'live') return status === 'live';
+        if (opts.filter === 'tonight') return status === 'live' || status === 'soon' || status === 'upcoming';
+        return true;
+      })
+      .slice(0, opts.limit || 20)
+      .map(function(ev) {
+        return {
+          id: ev.id,
+          name: ev.name,
+          venue: ev.venue,
+          address: ev.addr || '',
+          neighborhood: ev.hood || '',
+          time: ev.time,
+          price: ev.price,
+          availability: ev.avail,
+          vertical: ev.vertical,
+          tags: ev.tags || [],
+          source: ev.source || 'hyperlocal',
+          ticketUrl: ev.ticketUrl || '',
+          coordinates: ev.lat ? { lat: ev.lat, lng: ev.lng } : null,
+          status: typeof getLiveStatus === 'function' ? getLiveStatus(ev) : 'upcoming',
+          isTrending: ev.trending || false,
+          isFeatured: ev.featured || false
+        };
+      });
+    return {
+      meta: { zip: zip, timestamp: now.toISOString(), count: events.length, version: 'v1' },
+      events: events
+    };
+  },
+  // For Xcode: fetch this and decode as [HLEvent] in Swift
+  getSwiftJSON: function(zip) {
+    return JSON.stringify(this.getLiveNowFeed(zip, { filter: 'tonight', limit: 25 }), null, 2);
+  }
+};
+// Dev access: window.HyperLocalAPI.getSwiftJSON('10001')
+
+// ── Boot 34-36 ──
+setTimeout(function() {
+  // Wire curator picks from ?curator= param
+  var params = new URLSearchParams(window.location.search);
+  var curatorParam = params.get('curator');
+  if (curatorParam && typeof _curatorProfiles !== 'undefined' && _curatorProfiles[curatorParam]) {
+    // Auto-open curator page on load if ?curator= is set
+    setTimeout(function(){ openCuratorPage(curatorParam); }, 1200);
+  }
+
+  // Pre-fetch Posh/Luma in background
+  fetchPoshEvents('davis-pemberton', currentZip, function(evs){ console.log('[HL] Posh fetched:', evs.length, 'events'); });
+  fetchLumaEvents('hyperlocal-nyc', currentZip, function(evs){ console.log('[HL] Luma fetched:', evs.length, 'events'); });
+}, 2000);
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINTS 37-38: Auth Fix, Demo Chat, Vibe Search, Fuse
+// ══════════════════════════════════════════════════════
+
+// ── SPRINT 37: Supabase Auth Error Handling ──
+
+// Error code map for common Supabase / OAuth errors
+var SUPABASE_ERRORS = {
+  'redirect_uri_mismatch': 'OAuth Callback URL mismatch. Go to Supabase Dashboard → Auth → URL Configuration and add this site\'s URL.',
+  'invalid_grant':         'Invalid auth code. The OAuth flow may have expired — please try signing in again.',
+  'access_denied':         'Access was denied by the OAuth provider. Check your Google OAuth app settings.',
+  '7337':                  'GitHub error 7337: Callback URL mismatch. Add ' + window.location.origin + ' to your Supabase Redirect URLs.',
+  'email_not_confirmed':   'Please confirm your email before signing in.',
+  'user_not_found':        'No account found. Use "JOIN" to create one.',
+  'invalid_login_credentials': 'Incorrect email or password.',
+};
+
+function showAuthDebugToast(errorCode, errorMsg) {
+  // Remove existing
+  document.querySelectorAll('.auth-debug-toast').forEach(function(t){ t.remove(); });
+
+  var knownMsg = SUPABASE_ERRORS[errorCode] || SUPABASE_ERRORS[errorMsg] || null;
+  var displayMsg = knownMsg || ('Auth error: ' + (errorMsg || errorCode));
+  var isCallbackError = knownMsg && (knownMsg.includes('Callback') || knownMsg.includes('Redirect'));
+
+  var toast = document.createElement('div');
+  toast.className = 'auth-debug-toast';
+  toast.innerHTML = '⚠ ' + displayMsg
+    + (isCallbackError
+      ? '<span class="auth-debug-link" onclick="window.open(\'https://supabase.com/dashboard\',\'_blank\')">Open Supabase Dashboard →</span>'
+      : '');
+  document.body.appendChild(toast);
+  setTimeout(function(){ if(toast.parentNode) toast.remove(); }, 8000);
+}
+
+// Check for OAuth callback errors in URL on page load
+(function checkOAuthCallback() {
+  var params = new URLSearchParams(window.location.search);
+  var hashParams = new URLSearchParams(window.location.hash.replace('#',''));
+  var error = params.get('error') || hashParams.get('error');
+  var errorDesc = params.get('error_description') || hashParams.get('error_description') || '';
+  var errorCode = params.get('error_code') || '';
+  if (error) {
+    setTimeout(function() {
+      showAuthDebugToast(errorCode || error, errorDesc || error);
+      console.error('[HL] OAuth error:', error, errorDesc);
+    }, 1000);
+  }
+})();
+
+// Improved initSupabase with error handling
+var _s37_origInitSupabase = typeof initSupabase === 'function' ? initSupabase : null;
+initSupabase = function() {
+  var url = localStorage.getItem('hl_sb_url') || '';
+  var key = localStorage.getItem('hl_sb_key') || '';
+  if (!url || !key) {
+    console.log('[HL] Supabase: no credentials. Demo mode active.');
+    return false;
+  }
+  // Validate URL format
+  if (!url.includes('supabase.co') && !url.includes('supabase.io')) {
+    showAuthDebugToast('config', 'Invalid Supabase URL. Expected: https://xxxx.supabase.co');
+    return false;
+  }
+  if (window.supabase) {
+    try {
+      _supabase = window.supabase.createClient(url, key);
+      _supabase.auth.onAuthStateChange(function(event, session) {
+        if (event === 'SIGNED_OUT') {
+          _currentUser = null; _sbSession = null;
+          if (typeof refreshLoginView === 'function') refreshLoginView();
+          if (typeof refreshUserAvatar === 'function') refreshUserAvatar();
+        }
+        if (event === 'SIGNED_IN' && session) {
+          if (typeof restoreSupabaseSession === 'function') restoreSupabaseSession();
+        }
+        if (event === 'TOKEN_REFRESHED') {
+          console.log('[HL] Supabase token refreshed');
+        }
+      });
+      restoreSupabaseSession();
+      return true;
+    } catch(e) {
+      showAuthDebugToast('init', e.message);
+      return false;
+    }
+  }
+  // Lazy load SDK
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.onload = function() {
+    try {
+      _supabase = window.supabase.createClient(url, key);
+      console.log('[HL] Supabase ready (lazy)');
+      if (typeof restoreSupabaseSession === 'function') restoreSupabaseSession();
+    } catch(e) { showAuthDebugToast('init', e.message); }
+  };
+  script.onerror = function() {
+    showAuthDebugToast('sdk', 'Failed to load Supabase SDK. Check network connection.');
+  };
+  document.head.appendChild(script);
+  return true;
+};
+
+// ── Sprint 37: Save Maal follow to Supabase ──
+var MAAL_CURATOR_ID = 'curator_maal_hyperlocal'; // constant identifier for Maal
+
+var _s37_origFollowUser = typeof followUser === 'function' ? followUser : null;
+followUser = function(targetId, targetType) {
+  if (_s37_origFollowUser) _s37_origFollowUser(targetId, targetType);
+  // If following Maal and Supabase is active, persist it
+  var isMaal = String(targetId).toLowerCase().includes('maal') || targetType === 'curator';
+  if (isMaal && typeof _supabase !== 'undefined' && _supabase && typeof _currentUser !== 'undefined' && _currentUser) {
+    _supabase.from('connections').upsert({
+      follower_id: _currentUser.id,
+      following_id: MAAL_CURATOR_ID,
+      type: 'follow',
+      status: 'active'
+    }).then(function(res) {
+      if (res.error) console.warn('[HL] Maal follow persist error:', res.error.message);
+      else console.log('[HL] Maal follow saved to Supabase ✓');
+    });
+  }
+};
+
+// ── Sprint 37: Demo Mode chat ──
+var DEMO_CONVERSATIONS = {
+  default: [
+    { from: 'them', text: 'Hey! Are you going to the Industry Takeover tonight? 🔥', time: '8:47 PM' },
+    { from: 'me',   text: 'Yes! Just grabbed my ticket. You?', time: '8:48 PM' },
+    { from: 'them', text: 'Same! Let\'s link up at the bar around 10', time: '8:49 PM' },
+    { from: 'them', text: 'Neon Dreams looks crazy too btw', time: '8:50 PM' },
+  ]
+};
+
+// Patch openChatWindow to always show demo messages if no real history
+var _s37_origOpenChat = typeof openChatWindow === 'function' ? openChatWindow : null;
+openChatWindow = function(userId, name, avatar) {
+  if (_s37_origOpenChat) _s37_origOpenChat(userId, name, avatar);
+  // If no history, load demo messages
+  setTimeout(function() {
+    var msgEl = document.getElementById('chat-messages');
+    if (!msgEl) return;
+    var hasRealMessages = typeof _chatHistory !== 'undefined' && _chatHistory[userId] && _chatHistory[userId].length > 0;
+    if (!hasRealMessages) {
+      // Show demo badge
+      var chatHdr = document.querySelector('.chat-hdr');
+      if (chatHdr && !chatHdr.previousElementSibling?.classList?.contains('chat-demo-badge')) {
+        var badge = document.createElement('div');
+        badge.className = 'chat-demo-badge';
+        badge.textContent = '⚡ DEMO MODE — Connect Supabase for live messages';
+        chatHdr.insertAdjacentElement('afterend', badge);
+      }
+      // Load demo conversation
+      var demoMsgs = DEMO_CONVERSATIONS[userId] || DEMO_CONVERSATIONS.default;
+      if (typeof _chatHistory === 'undefined') return;
+      _chatHistory[userId] = demoMsgs.map(function(m) {
+        return { from: m.from === 'me' ? 'me' : userId, text: m.text, time: m.time };
+      });
+      if (typeof renderChatMessages === 'function') renderChatMessages(userId);
+    }
+  }, 150);
+};
+
+// ── SPRINT 38: Lightweight fuzzy search (no Fuse.js dependency) ──
+// Custom fuzzy matcher — handles typos within 2 chars
+function fuzzyMatch(needle, haystack) {
+  if (!needle || !haystack) return 0;
+  var n = needle.toLowerCase();
+  var h = haystack.toLowerCase();
+  if (h.includes(n)) return 1.0; // exact substring match
+  if (n.length < 3) return 0;
+  // Sliding window comparison
+  var matches = 0;
+  var nLen = n.length;
+  for (var i = 0; i <= h.length - nLen; i++) {
+    var window = h.substring(i, i + nLen);
+    var diff = 0;
+    for (var j = 0; j < nLen; j++) {
+      if (window[j] !== n[j]) diff++;
+    }
+    var score = 1 - (diff / nLen);
+    if (score > matches) matches = score;
+    if (matches >= 0.9) break; // good enough
+  }
+  return matches;
+}
+
+function fuzzySearch(query, pool, keys, threshold) {
+  threshold = threshold || 0.6;
+  var q = query.toLowerCase().trim();
+  return pool.map(function(item) {
+    var bestScore = 0;
+    (keys || ['name','venue','hood']).forEach(function(key) {
+      var val = item[key];
+      if (!val) return;
+      var score = fuzzyMatch(q, String(val));
+      if (score > bestScore) bestScore = score;
+    });
+    return { item: item, score: bestScore };
+  })
+  .filter(function(r){ return r.score >= threshold; })
+  .sort(function(a,b){ return b.score - a.score; });
+}
+
+// ── Sprint 38: Enhanced VIBE keyword dictionary ──
+var VIBE_KEYWORDS = {
+  // Food & drink
+  'pizza':    { vertical:'themenu', tags:['PIZZA','FOOD'], label:'🍕 Pizza' },
+  'tacos':    { vertical:'themenu', tags:['TACOS','MEXICAN'], label:'🌮 Tacos' },
+  'brunch':   { vertical:'themenu', tags:['BRUNCH','MIMOSAS'], label:'🥂 Brunch' },
+  'drinks':   { vertical:'themenu', tags:['OPEN BAR','COCKTAILS'], label:'🍹 Drinks' },
+  'wine':     { vertical:'themenu', tags:['WINE','TASTING'], label:'🍷 Wine' },
+  'seafood':  { vertical:'themenu', tags:['SEAFOOD','CRAB'], label:'🦀 Seafood' },
+  'sushi':    { vertical:'themenu', tags:['SUSHI','JAPANESE'], label:'🍣 Sushi' },
+  // Atmosphere
+  'chill':    { vibe:'chill',     label:'🌿 Chill vibes' },
+  'chilled':  { vibe:'chill',     label:'🌿 Chill vibes' },
+  'lowkey':   { vibe:'chill',     label:'🌿 Low-key night' },
+  'loud':     { vibe:'hype',      label:'🔊 Loud & hype' },
+  'hype':     { vibe:'hype',      label:'🔥 Hype events' },
+  'lit':      { vibe:'hype',      label:'🔥 Lit events' },
+  'bougie':   { vibe:'bougie',    label:'✨ Upscale only' },
+  'fancy':    { vibe:'bougie',    label:'✨ Upscale only' },
+  'vip':      { vibe:'bougie',    label:'✨ VIP access' },
+  'vibe':     { vibe:'hype',      label:'🔥 Good vibes' },
+  'free':     { vibe:'free',      label:'🎁 Free events' },
+  'date':     { vibe:'date night',label:'💫 Date night' },
+  // Music genres
+  'edm':      { vertical:'afterdark', tags:['EDM'], label:'🎧 EDM' },
+  'jazz':     { vertical:'afterdark', tags:['JAZZ'], label:'🎷 Jazz' },
+  'hiphop':   { vertical:'afterdark', tags:['HIP-HOP'], label:'🎤 Hip-Hop' },
+  'techno':   { vertical:'afterdark', tags:['TECHNO'], label:'🎛 Techno' },
+  'gospel':   { vertical:'worship',   tags:['GOSPEL'], label:'🎵 Gospel' },
+  // Professional
+  'networking':{ vertical:'professional', tags:['NETWORKING'], label:'💼 Networking' },
+  'startup':  { vertical:'professional', tags:['STARTUP'], label:'🚀 Startup' },
+  'stem':     { vertical:'professional', tags:['STEM'], label:'🔬 STEM' },
+};
+
+// Rebuild homeSearchQuery to use fuzzy + keyword expansion
+var _s38_prevHomeSearch = typeof homeSearchQuery === 'function' ? homeSearchQuery : null;
+homeSearchQuery = function(query) {
+  var q = (query||'').toLowerCase().trim();
+  var resultsEl = document.getElementById('home-search-results');
+  if (!resultsEl) return;
+  if (!q || q.length < 2) { resultsEl.classList.remove('visible'); return; }
+
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+  var results = [];
+
+  // 1. Check vibe keyword dictionary
+  var vibeHit = VIBE_KEYWORDS[q];
+  if (vibeHit) {
+    results.push({
+      type: 'keyword', label: vibeHit.label,
+      sub: vibeHit.vibe ? 'Vibe filter' : 'Category filter',
+      vibe: vibeHit.vibe || null,
+      vertical: vibeHit.vertical || null,
+      tags: vibeHit.tags || []
+    });
+  }
+
+  // 2. Check VIBE_MAP (existing vibe keys)
+  if (typeof VIBE_MAP !== 'undefined' && VIBE_MAP[q]) {
+    results.push({ type:'vibe', label: '✨ '+q.toUpperCase(), sub:'Vibe filter', key:q });
+  }
+
+  // 3. Fuzzy event search
+  var fuzzyResults = [];
+  try { fuzzyResults = fuzzySearch(q, evPool, ['name','venue','hood','genre'], 0.65); } catch(e) { console.warn('[HL] fuzzy search error:', e.message); }
+  fuzzyResults.slice(0,5).forEach(function(r) {
+    if (results.some(function(x){ return x.id===r.item.id; })) return;
+    var pct = Math.round(r.score * 100);
+    results.push({
+      type: r.score >= 0.95 ? 'event' : 'fuzzy',
+      label: r.item.name,
+      sub: r.item.venue + ' · ' + r.item.time,
+      id: r.item.id, score: pct
+    });
+  });
+
+  // 4. City/metro
+  if (typeof CITY_TO_ZIP !== 'undefined') {
+    Object.keys(CITY_TO_ZIP).filter(function(c){ return fuzzyMatch(q,c) > 0.7; }).slice(0,2).forEach(function(city){
+      results.push({ type:'city', label:'🗺 '+city.charAt(0).toUpperCase()+city.slice(1), sub:'Switch metro', zip:CITY_TO_ZIP[city] });
+    });
+  }
+
+  if (!results.length) {
+    resultsEl.innerHTML = '<div class="search-result-row"><span class="search-result-icon">🔍</span><span style="color:var(--text-dim)">No results for "'+query+'" — try a vibe or city name</span></div>';
+    resultsEl.classList.add('visible');
+    return;
+  }
+
+  resultsEl.innerHTML = results.map(function(r) {
+    var onclick = '';
+    if (r.type === 'vibe' || r.type === 'keyword') {
+      if (r.vibe) onclick = 'setVibe("'+r.vibe+'");document.getElementById("home-search-results").classList.remove("visible");document.getElementById("home-search-input").value=""';
+      else if (r.vertical) onclick = 'switchTab("'+r.vertical+'",null);document.getElementById("home-search-results").classList.remove("visible")';
+    }
+    if (r.type === 'event' || r.type === 'fuzzy') onclick = 'openEvDetailById('+r.id+');document.getElementById("home-search-results").classList.remove("visible")';
+    if (r.type === 'city') onclick = 'handleZip("'+r.zip+'");document.getElementById("home-search-results").classList.remove("visible")';
+    var icon = r.type === 'event' ? '🎟' : r.type === 'fuzzy' ? '🔍' : r.type === 'vibe' || r.type === 'keyword' ? '✨' : '🗺';
+    return '<div class="search-result-row" onclick="'+onclick+'">'
+      +'<span class="search-result-icon">'+icon+'</span>'
+      +'<div style="flex:1;min-width:0"><div style="font-weight:600">'+r.label+'</div>'
+      +'<div class="search-result-sub">'+r.sub+'</div></div>'
+      + (r.score && r.score < 95 ? '<span class="search-result-score">'+r.score+'% match</span>' : '')
+      +'</div>';
+  }).join('');
+  resultsEl.classList.add('visible');
+};
+
+// ── Sprint 38: Eventbrite real event injection into search ──
+function searchEventbriteAndInject(query, zip, callback) {
+  var token = localStorage.getItem('hl_eb_token') || '';
+  if (!token) { callback([]); return; }
+  var url = 'https://www.eventbriteapi.com/v3/events/search/'
+    + '?q=' + encodeURIComponent(query)
+    + '&location.address=' + encodeURIComponent(zip || '10001')
+    + '&location.within=10mi&sort_by=best&expand=venue&token=' + token;
+  fetch(url)
+    .then(function(r){ if (!r.ok) throw new Error('EB HTTP '+r.status); return r.text(); })
+    .then(function(text){ return JSON.parse(text); })
+    .then(function(data) {
+      var events = (data.events || []).slice(0,5).map(function(ev,i) {
+        return {
+          id: 8000 + i,
+          name: ev.name.text,
+          venue: ev.venue ? ev.venue.name : 'Venue TBD',
+          hood: ev.venue ? ev.venue.address.city : zip,
+          time: ev.start ? new Date(ev.start.local).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : 'TBA',
+          price: ev.is_free ? 'Free' : '$?',
+          avail: 50, trending: false, featured: false,
+          tags: ['EVENTBRITE'], genre: 'Live',
+          vertical: 'terminal', source: 'eventbrite',
+          ticketUrl: ev.url
+        };
+      });
+      // Inject into pool
+      if (!ALL_EVENTS[zip]) ALL_EVENTS[zip] = [];
+      events.forEach(function(e){ if(!ALL_EVENTS[zip].find(function(x){return x.id===e.id;})) ALL_EVENTS[zip].push(e); });
+      callback(events);
+    })
+    .catch(function(){ callback([]); });
+}
+
+// Patch homeSearchSubmit to also pull Eventbrite results
+var _s38_origSearchSubmit = typeof homeSearchSubmit === 'function' ? homeSearchSubmit : null;
+homeSearchSubmit = function(val) {
+  if (!val) return;
+  // First run local search
+  homeSearchQuery(val);
+  // Then fire Eventbrite in background and refresh results
+  if (typeof currentZip !== 'undefined') {
+    searchEventbriteAndInject(val, currentZip, function(events) {
+      if (events.length > 0) {
+        console.log('[HL] Eventbrite injected', events.length, 'results for:', val);
+        homeSearchQuery(val); // re-run with new data
+      }
+    });
+  }
+  // Also handle city/vibe fallback
+  if (_s38_origSearchSubmit) {
+    var q = val.toLowerCase().trim();
+    if (typeof VIBE_KEYWORDS !== 'undefined' && VIBE_KEYWORDS[q] && VIBE_KEYWORDS[q].vibe) {
+      if (typeof setVibe === 'function') setVibe(VIBE_KEYWORDS[q].vibe);
+      document.getElementById('home-search-results').classList.remove('visible');
+      return;
+    }
+  }
+  if (_s38_origSearchSubmit) _s38_origSearchSubmit(val);
+};
+
+// ── Sprint 38: Resizable columns with localStorage persistence ──
+var COL_STORAGE_KEY = 'hl_col_widths';
+
+function saveColumnWidths() {
+  var widths = {};
+  var news = document.querySelector('#tab-terminal .news-panel');
+  var sidebar = document.querySelector('#tab-terminal .sidebar, #sidebar-terminal');
+  var itinCol = document.getElementById('ud-itin-col');
+  var socialCol = document.getElementById('ud-social-col');
+  if (news)     widths.news     = news.getBoundingClientRect().width;
+  if (sidebar)  widths.sidebar  = sidebar.getBoundingClientRect().width;
+  if (itinCol)  widths.itin     = itinCol.getBoundingClientRect().width;
+  if (socialCol)widths.social   = socialCol.getBoundingClientRect().width;
+  try { localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(widths)); } catch(e) {}
+}
+
+function restoreColumnWidths() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(COL_STORAGE_KEY) || 'null');
+    if (!saved) return;
+    var news = document.querySelector('#tab-terminal .news-panel');
+    var sidebar = document.querySelector('#tab-terminal .sidebar, #sidebar-terminal');
+    var itinCol = document.getElementById('ud-itin-col');
+    var socialCol = document.getElementById('ud-social-col');
+    if (news     && saved.news)   { news.style.width     = saved.news   + 'px'; news.style.minWidth   = Math.min(saved.news,200) + 'px'; }
+    if (sidebar  && saved.sidebar){ sidebar.style.width  = saved.sidebar+ 'px'; sidebar.style.minWidth= Math.min(saved.sidebar,200)+'px'; }
+    if (itinCol  && saved.itin)   { itinCol.style.width  = saved.itin   + 'px'; }
+    if (socialCol&& saved.social) { socialCol.style.width= saved.social + 'px'; }
+    console.log('[HL] Column widths restored:', saved);
+  } catch(e) {}
+}
+
+function initColumnResizers() {
+  var COLS = [
+    { selector: '#tab-terminal .news-panel', side: 'right' },
+    { selector: '#sidebar-terminal, #tab-terminal .sidebar', side: 'left' },
+    { selector: '#ud-itin-col', side: 'right' },
+    { selector: '#ud-social-col', side: 'right' },
+  ];
+  COLS.forEach(function(cfg) {
+    var el = document.querySelector(cfg.selector);
+    if (!el || el.querySelector('.col-resize-handle')) return; // already has handle
+    // Must be position:relative
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    var handle = document.createElement('div');
+    handle.className = 'col-resize-handle';
+    el.appendChild(handle);
+    var startX, startW;
+    handle.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      handle.classList.add('dragging');
+      startX = e.clientX;
+      startW = el.getBoundingClientRect().width;
+      function onMove(e2) {
+        var delta = cfg.side === 'right' ? e2.clientX - startX : startX - e2.clientX;
+        var newW = Math.max(160, Math.min(520, startW + delta));
+        el.style.width = newW + 'px';
+        el.style.minWidth = '0';
+        el.style.maxWidth = 'none';
+        el.style.flexShrink = '0';
+      }
+      function onUp() {
+        handle.classList.remove('dragging');
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        saveColumnWidths();
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+    // Touch support
+    handle.addEventListener('touchstart', function(e) {
+      var touch = e.touches[0];
+      startX = touch.clientX; startW = el.getBoundingClientRect().width;
+      function onTouch(e2) {
+        var t2 = e2.touches[0];
+        var delta = cfg.side === 'right' ? t2.clientX - startX : startX - t2.clientX;
+        el.style.width = Math.max(160, Math.min(520, startW + delta)) + 'px';
+      }
+      function onEnd() {
+        handle.removeEventListener('touchmove', onTouch);
+        handle.removeEventListener('touchend', onEnd);
+        saveColumnWidths();
+      }
+      handle.addEventListener('touchmove', onTouch, { passive: false });
+      handle.addEventListener('touchend', onEnd);
+    }, { passive: true });
+  });
+}
+
+// ── Boot 37-38 ──
+setTimeout(function() {
+  restoreColumnWidths();
+  initColumnResizers();
+  // Re-init resizers after ud columns are created (they're added by JS)
+  setTimeout(initColumnResizers, 1500);
+}, 800);
 
 
 </script>
