@@ -1864,6 +1864,25 @@ body.metro-miami { --metro-color: #00E676; }
 }
 .org-filter-clear { margin-left: auto; cursor: pointer; opacity: .7; }
 .org-filter-clear:hover { opacity: 1; }
+
+/* Sprint 42: gmap container height — only inside ACTIVE map tab */
+#tab-mapview.active .map-page-grid {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+#tab-mapview.active .map-page-inner,
+#tab-mapview.active .map-inner {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+#tab-mapview.active #gmap-mobile,
+#tab-mapview.active #gmap-desktop {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 300px !important;
+}
 </style>
 
 </head>
@@ -3713,17 +3732,19 @@ renderDesktopMap = function(filter) {
 };
 
 // ── 4. Google Maps API Shell ──
-var _gmapApiKey = localStorage.getItem('hl_gmap_key') || '';
+var _gmapApiKey = (window.GMAP_KEY && String(window.GMAP_KEY).length > 10 ? String(window.GMAP_KEY) : null) || localStorage.getItem('hl_gmap_key') || '';
 var _gmapLoaded = false;
 
 function initGoogleMapsShell() {
-  // Key resolution chain — check all possible injection points
-  if (!_gmapApiKey) {
-    // 1. Netlify env injection via global window.ENV (set by build plugin)
-    if (window.ENV && window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
-      _gmapApiKey = window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-      localStorage.setItem('hl_gmap_key', _gmapApiKey);
-    }
+  // ── Sprint 43: Key resolution — window.GMAP_KEY first (Netlify snippet) ──
+  if (!_gmapApiKey && window.GMAP_KEY && String(window.GMAP_KEY).length > 10) {
+    _gmapApiKey = String(window.GMAP_KEY);
+    localStorage.setItem('hl_gmap_key', _gmapApiKey);
+    console.log('[HL] Maps key from window.GMAP_KEY ✓');
+  }
+  if (!_gmapApiKey && window.ENV && window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+    _gmapApiKey = window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    localStorage.setItem('hl_gmap_key', _gmapApiKey);
   }
   if (!_gmapApiKey) {
     // 2. Meta tag: <meta name="gmap-key" content="...">
@@ -3791,9 +3812,10 @@ function loadGoogleMap(container, containerId) {
   if (!_gmapLoaded && !document.getElementById('gmap-api-script')) {
     var script = document.createElement('script');
     script.id = 'gmap-api-script';
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=' + _gmapApiKey + '&callback=_onGmapReady';
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=' + _gmapApiKey + '&callback=_onGmapReady&libraries=places,geometry';
     script.async = true;
     script.defer = true;
+    script.onerror = function() { onGoogleApiError('LOAD_FAILED', 'Maps script failed to load — check key and billing'); };
     document.head.appendChild(script);
     _gmapLoaded = true;
     // Store pending containers to init after load
@@ -3805,7 +3827,26 @@ function loadGoogleMap(container, containerId) {
 }
 
 // Called by Google Maps API once script loads
-window._onGmapReady = function() {
+window.
+// Sprint 42: Google Maps API error detection
+window.gm_authFailure = function() {
+  console.error('[HL] Google Maps auth failed. Check: API key valid, billing enabled, referrer restrictions.');
+  ['gmap-desktop','gmap-mobile'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.style.display !== 'none') {
+      el.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;padding:20px;text-align:center;background:var(--bg2)">'
+        + '<div style="font-size:20px">⚠</div>'
+        + '<div style="font-family:var(--mono);font-size:8px;color:var(--red);letter-spacing:.08em">AUTH FAILURE</div>'
+        + '<div style="font-family:var(--mono);font-size:7px;color:var(--text-muted);max-width:220px;line-height:1.5">Check API key, billing, and referrer restrictions in Google Cloud Console</div>'
+        + '</div>';
+    }
+  });
+};
+
+function onGoogleApiError(code, msg) {
+  console.error('[HL] Google Maps error:', code, msg || '');
+}
+_onGmapReady = function() {
   (window._gmapPendingContainers || []).forEach(function(item) {
     _createGmapInstance(item.container);
   });
@@ -5457,6 +5498,39 @@ window.HyperLocalDB = POSTGIS_SCHEMA;
 })();
 
 // ── Boot ──
+// Sprint 43: DOMContentLoaded key re-check
+document.addEventListener('DOMContentLoaded', function() {
+  if (!_gmapApiKey && window.GMAP_KEY && String(window.GMAP_KEY).length > 10) {
+    _gmapApiKey = String(window.GMAP_KEY);
+    localStorage.setItem('hl_gmap_key', _gmapApiKey);
+    console.log('[HL] Maps key on DOMContentLoaded ✓');
+  }
+});
+
+// Sprint 43: Netlify proxy for event data (bypasses CORS)
+var _netlifyEvFetched = {};
+function fetchEventsFromProxy(zip, vertical, callback) {
+  var key = zip + '_' + (vertical||'all');
+  if (_netlifyEvFetched[key]) { callback([]); return; }
+  _netlifyEvFetched[key] = true;
+  fetch('/.netlify/functions/get-events?zip='+encodeURIComponent(zip)+'&vertical='+encodeURIComponent(vertical||'all'))
+    .then(function(r){ if(!r.ok) throw new Error('proxy '+r.status); return r.json(); })
+    .then(function(data){
+      var evs = data.events||[];
+      console.log('[HL] Proxy:', evs.length, 'events for', zip, vertical);
+      if(!ALL_EVENTS[zip]) ALL_EVENTS[zip]=[];
+      evs.forEach(function(ev){ if(!ALL_EVENTS[zip].find(function(e){return e.id===ev.id;})) ALL_EVENTS[zip].push(ev); });
+      if(evs.length>0 && typeof renderAll==='function') renderAll(currentTab,currentZip,pulseOn);
+      callback(evs);
+    })
+    .catch(function(err){ console.warn('[HL] Proxy failed:', err.message); callback([]); });
+}
+
+// Patch fetchers to use proxy first
+var _s43p=fetchPoshEvents, _s43l=fetchLumaEvents;
+fetchPoshEvents=function(slug,zip,cb){ fetchEventsFromProxy(zip,'afterdark',function(evs){ if(!evs.length)_s43p(slug,zip,cb); else cb(evs); }); };
+fetchLumaEvents=function(q,zip,cb){ fetchEventsFromProxy(zip,'professional',function(evs){ if(!evs.length)_s43l(q,zip,cb); else cb(evs); }); };
+
 setTimeout(function() {
   // Re-init gmap with improved key resolution
   if (typeof initGoogleMapsShell === 'function') initGoogleMapsShell();
@@ -6189,9 +6263,12 @@ var _supabase = null;
 var _sbSession = null;
 
 function initSupabase() {
-  var url = localStorage.getItem('hl_sb_url') || '';
-  var key = localStorage.getItem('hl_sb_key') || '';
-  if (!url || !key) {
+  // Sprint 43: read from window.* (Netlify snippet injection)
+  var url = (window.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || '') || localStorage.getItem('hl_sb_url') || '';
+  var key = (window.SUPABASE_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || '') || localStorage.getItem('hl_sb_key') || '';
+  if (url) localStorage.setItem('hl_sb_url', url);
+  if (key) localStorage.setItem('hl_sb_key', key);
+    if (!url || !key) {
     console.log('[HL] Supabase: no credentials — using local auth. Set hl_sb_url + hl_sb_key to activate.');
     return false;
   }
@@ -7761,20 +7838,32 @@ sendChatMessage = function() {
 // Add to your Netlify _headers or via a snippet injection:
 //   <script>window.GMAP_KEY = "AIzaSy...";</script>
 // Also reads from Netlify env via edge function injection
-(function bootstrapGmapKey() {
-  var k = '';
-  if (!k && window.GMAP_KEY) k = window.GMAP_KEY;
+function bootstrapGmapKey() {
+  var k = _gmapApiKey || '';
+  // Check all sources in priority order
+  if (!k && window.GMAP_KEY && window.GMAP_KEY !== 'undefined') k = String(window.GMAP_KEY);
   if (!k && window.ENV && window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) k = window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  if (!k) { var m = document.querySelector('meta[name="gmap-key"]'); if (m && m.content && m.content.charAt(0) !== '{') k = m.content; }
+  if (!k) {
+    var metaEl = document.querySelector('meta[name="gmap-key"]');
+    if (metaEl && metaEl.content && metaEl.content.length > 10) k = metaEl.content;
+  }
   if (!k) k = localStorage.getItem('hl_gmap_key') || '';
-  if (k) {
+  if (k && k !== _gmapApiKey) {
     _gmapApiKey = k;
     localStorage.setItem('hl_gmap_key', k);
     console.log('[HL] Google Maps key loaded ✓ (' + k.substring(0,8) + '...)');
-  } else {
-    console.log('[HL] Google Maps: no key found. Set localStorage.hl_gmap_key or window.GMAP_KEY');
+  } else if (!k) {
+    console.warn('[HL] Google Maps: no key. Use: localStorage.setItem("hl_gmap_key","AIzaSy...")');
   }
-})();
+  return !!k;
+}
+// Run immediately and also on DOMContentLoaded (Netlify snippet may load after script)
+bootstrapGmapKey();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapGmapKey);
+} else {
+  setTimeout(bootstrapGmapKey, 0);
+}
 
 // ── SPRINT 40: Organizer display + image rendering ──
 
