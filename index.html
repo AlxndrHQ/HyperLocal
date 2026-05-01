@@ -1848,6 +1848,22 @@ body.metro-miami { --metro-color: #00E676; }
   height: 100% !important;
   min-height: 400px !important;
 }
+
+/* ════ SPRINTS 39-41: DMs, Organizer, Social ════ */
+/* Organizer row on event detail */
+.ev-organizer-row:hover { background: var(--bg3); }
+/* Map modal transport row */
+.mm-transport-row { flex-shrink: 0; }
+/* Follow button (replaces Add Friend) */
+.ev-social-btn.following { opacity: .65; cursor: default; }
+/* Org filter indicator */
+.org-filter-bar {
+  display: flex; align-items: center; gap: 8px; padding: 5px 12px;
+  background: rgba(0,71,255,.08); border-bottom: 1px solid rgba(0,71,255,.2);
+  font-family: var(--mono); font-size: 8px; color: var(--blue); flex-shrink: 0;
+}
+.org-filter-clear { margin-left: auto; cursor: pointer; opacity: .7; }
+.org-filter-clear:hover { opacity: 1; }
 </style>
 
 </head>
@@ -2193,13 +2209,13 @@ const TABS=["terminal","afterdark","themenu","theladder"];
 const ALL_TABS=["terminal","afterdark","themenu","theladder","mapview"];
 let currentTab="terminal",currentZip="10001",pulseOn=false;
 const ALL_EVENTS={"10001":[
-{id:1,name:"INDUSTRY TAKEOVER",venue:"Marquee NYC",addr:"289 10th Ave",hood:"Chelsea",time:"10:00 PM",price:"$45",avail:12,trending:true,featured:false,tags:["EDM","OPEN BAR"],genre:"Electronic",cap:800,vertical:"afterdark",source:"posh"},
-{id:2,name:"Jazz & Cocktails",venue:"Village Vanguard",addr:"178 7th Ave S",hood:"West Village",time:"8:30 PM",price:"$28",avail:65,trending:false,featured:true,tags:["JAZZ","SEATED"],genre:"Jazz",cap:120,vertical:"afterdark",source:"eventbrite"},
-{id:3,name:"Rooftop Sessions Vol.11",venue:"230 Fifth",addr:"230 5th Ave",hood:"Flatiron",time:"9:00 PM",price:"$35",avail:33,trending:true,featured:false,tags:["ROOFTOP","DJ SET"],genre:"House",cap:500,vertical:"afterdark",source:"posh"},
-{id:4,name:"NEON DREAMS",venue:"Output Brooklyn",addr:"74 Wythe Ave",hood:"Williamsburg",time:"11:00 PM",price:"$55",avail:5,trending:true,featured:true,tags:["TECHNO","FEW LEFT"],genre:"Techno",cap:600,vertical:"afterdark",source:"luma"},
-{id:5,name:"Hip-Hop Thursdays",venue:"SOBs",addr:"204 Varick St",hood:"SoHo",time:"9:30 PM",price:"$20",avail:90,trending:false,featured:false,tags:["HIP-HOP","LIVE"],genre:"Hip-Hop",cap:300,vertical:"afterdark",source:"eventbrite"},
+{id:1,name:"INDUSTRY TAKEOVER",venue:"Marquee NYC",addr:"289 10th Ave",hood:"Chelsea",time:"10:00 PM",price:"$45",avail:12,trending:true,featured:false,tags:["EDM","OPEN BAR"],genre:"Electronic",cap:800,vertical:"afterdark",source:"posh",organizer:"High Status Events",organizer_id:"high_status",image_url:"https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80"},
+{id:2,name:"Jazz & Cocktails",venue:"Village Vanguard",addr:"178 7th Ave S",hood:"West Village",time:"8:30 PM",price:"$28",avail:65,trending:false,featured:true,tags:["JAZZ","SEATED"],genre:"Jazz",cap:120,vertical:"afterdark",source:"eventbrite",organizer:"Village Vanguard",organizer_id:"village_vanguard",image_url:"https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=800&q=80"},
+{id:3,name:"Rooftop Sessions Vol.11",venue:"230 Fifth",addr:"230 5th Ave",hood:"Flatiron",time:"9:00 PM",price:"$35",avail:33,trending:true,featured:false,tags:["ROOFTOP","DJ SET"],genre:"House",cap:500,vertical:"afterdark",source:"posh",organizer:"Uptown Collective",organizer_id:"uptown_collective",image_url:"https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80"},
+{id:4,name:"NEON DREAMS",venue:"Output Brooklyn",addr:"74 Wythe Ave",hood:"Williamsburg",time:"11:00 PM",price:"$55",avail:5,trending:true,featured:true,tags:["TECHNO","FEW LEFT"],genre:"Techno",cap:600,vertical:"afterdark",source:"luma",organizer:"Output Brooklyn",organizer_id:"output_bk",image_url:"https://images.unsplash.com/photo-1571266028217-2cd4b4f8f9a5?w=800&q=80"},
+{id:5,name:"Hip-Hop Thursdays",venue:"SOBs",addr:"204 Varick St",hood:"SoHo",time:"9:30 PM",price:"$20",avail:90,trending:false,featured:false,tags:["HIP-HOP","LIVE"],genre:"Hip-Hop",cap:300,vertical:"afterdark",source:"eventbrite",organizer:"SOB's",organizer_id:"sobs_nyc",image_url:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80"},
 {id:6,name:"Wine & Canvas",venue:"Dream Hotel",addr:"355 W 16th St",hood:"Chelsea",time:"7:00 PM",price:"$65",avail:20,trending:false,featured:true,tags:["WINE","ART"],genre:"Social",cap:60,vertical:"afterdark",source:"posh"},
-{id:7,name:"Chef Table Pop-Up",venue:"Eleven Madison",addr:"11 Madison Ave",hood:"NoMad",time:"7:30 PM",price:"$120",avail:15,trending:true,featured:true,tags:["TASTING","MICHELIN"],genre:"Fine Dining",cap:30,vertical:"themenu",source:"luma"},
+{id:7,name:"Chef Table Pop-Up",venue:"Eleven Madison",addr:"11 Madison Ave",hood:"NoMad",time:"7:30 PM",price:"$120",avail:15,trending:true,featured:true,tags:["TASTING","MICHELIN"],genre:"Fine Dining",cap:30,vertical:"themenu",source:"luma",organizer:"Eleven Madison Group",organizer_id:"eleven_madison",image_url:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80"},
 {id:8,name:"Omakase Night",venue:"Sushi Noz",addr:"181 E 78th St",hood:"Upper East",time:"8:00 PM",price:"$250",avail:8,trending:false,featured:true,tags:["OMAKASE","SUSHI"],genre:"Japanese",cap:12,vertical:"themenu",source:"eventbrite"},
 {id:9,name:"Smash Burger Battle",venue:"Robertas BK",addr:"261 Moore St",hood:"Bushwick",time:"6:00 PM",price:"$18",avail:80,trending:true,featured:false,tags:["BURGERS","CONTEST"],genre:"Casual",cap:200,vertical:"themenu",source:"posh"},
 {id:10,name:"Wine Harvest Dinner",venue:"Gramercy Tavern",addr:"42 E 20th St",hood:"Gramercy",time:"7:00 PM",price:"$95",avail:25,trending:false,featured:false,tags:["WINE","SEASONAL"],genre:"American",cap:80,vertical:"themenu",source:"eventbrite"},
@@ -2497,9 +2513,9 @@ function copyAff(){
 // ── Itinerary ──
 var _itinMode='tonight'; // 'tonight' | 'reunion'
 var _itinItems=[
-  {time:'7:00P',name:'Chef Table Pop-Up',venue:'Eleven Madison',live:false,cat:'FOOD',color:'var(--orange)'},
+  {time:'7:00P',name:'Chef Table Pop-Up',organizer:'Eleven Madison Group',organizer_id:'eleven_madison',image_url:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',venue:'Eleven Madison',live:false,cat:'FOOD',color:'var(--orange)'},
   {time:'9:00P',name:'INDUSTRY TAKEOVER',venue:'Marquee NYC',live:true,cat:'SOCIAL',color:'var(--purple)'},
-  {time:'11:30P',name:'NEON DREAMS',venue:'Output Brooklyn',live:false,cat:'SOCIAL',color:'var(--purple)'}
+  {time:'11:30P',name:'NEON DREAMS',organizer:'Output Brooklyn',organizer_id:'output_bk',image_url:'https://images.unsplash.com/photo-1571266028217-2cd4b4f8f9a5?w=800&q=80',venue:'Output Brooklyn',live:false,cat:'SOCIAL',color:'var(--purple)'}
 ];
 var _reunionDays=[
   {day:'FRI · JUN 27',label:'ARRIVAL DAY',color:'var(--blue)',items:[
@@ -2957,8 +2973,8 @@ function openEvDetail(ev){
       ? 'https://posh.vip/e/'+encodeURIComponent((ev.poshSlug||ev.name).toLowerCase().replace(/\s+/g,'-'))+'?ref='+_aff
       : 'https://www.eventbrite.com/e/'+(ev.name||'event').toLowerCase().replace(/\s+/g,'-')+'?aff='+_aff);
     var shopBtnHtml=(ev.vertical==='afterdark'||ev.vertical==='themenu')?'<button class="ev-detail-shop-btn" onclick="closeEvDetail();openShopModal('+ev.id+')">&#128722; SHOP THE LOOK — '+ev.name+'</button>':'';
-    actEl.innerHTML='<a class="ev-detail-ticket-btn" href="'+ticketUrl+'" target="_blank">'+(isJob?'&#128084; APPLY NOW':'&#127915; GET TICKET — '+ev.price)+'</a>'+shopBtnHtml+'<div style="display:flex;gap:6px;margin-top:2px"><a class="ev-detail-transport-btn uber-btn" href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]='+encodeURIComponent((ev.addr||ev.venue)+', '+(ev.hood||''))+'" target="_blank" rel="noopener">&#9650; UBER</a><a class="ev-detail-transport-btn lyft-btn" href="https://lyft.com/ride?destination[address]='+encodeURIComponent(ev.addr||ev.venue)+'" target="_blank" rel="noopener">&#9670; LYFT</a></div><button style="width:100%;padding:10px;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.28);color:#7AABFF;font-family:var(--mono);font-size:9px;font-weight:600;border-radius:2px;cursor:pointer;min-height:44px;" onclick="closeEvDetail();openMap(null,'+ev.id+')">&#9673; VIEW ON MAP</button>'
-    +'<div style="display:flex;gap:6px;margin-top:6px"><button class="ev-social-btn add-friend-btn" onclick="addFriendFromEvent(event,'+ev.id+')">&#128101; ADD FRIEND</button><button class="ev-social-btn follow-btn" onclick="followFromEvent(event,'+ev.id+')">&#10010; FOLLOW</button></div>';
+    actEl.innerHTML='<a class="ev-detail-ticket-btn" href="'+ticketUrl+'" target="_blank">'+(isJob?'&#128084; APPLY NOW':'&#127915; GET TICKET — '+ev.price)+'</a>'+shopBtnHtml+'<button style="width:100%;padding:10px;background:rgba(0,71,255,.1);border:1px solid rgba(0,71,255,.28);color:#7AABFF;font-family:var(--mono);font-size:9px;font-weight:600;border-radius:2px;cursor:pointer;min-height:44px;" onclick="closeEvDetail();openMap(null,'+ev.id+')">&#9673; VIEW ON MAP</button>'
+    +'<div style="display:flex;gap:6px;margin-top:6px"><button class="ev-social-btn follow-btn" id="follow-btn-'+ev.id+'" onclick="followFromEvent(event,'+ev.id+')">&#10010; FOLLOW</button></div>';
   }
   modal.classList.add('open');
 }
@@ -6241,6 +6257,23 @@ var SUPABASE_MIGRATIONS = {
     ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
     CREATE POLICY "Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
     CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+  `,
+  messages: `
+    CREATE TABLE IF NOT EXISTS messages (
+      id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+      sender_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+      receiver_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+      content text NOT NULL,
+      read boolean DEFAULT false,
+      created_at timestamptz DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_messages_sender ON messages(sender_id);
+    CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id);
+    ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY "Users can see their messages" ON messages FOR SELECT
+      USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
+    CREATE POLICY "Users can send messages" ON messages FOR INSERT
+      WITH CHECK (auth.uid() = sender_id);
   `
 };
 
@@ -7556,6 +7589,411 @@ setTimeout(function() {
   // Re-init resizers after ud columns are created (they're added by JS)
   setTimeout(initColumnResizers, 1500);
 }, 800);
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINTS 39-41: Map Fix, Real DMs, Organizer, Social
+// ══════════════════════════════════════════════════════
+
+// ── SPRINT 39: Real Supabase DMs (disable demo mode when connected) ──
+
+// Track view state for modal backstack (Sprint 41)
+var _activeView = 'home'; // 'home' | 'detail' | 'map'
+var _detailEvId = null;   // last ev detail that was open
+
+// Patch openEvDetail to track state
+var _s39_origOpenEvDetail = typeof openEvDetail === 'function' ? openEvDetail : null;
+openEvDetail = function(ev) {
+  _activeView = 'detail';
+  _detailEvId = ev ? ev.id : null;
+  if (_s39_origOpenEvDetail) _s39_origOpenEvDetail(ev);
+};
+
+// Patch closeEvDetail to reset state
+var _s39_origCloseEvDetail = typeof closeEvDetail === 'function' ? closeEvDetail : null;
+closeEvDetail = function() {
+  _activeView = 'home';
+  _detailEvId = null;
+  if (_s39_origCloseEvDetail) _s39_origCloseEvDetail();
+};
+
+// Real message fetch from Supabase
+async function fetchMessagesFromSupabase(otherUserId) {
+  if (!_supabase || !_sbSession || !_currentUser) return null;
+  var myId = _currentUser.id;
+  var { data, error } = await _supabase
+    .from('messages')
+    .select('*')
+    .or('and(sender_id.eq.' + myId + ',receiver_id.eq.' + otherUserId + '),and(sender_id.eq.' + otherUserId + ',receiver_id.eq.' + myId + ')')
+    .order('created_at', { ascending: true })
+    .limit(50);
+  if (error) {
+    console.warn('[HL] Message fetch error:', error.message);
+    return null;
+  }
+  return (data || []).map(function(msg) {
+    return {
+      from: msg.sender_id === myId ? 'me' : otherUserId,
+      text: msg.content,
+      time: new Date(msg.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),
+      id: msg.id
+    };
+  });
+}
+
+async function sendMessageToSupabase(receiverId, text) {
+  if (!_supabase || !_sbSession || !_currentUser) return false;
+  var { error } = await _supabase.from('messages').insert({
+    sender_id: _currentUser.id,
+    receiver_id: receiverId,
+    content: text
+  });
+  if (error) { console.warn('[HL] Send message error:', error.message); return false; }
+  return true;
+}
+
+// Supabase realtime for messages
+function subscribeToMessages(otherUserId) {
+  if (!_supabase || !_currentUser) return null;
+  return _supabase
+    .channel('messages_' + [_currentUser.id, otherUserId].sort().join('_'))
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages',
+      filter: 'receiver_id=eq.' + _currentUser.id
+    }, function(payload) {
+      var msg = payload.new;
+      if (msg.sender_id !== otherUserId) return;
+      if (!_chatHistory[otherUserId]) _chatHistory[otherUserId] = [];
+      _chatHistory[otherUserId].push({
+        from: otherUserId,
+        text: msg.content,
+        time: new Date(msg.created_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),
+        id: msg.id
+      });
+      if (typeof renderChatMessages === 'function') renderChatMessages(otherUserId);
+    })
+    .subscribe();
+}
+
+// Override openChatWindow to use real Supabase when available
+var _s39_origOpenChat = typeof openChatWindow === 'function' ? openChatWindow : null;
+openChatWindow = function(userId, name, avatar) {
+  _activeChatUser = { id: userId, name: name, avatar: avatar };
+  // Set header
+  var avEl   = document.getElementById('chat-avatar');
+  var nameEl = document.getElementById('chat-name');
+  var statEl = document.getElementById('chat-status');
+  if (avEl)   avEl.textContent = avatar || (name||'?').charAt(0).toUpperCase();
+  if (nameEl) nameEl.textContent = name;
+  if (statEl) statEl.textContent = '● Online';
+
+  // Remove any old demo badge
+  document.querySelectorAll('.chat-demo-badge').forEach(function(b){ b.remove(); });
+
+  document.getElementById('chat-window').classList.add('open');
+  document.getElementById('chat-overlay').style.display = 'block';
+  var inputEl = document.getElementById('chat-input');
+  if (inputEl) inputEl.focus();
+
+  if (_supabase && _sbSession && _currentUser && _currentUser.id && !userId.startsWith('user_')) {
+    // Real Supabase mode
+    fetchMessagesFromSupabase(userId).then(function(msgs) {
+      if (msgs !== null) {
+        _chatHistory[userId] = msgs;
+        if (typeof renderChatMessages === 'function') renderChatMessages(userId);
+        // Subscribe to new messages
+        if (_chatChannel) { try { _supabase.removeChannel(_chatChannel); } catch(e){} }
+        _chatChannel = subscribeToMessages(userId);
+      }
+    });
+  } else {
+    // Demo mode fallback
+    setTimeout(function() {
+      var chatHdr = document.querySelector('.chat-hdr');
+      if (chatHdr) {
+        var badge = document.createElement('div');
+        badge.className = 'chat-demo-badge';
+        badge.textContent = '⚡ DEMO MODE — Connect Supabase for live messages';
+        chatHdr.insertAdjacentElement('afterend', badge);
+      }
+      var uid = userId;
+      if (!_chatHistory[uid] || !_chatHistory[uid].length) {
+        var demos = (typeof DEMO_CONVERSATIONS !== 'undefined' && DEMO_CONVERSATIONS.default) || [];
+        _chatHistory[uid] = demos.map(function(m){ return {from:m.from==='me'?'me':uid,text:m.text,time:m.time}; });
+      }
+      if (typeof renderChatMessages === 'function') renderChatMessages(uid);
+    }, 150);
+  }
+};
+
+// Override sendChatMessage to use Supabase when available
+var _s39_origSendChat = typeof sendChatMessage === 'function' ? sendChatMessage : null;
+sendChatMessage = function() {
+  var input = document.getElementById('chat-input');
+  var text  = input ? input.value.trim() : '';
+  if (!text || !_activeChatUser) return;
+  input.value = '';
+  var msg = { from: 'me', text: text, time: new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) };
+  var uid = _activeChatUser.id;
+  if (!_chatHistory[uid]) _chatHistory[uid] = [];
+  _chatHistory[uid].push(msg);
+  if (typeof renderChatMessages === 'function') renderChatMessages(uid);
+
+  if (_supabase && _sbSession && _currentUser && !uid.startsWith('user_')) {
+    sendMessageToSupabase(uid, text);
+  } else {
+    // Demo auto-reply
+    setTimeout(function() {
+      var replies = ['Sounds good! 🔥', "I'll be there", 'What time are you heading?', "Let's link up!", 'Already got my ticket 🎟'];
+      var reply = { from: uid, text: replies[Math.floor(Math.random()*replies.length)], time: new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) };
+      _chatHistory[uid].push(reply);
+      if (typeof renderChatMessages === 'function') renderChatMessages(uid);
+    }, 600 + Math.random() * 1000);
+  }
+};
+
+// ── SPRINT 39: Map key bootstrap ──
+// For Netlify static HTML: inject key via a <script> tag at the top of index.html
+// Add to your Netlify _headers or via a snippet injection:
+//   <script>window.GMAP_KEY = "AIzaSy...";</script>
+// Also reads from Netlify env via edge function injection
+(function bootstrapGmapKey() {
+  var k = '';
+  if (!k && window.GMAP_KEY) k = window.GMAP_KEY;
+  if (!k && window.ENV && window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) k = window.ENV.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  if (!k) { var m = document.querySelector('meta[name="gmap-key"]'); if (m && m.content && m.content.charAt(0) !== '{') k = m.content; }
+  if (!k) k = localStorage.getItem('hl_gmap_key') || '';
+  if (k) {
+    _gmapApiKey = k;
+    localStorage.setItem('hl_gmap_key', k);
+    console.log('[HL] Google Maps key loaded ✓ (' + k.substring(0,8) + '...)');
+  } else {
+    console.log('[HL] Google Maps: no key found. Set localStorage.hl_gmap_key or window.GMAP_KEY');
+  }
+})();
+
+// ── SPRINT 40: Organizer display + image rendering ──
+
+// Patch openEvDetail to show organizer + image
+var _s40_origOpenEvDetail = openEvDetail;
+openEvDetail = function(ev) {
+  _s40_origOpenEvDetail(ev);
+  if (!ev) return;
+  // Add organizer row to detail modal
+  setTimeout(function() {
+    var modalCard = document.querySelector('.ev-detail-card');
+    if (!modalCard) return;
+    // Organizer
+    if (ev.organizer && !modalCard.querySelector('.ev-organizer-row')) {
+      var orgRow = document.createElement('div');
+      orgRow.className = 'ev-organizer-row';
+      orgRow.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid var(--border);cursor:pointer;';
+      orgRow.innerHTML = '<span style="font-family:var(--mono);font-size:7px;color:var(--text-muted);letter-spacing:.1em">BY</span>'
+        + '<span style="font-family:var(--mono);font-size:9px;font-weight:700;color:var(--blue)">'+ev.organizer+'</span>'
+        + '<span style="margin-left:auto;font-family:var(--mono);font-size:7px;color:var(--text-muted)">SEE ALL ›</span>';
+      orgRow.onclick = function() {
+        closeEvDetail();
+        filterByOrganizer(ev.organizer_id, ev.organizer);
+      };
+      var actEl = document.getElementById('ev-detail-actions');
+      if (actEl) actEl.insertAdjacentElement('beforebegin', orgRow);
+    }
+    // Image — replace the emoji placeholder with real image if available
+    if (ev.image_url) {
+      var imgEl = document.getElementById('ev-detail-img');
+      if (imgEl) {
+        imgEl.style.backgroundImage = 'url(' + ev.image_url + ')';
+        imgEl.style.backgroundSize = 'cover';
+        imgEl.style.backgroundPosition = 'center';
+        imgEl.style.fontSize = '0'; // hide emoji
+        imgEl.textContent = '';
+      }
+    }
+  }, 80);
+};
+
+// Filter feed by organizer
+function filterByOrganizer(orgId, orgName) {
+  _activeOrgFilter = orgId;
+  _activeOrgName = orgName;
+  // Re-render current tab with filter
+  if (typeof renderAll === 'function') renderAll(currentTab, currentZip, pulseOn);
+  // Show filter indicator
+  showToast('Showing events by ' + orgName);
+}
+var _activeOrgFilter = null;
+var _activeOrgName = null;
+
+// Patch getEvs to apply organizer filter
+var _s40_origGetEvs = typeof getEvs === 'function' ? getEvs : null;
+getEvs = function(zip, tab, pulse) {
+  var base = _s40_origGetEvs ? _s40_origGetEvs(zip, tab, pulse) : [];
+  if (!_activeOrgFilter) return base;
+  var filtered = base.filter(function(ev){ return ev.organizer_id === _activeOrgFilter; });
+  return filtered.length > 0 ? filtered : base; // fallback if no matches
+};
+
+// Patch renderEvList card to show image_url as background
+var _s40_origRenderEvList = typeof renderEvList === 'function' ? renderEvList : null;
+
+// Patch image into list cards via post-render
+function injectEventImages() {
+  document.querySelectorAll('.ev-list-card[data-ev-id]').forEach(function(card) {
+    var evId = parseInt(card.dataset.evId);
+    var evPool = [];
+    Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+    var ev = evPool.find(function(e){ return e.id === evId; });
+    if (ev && ev.image_url) {
+      var thumb = card.querySelector('.ev-list-thumb');
+      if (thumb && !thumb.dataset.imgSet) {
+        thumb.style.backgroundImage = 'url(' + ev.image_url + ')';
+        thumb.style.backgroundSize = 'cover';
+        thumb.style.backgroundPosition = 'center';
+        thumb.style.borderRadius = '2px';
+        thumb.style.fontSize = '0';
+        thumb.textContent = '';
+        thumb.dataset.imgSet = '1';
+      }
+    }
+  });
+}
+
+// Also patch API mapping — when Posh/EB events come in, save image
+var _s40_origFetchPosh = typeof fetchPoshEvents === 'function' ? fetchPoshEvents : null;
+fetchPoshEvents = function(slug, zip, callback) {
+  if (!_s40_origFetchPosh) { callback([]); return; }
+  _s40_origFetchPosh(slug, zip, function(events) {
+    events.forEach(function(ev) {
+      if (!ev.image_url && ev.cover_url) ev.image_url = ev.cover_url;
+      if (!ev.image_url && ev.logo_url) ev.image_url = ev.logo_url;
+    });
+    callback(events);
+  });
+};
+
+// ── SPRINT 41: Follow-to-Friend logic (no Add Friend button) ──
+
+// Override followFromEvent — mutual follow = friend
+var _s41_origFollowFromEvent = typeof followFromEvent === 'function' ? followFromEvent : null;
+followFromEvent = function(e, evId) {
+  if (!_currentUser) { if (typeof openLoginModal === 'function') openLoginModal(); return; }
+  var btn = (e && (e.currentTarget || e.target)) ? (e.currentTarget || e.target) : document.getElementById('follow-btn-' + evId);
+  if (btn) { btn.textContent = '✓ FOLLOWING'; btn.classList.add('following'); btn.disabled = true; }
+
+  // 1-way follow in local graph
+  if (typeof followUser === 'function') followUser(evId, 'event_organizer');
+  if (_currentUser) {
+    _currentUser.following = _currentUser.following || [];
+    if (_currentUser.following.indexOf(String(evId)) === -1) _currentUser.following.push(String(evId));
+    localStorage.setItem('hl_user', JSON.stringify(_currentUser));
+  }
+
+  // Check mutual — if target already follows back, upgrade to friend
+  if (typeof _supabase !== 'undefined' && _supabase && _sbSession && _currentUser && _currentUser.id) {
+    // Upsert follow
+    _supabase.from('connections').upsert({
+      follower_id: _currentUser.id,
+      following_id: String(evId),
+      type: 'follow',
+      status: 'active'
+    }).then(function() {
+      // Check if reverse connection exists
+      return _supabase.from('connections')
+        .select('id, type')
+        .eq('follower_id', String(evId))
+        .eq('following_id', _currentUser.id)
+        .single();
+    }).then(function(res) {
+      if (res && res.data && (res.data.type === 'follow' || res.data.type === 'friend')) {
+        // Mutual! Upgrade both to friend
+        console.log('[HL] Mutual follow detected — upgrading to friend ✓');
+        var myId = _currentUser.id;
+        var theirId = String(evId);
+        Promise.all([
+          _supabase.from('connections').update({type:'friend'})
+            .eq('follower_id', myId).eq('following_id', theirId),
+          _supabase.from('connections').update({type:'friend'})
+            .eq('follower_id', theirId).eq('following_id', myId)
+        ]).then(function() {
+          if (btn) { btn.textContent = '✓ FRIENDS'; }
+          showToast && showToast('You and this person are now friends! 🤝');
+        });
+      }
+    }).catch(function(err) { console.warn('[HL] Follow error:', err && err.message); });
+  }
+};
+
+// ── SPRINT 41: openMap — add Uber/Lyft + backstack ──
+var _s41_origOpenMap = typeof openMap === 'function' ? openMap : null;
+openMap = function(e, id) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  _activeView = 'map';
+  if (_s41_origOpenMap) _s41_origOpenMap(e, id);
+  // Add Uber/Lyft to map modal after it opens
+  setTimeout(function() {
+    var mapModal = document.getElementById('map-modal') || document.querySelector('.mm-panel');
+    if (!mapModal) return;
+    // Find event
+    var evPool = [];
+    Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+    var ev = evPool.find(function(x){ return x.id === id; });
+    if (!ev) return;
+    // Add transport row if not already present
+    if (!mapModal.querySelector('.mm-transport-row')) {
+      var transRow = document.createElement('div');
+      transRow.className = 'mm-transport-row';
+      transRow.style.cssText = 'display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0';
+      var addr = encodeURIComponent((ev.addr || ev.venue) + ', ' + (ev.hood || ''));
+      transRow.innerHTML =
+        '<a class="ev-detail-transport-btn uber-btn" style="flex:1;padding:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:2px;font-family:var(--mono);font-size:9px;font-weight:700;background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.15)" href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]=' + addr + '" target="_blank" rel="noopener">▲ UBER</a>'
+        + '<a class="ev-detail-transport-btn lyft-btn" style="flex:1;padding:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:2px;font-family:var(--mono);font-size:9px;font-weight:700;background:rgba(234,0,137,.1);color:#F472B6;border:1px solid rgba(234,0,137,.25)" href="https://lyft.com/ride?destination[address]=' + encodeURIComponent(ev.addr || ev.venue) + '" target="_blank" rel="noopener">◆ LYFT</a>';
+      mapModal.appendChild(transRow);
+    }
+  }, 100);
+};
+
+// ── SPRINT 41: Close map → return to event detail ──
+var _s41_origCloseMap = typeof closeMap === 'function' ? closeMap : null;
+closeMap = function() {
+  var prevView = _activeView;
+  var prevEvId = _detailEvId;
+  _activeView = 'home';
+  if (_s41_origCloseMap) _s41_origCloseMap();
+  // If came from detail view, re-open it
+  if (prevView === 'map' && prevEvId != null) {
+    setTimeout(function() {
+      var evPool = [];
+      Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+      var ev = evPool.find(function(x){ return x.id === prevEvId; });
+      if (ev && typeof openEvDetail === 'function') {
+        _detailEvId = prevEvId;
+        _activeView = 'detail';
+        openEvDetail(ev);
+      }
+    }, 150);
+  }
+};
+
+// ── Boot 39-41 ──
+setTimeout(function() {
+  // Re-inject images after each render
+  var _imgInterval = setInterval(injectEventImages, 2000);
+  setTimeout(function(){ clearInterval(_imgInterval); }, 20000); // stop after 20s
+  injectEventImages();
+}, 1200);
+
+// Patch switchTab to inject images after render
+var _s40_origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
+switchTab = function(tab, btn) {
+  if (_s40_origSwitchTab) _s40_origSwitchTab(tab, btn);
+  // Clear org filter when switching tabs
+  if (typeof _activeOrgFilter !== 'undefined') _activeOrgFilter = null;
+  setTimeout(injectEventImages, 400);
+};
 
 
 </script>
