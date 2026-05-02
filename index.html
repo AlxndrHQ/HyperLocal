@@ -1911,6 +1911,52 @@ body.metro-miami { --metro-color: #00E676; }
   padding: 7px 16px; border-radius: 2px; border: none; cursor: pointer;
   letter-spacing: .07em; margin-top: 4px;
 }
+
+/* ════ SPRINT 44.1: Geospatial Engine ════ */
+/* Map search bar overlay */
+#map-search-overlay {
+  position: absolute; top: 48px; left: 0; right: 0; z-index: 20;
+  padding: 8px 10px; pointer-events: none;
+}
+#map-search-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(13,13,13,.88); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 4px;
+  padding: 6px 10px; pointer-events: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,.5);
+}
+#map-search-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--mono); font-size: 10px;
+  letter-spacing: .04em;
+}
+#map-search-input::placeholder { color: var(--text-muted); }
+#map-search-btn {
+  background: var(--blue); border: none; color: #fff;
+  font-family: var(--mono); font-size: 8px; font-weight: 700;
+  padding: 4px 10px; border-radius: 2px; cursor: pointer;
+  letter-spacing: .06em; white-space: nowrap; flex-shrink: 0;
+}
+#map-search-area-btn {
+  position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+  z-index: 20; display: none;
+  background: rgba(13,13,13,.9); color: var(--lime);
+  border: 1px solid var(--lime); font-family: var(--mono);
+  font-size: 8px; font-weight: 700; padding: 6px 14px;
+  border-radius: 12px; cursor: pointer; letter-spacing: .07em;
+  backdrop-filter: blur(8px); white-space: nowrap;
+  box-shadow: 0 0 12px rgba(168,255,62,.2);
+}
+#map-search-area-btn:hover { background: rgba(168,255,62,.15); }
+/* Geocode loading spinner */
+.map-geocoding-toast {
+  position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+  background: rgba(13,13,13,.9); border: 1px solid var(--border);
+  color: var(--text-dim); font-family: var(--mono); font-size: 8px;
+  padding: 6px 14px; border-radius: 3px; z-index: 25;
+  letter-spacing: .06em; pointer-events: none;
+}
 </style>
 
 </head>
@@ -8430,6 +8476,430 @@ setTimeout(function() {
     updateMapDotsWithTrending();
   }
 }, 1500);
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 44.1: Geospatial Discovery Engine
+// ══════════════════════════════════════════════════════
+
+// Global marker registry — all active google.maps.Marker objects
+var _gmapMarkers = [];
+var _gmapGeocodeCache = {};   // addr → {lat,lng}
+var _gmapBoundsListener = null;
+var _mapSearchAreaVisible = false;
+
+// ── Get the active map instance (mobile or desktop) ──
+function getActiveGmapInstance() {
+  var containers = ['gmap-mobile', 'gmap-desktop'];
+  for (var i = 0; i < containers.length; i++) {
+    var el = document.getElementById(containers[i]);
+    if (el && el._gmapInstance) return el._gmapInstance;
+  }
+  return null;
+}
+
+// ── Clear all markers from map ──
+function clearMapMarkers() {
+  _gmapMarkers.forEach(function(m) { try { m.setMap(null); } catch(e){} });
+  _gmapMarkers = [];
+}
+
+// ── Neon glow icon for a google.maps.Marker ──
+// Uses SVG path encoded as a data URL for rich custom pins
+function buildNeonIcon(color, scale, goingCount) {
+  var s = Math.max(6, Math.min(18, 6 + (goingCount || 0) * 0.8));
+  if (scale) s = scale;
+  return {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: s,
+    fillColor: color,
+    fillOpacity: 0.92,
+    strokeColor: lightenColor(color, 60),
+    strokeWeight: 2,
+    // The "glow" is faked by a wide, semi-transparent stroke
+  };
+}
+
+// Lighten a hex color by amt (0–100)
+function lightenColor(hex, amt) {
+  try {
+    var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return 'rgba('+Math.min(255,r+amt)+','+Math.min(255,g+amt)+','+Math.min(255,b+amt)+',.6)';
+  } catch(e) { return hex; }
+}
+
+// Vertical → neon color map
+var GMAP_COLORS = {
+  afterdark:    '#C084FC',
+  themenu:      '#FF8C00',
+  theladder:    '#00E676',
+  professional: '#60A5FA',
+  worship:      '#E879F9',
+  terminal:     '#A8FF3E',
+};
+
+// ── Place a single event as a real GMaps Marker with glow ──
+function placeEventMarker(map, ev) {
+  if (!map || !ev || !ev.lat || !ev.lng) return null;
+  var color = GMAP_COLORS[ev.vertical] || '#A8FF3E';
+  var goingCount = ev.going_count || (ev.trending ? 5 : ev.avail < 20 ? 4 : 1);
+
+  // Outer glow marker (larger, transparent)
+  var glowMarker = new google.maps.Marker({
+    position: { lat: parseFloat(ev.lat), lng: parseFloat(ev.lng) },
+    map: map,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: Math.max(8, 6 + goingCount * 1.2) + 4,
+      fillColor: color,
+      fillOpacity: 0.18,
+      strokeColor: color,
+      strokeWeight: 1,
+      strokeOpacity: 0.35,
+    },
+    zIndex: 1,
+    clickable: false,
+  });
+
+  // Core marker
+  var marker = new google.maps.Marker({
+    position: { lat: parseFloat(ev.lat), lng: parseFloat(ev.lng) },
+    map: map,
+    title: ev.name + ' @ ' + ev.venue,
+    icon: buildNeonIcon(color, Math.max(6, 5 + goingCount * 0.8), goingCount),
+    zIndex: 10,
+  });
+
+  // Info window on click
+  var infoContent = '<div style="background:#0D0D0D;color:#F0F0F0;font-family:\'Roboto Mono\',monospace;padding:10px;border-radius:3px;min-width:160px;max-width:220px;font-size:10px">'
+    + '<div style="font-weight:700;margin-bottom:3px">' + ev.name + '</div>'
+    + '<div style="color:#808080;font-size:8px;margin-bottom:6px">' + ev.venue + ' · ' + ev.time + '</div>'
+    + '<div style="display:flex;gap:6px;align-items:center">'
+    + '<span style="color:' + color + ';font-weight:700">' + ev.price + '</span>'
+    + (ev.avail < 20 ? '<span style="color:#FF3355;font-size:7px">FEW LEFT</span>' : '')
+    + '</div>'
+    + '</div>';
+
+  var infoWindow = new google.maps.InfoWindow({ content: infoContent, pixelOffset: new google.maps.Size(0, -8) });
+
+  marker.addListener('click', function() {
+    infoWindow.open(map, marker);
+    // Also open event detail if function exists
+    setTimeout(function() {
+      if (typeof openEvDetailById === 'function') openEvDetailById(ev.id);
+    }, 300);
+  });
+
+  _gmapMarkers.push(glowMarker, marker);
+
+  return marker;
+}
+
+// ── Geocode an address string → {lat, lng} ──
+function geocodeAddress(address, callback) {
+  if (!window.google || !google.maps.Geocoder) { callback(null); return; }
+  if (_gmapGeocodeCache[address]) { callback(_gmapGeocodeCache[address]); return; }
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: address }, function(results, status) {
+    if (status === 'OK' && results[0]) {
+      var loc = results[0].geometry.location;
+      var coords = { lat: loc.lat(), lng: loc.lng() };
+      _gmapGeocodeCache[address] = coords;
+      callback(coords);
+    } else {
+      callback(null);
+    }
+  });
+}
+
+// ── Geocode events that have address but no lat/lng ──
+function geocodeEventCoords(events, onProgress) {
+  var queue = events.filter(function(ev) { return !ev.lat && ev.addr; });
+  if (!queue.length) { if (onProgress) onProgress(events); return; }
+  var done = 0;
+  queue.forEach(function(ev) {
+    var addrKey = (ev.addr || ev.venue) + ', ' + (ev.hood || '');
+    geocodeAddress(addrKey, function(coords) {
+      if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; }
+      done++;
+      if (done === queue.length && onProgress) onProgress(events);
+    });
+  });
+}
+
+// ── Refresh all map markers from event pool ──
+function refreshMapMarkers(zip) {
+  var map = getActiveGmapInstance();
+  if (!map) return;
+  clearMapMarkers();
+
+  var pool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(p) { pool = pool.concat(p); });
+
+  // Focus on current zip's events
+  var zipPool = ALL_EVENTS[zip || currentZip] || ALL_EVENTS['10001'] || [];
+  var withCoords = zipPool.filter(function(ev) { return ev.lat && ev.lng; });
+  var needsGeocode = zipPool.filter(function(ev) { return !ev.lat && ev.addr; });
+
+  // Place events that already have coords immediately
+  withCoords.forEach(function(ev) { placeEventMarker(map, ev); });
+  updateVenueCount();
+
+  // Geocode the rest and add them
+  if (needsGeocode.length > 0 && needsGeocode.length <= 10) { // limit geocode calls
+    showGeocodingToast('Locating ' + needsGeocode.length + ' venues...');
+    geocodeEventCoords(needsGeocode, function(geocoded) {
+      geocoded.forEach(function(ev) {
+        if (ev.lat && ev.lng) placeEventMarker(map, ev);
+      });
+      updateVenueCount();
+      hideGeocodingToast();
+    });
+  }
+
+  // Attach bounds listener for "Search this area"
+  if (!_gmapBoundsListener) {
+    _gmapBoundsListener = map.addListener('idle', onMapIdle);
+  }
+}
+
+function updateVenueCount() {
+  var el = document.getElementById('desktop-map-count');
+  // Also check mobile map header
+  var mobileEl = document.querySelector('.map-venue-count, [id*="map-count"]');
+  var count = _gmapMarkers.filter(function(m) { return m.getZIndex() === 10; }).length;
+  var trending = _gmapMarkers.filter(function(m, i) {
+    // Every other marker is a glow — only count core markers
+    return m.getZIndex() === 10;
+  }).length;
+  var text = count + ' VENUES';
+  if (el) el.textContent = text;
+  // Also update mobile LIVE MAP header count
+  var mobileCount = document.querySelector('.map-venue-badge, [class*="venue"]');
+}
+
+// ── Map idle: show "Search this area" button ──
+var _mapIdleCount = 0;
+function onMapIdle() {
+  _mapIdleCount++;
+  if (_mapIdleCount < 2) return; // skip initial render
+  var btn = document.getElementById('map-search-area-btn');
+  if (btn) { btn.style.display = 'block'; }
+}
+
+// ── "Search this area" — fetch events for visible bounds ──
+function mapSearchThisArea() {
+  var map = getActiveGmapInstance();
+  if (!map) return;
+  var btn = document.getElementById('map-search-area-btn');
+  if (btn) btn.style.display = 'none';
+  _mapIdleCount = 0;
+
+  var center = map.getCenter();
+  var lat = center.lat().toFixed(4);
+  var lng = center.lng().toFixed(4);
+
+  // Find nearest ZIP from METRO_CONFIG or reverse geocode
+  showGeocodingToast('Scanning this area...');
+  fetch('/.netlify/functions/get-events?lat=' + lat + '&lng=' + lng + '&vertical=all')
+    .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+    .then(function(data) {
+      var evs = data.events || [];
+      console.log('[HL] Area scan:', evs.length, 'events at', lat, lng);
+      if (!ALL_EVENTS['area_' + lat]) ALL_EVENTS['area_' + lat] = [];
+      evs.forEach(function(ev) {
+        if (!ALL_EVENTS['area_' + lat].find(function(e){ return e.id === ev.id; })) {
+          ALL_EVENTS['area_' + lat].push(ev);
+        }
+      });
+      evs.forEach(function(ev) { if (ev.lat && ev.lng) placeEventMarker(map, ev); });
+      updateVenueCount();
+      hideGeocodingToast();
+    })
+    .catch(function() { hideGeocodingToast(); });
+}
+
+// ── Map search bar ──
+function mapSearchSubmit(val) {
+  if (!val || val.trim().length < 2) return;
+  var q = val.trim();
+  var map = getActiveGmapInstance();
+  var input = document.getElementById('map-search-input');
+  if (input) input.blur();
+
+  // Check if it's a ZIP code
+  if (/^\d{5}$/.test(q)) {
+    handleZip && handleZip(q);
+    fetchEventsAndRefreshMap(q);
+    return;
+  }
+
+  // Try city name
+  if (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q.toLowerCase()]) {
+    var zip = CITY_TO_ZIP[q.toLowerCase()];
+    handleZip && handleZip(zip);
+    fetchEventsAndRefreshMap(zip);
+    return;
+  }
+
+  // Geocode the query and pan map there
+  if (map) {
+    showGeocodingToast('Searching ' + q + '...');
+    geocodeAddress(q + ', USA', function(coords) {
+      hideGeocodingToast();
+      if (coords) {
+        map.panTo(coords);
+        map.setZoom(13);
+        // Fetch events for this area
+        fetch('/.netlify/functions/get-events?lat=' + coords.lat + '&lng=' + coords.lng + '&vertical=all')
+          .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+          .then(function(data) {
+            var evs = data.events || [];
+            evs.forEach(function(ev) { if (ev.lat && ev.lng) placeEventMarker(map, ev); });
+            updateVenueCount();
+            console.log('[HL] Map search:', evs.length, 'events for', q);
+          })
+          .catch(function(){});
+      } else {
+        showToast('Location not found: ' + q);
+      }
+    });
+  }
+}
+
+function mapSearchInputChanged(val) {
+  // Could add autocomplete here in future
+}
+
+function fetchEventsAndRefreshMap(zip) {
+  // Reset proxy cache for this zip so it re-fetches
+  if (typeof _netlifyEvFetched !== 'undefined') {
+    delete _netlifyEvFetched[zip + '_all'];
+    delete _netlifyEvFetched[zip + '_afterdark'];
+    delete _netlifyEvFetched[zip + '_professional'];
+  }
+  fetchEventsFromProxy(zip, 'all', function(evs) {
+    console.log('[HL] Refreshed map for zip', zip, ':', evs.length, 'events');
+    setTimeout(function() { refreshMapMarkers(zip); }, 200);
+  });
+}
+
+// ── Toast helpers ──
+var _geocodeToastEl = null;
+function showGeocodingToast(msg) {
+  if (_geocodeToastEl) _geocodeToastEl.remove();
+  var mapTab = document.getElementById('tab-mapview');
+  if (!mapTab) return;
+  _geocodeToastEl = document.createElement('div');
+  _geocodeToastEl.className = 'map-geocoding-toast';
+  _geocodeToastEl.textContent = msg;
+  mapTab.style.position = 'relative';
+  mapTab.appendChild(_geocodeToastEl);
+}
+function hideGeocodingToast() {
+  if (_geocodeToastEl) { _geocodeToastEl.remove(); _geocodeToastEl = null; }
+}
+
+// ── Patch _createGmapInstance to store instance globally + run markers ──
+var _s441_origCreateGmap = _createGmapInstance;
+_createGmapInstance = function(container) {
+  _s441_origCreateGmap(container);
+  // Store the instance globally for getActiveGmapInstance
+  if (container._gmapInstance && !window._activeGmapInstance) {
+    window._activeGmapInstance = container._gmapInstance;
+  }
+  // Run geo-aware marker placement after map init
+  setTimeout(function() {
+    var map = container._gmapInstance;
+    if (!map) return;
+    var zip = typeof currentZip !== 'undefined' ? currentZip : '10001';
+    var pool = ALL_EVENTS[zip] || ALL_EVENTS['10001'] || [];
+
+    // Place events with coords, geocode those with only addresses
+    clearMapMarkers();
+    var withCoords = pool.filter(function(ev) { return ev.lat && ev.lng; });
+    var needsGeocode = pool.filter(function(ev) { return !ev.lat && ev.addr && ev.addr.length > 4; }).slice(0, 8);
+
+    withCoords.forEach(function(ev) { placeEventMarker(map, ev); });
+
+    if (needsGeocode.length) {
+      showGeocodingToast('Locating ' + needsGeocode.length + ' venues...');
+      var geocoded = 0;
+      needsGeocode.forEach(function(ev) {
+        geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || 'NYC'), function(coords) {
+          if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; placeEventMarker(map, ev); updateVenueCount(); }
+          geocoded++;
+          if (geocoded === needsGeocode.length) hideGeocodingToast();
+        });
+      });
+    }
+
+    updateVenueCount();
+
+    // Bounds idle listener for "search this area"
+    map.addListener('idle', onMapIdle);
+    console.log('[HL] Map initialized:', withCoords.length, 'coords, geocoding', needsGeocode.length);
+  }, 300);
+};
+
+// Also patch getActiveGmapInstance to use container
+getActiveGmapInstance = function() {
+  if (window._activeGmapInstance) return window._activeGmapInstance;
+  var ids = ['gmap-mobile', 'gmap-desktop'];
+  for (var i = 0; i < ids.length; i++) {
+    var el = document.getElementById(ids[i]);
+    if (el && el._gmapInstance) {
+      window._activeGmapInstance = el._gmapInstance;
+      return el._gmapInstance;
+    }
+  }
+  return null;
+};
+
+// ── Patch _onGmapReady to also set global instance ──
+var _s441_origOnGmapReady = _onGmapReady;
+_onGmapReady = function() {
+  _s441_origOnGmapReady();
+  // After map init, refresh markers
+  setTimeout(function() {
+    var map = getActiveGmapInstance();
+    if (map) {
+      refreshMapMarkers(typeof currentZip !== 'undefined' ? currentZip : '10001');
+    }
+  }, 500);
+};
+
+// ── Update Netlify proxy to support lat/lng params ──
+// Patch fetchEventsFromProxy to accept coordinates
+var _s441_origFetchProxy = fetchEventsFromProxy;
+fetchEventsFromProxy = function(zip, vertical, callback) {
+  // If zip looks like coordinates (lat_lng format), use them
+  if (zip && zip.toString().indexOf('_') !== -1) {
+    var parts = zip.split('_');
+    var url = '/.netlify/functions/get-events?lat=' + parts[0] + '&lng=' + parts[1] + '&vertical=' + encodeURIComponent(vertical || 'all');
+    fetch(url)
+      .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+      .then(function(data) { callback(data.events || []); })
+      .catch(function() { callback([]); });
+    return;
+  }
+  _s441_origFetchProxy(zip, vertical, callback);
+};
+
+// ── Boot 44.1 ──
+setTimeout(function() {
+  // If map is already active, refresh markers
+  if (typeof currentTab !== 'undefined' && currentTab === 'mapview') {
+    var map = getActiveGmapInstance();
+    if (map) refreshMapMarkers(currentZip);
+  }
+
+  // Sync map search input with current zip
+  var mapInput = document.getElementById('map-search-input');
+  if (mapInput && typeof currentZip !== 'undefined') mapInput.placeholder = 'Current: ' + currentZip + ' — search city, ZIP, vibe...';
+}, 1200);
 
 
 </script>
