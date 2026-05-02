@@ -1883,6 +1883,34 @@ body.metro-miami { --metro-color: #00E676; }
   height: 100% !important;
   min-height: 300px !important;
 }
+
+/* ════ SPRINT 44 ════ */
+/* Trending friend-circle badge on map */
+.map-trending-badge {
+  position: absolute; top: -8px; right: -8px;
+  background: var(--red); color: #fff;
+  font-family: var(--mono); font-size: 7px; font-weight: 700;
+  padding: 2px 5px; border-radius: 8px; letter-spacing: .04em;
+  pointer-events: none; z-index: 10;
+  animation: pulse-badge .9s ease-in-out infinite alternate;
+}
+@keyframes pulse-badge { from { opacity:.8; transform:scale(1); } to { opacity:1; transform:scale(1.1); } }
+/* DM locked state */
+.chat-friends-only {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; gap: 10px; padding: 20px; text-align: center;
+}
+.chat-lock-icon { font-size: 28px; }
+.chat-lock-msg {
+  font-family: var(--mono); font-size: 8px; color: var(--text-dim);
+  letter-spacing: .07em; line-height: 1.6; max-width: 200px;
+}
+.chat-follow-btn {
+  background: var(--blue); color: #fff;
+  font-family: var(--mono); font-size: 8px; font-weight: 700;
+  padding: 7px 16px; border-radius: 2px; border: none; cursor: pointer;
+  letter-spacing: .07em; margin-top: 4px;
+}
 </style>
 
 </head>
@@ -8126,6 +8154,282 @@ switchTab = function(tab, btn) {
   if (typeof _activeOrgFilter !== 'undefined') _activeOrgFilter = null;
   setTimeout(injectEventImages, 400);
 };
+
+
+
+
+// ══════════════════════════════════════════════════════
+// SPRINT 44: Social, Map Navigation, Trending, DMs
+// ══════════════════════════════════════════════════════
+
+// ── 1. Mutual Follow = Friend (Supabase + local) ──
+// followFromEvent in Sprint 41 already has this logic for event follows.
+// This patch handles the general followUser case (friend panel, profile, etc.)
+
+var _s44_origFollowUser = typeof followUser === 'function' ? followUser : null;
+followUser = function(targetId, targetType) {
+  if (_s44_origFollowUser) _s44_origFollowUser(targetId, targetType);
+
+  if (!_currentUser || !targetId) return;
+
+  // Check mutual in local graph first
+  var graph = typeof _socialGraph !== 'undefined' ? _socialGraph : null;
+  if (graph && graph.following && graph.following[targetId]) {
+    // Already following — check if they follow back
+    if (graph.followers && graph.followers[targetId]) {
+      // Mutual! Upgrade both sides to friend locally
+      if (graph.friends) {
+        graph.friends[targetId] = true;
+        delete graph.following[targetId];
+        delete graph.followers[targetId];
+        try { localStorage.setItem('hl_social', JSON.stringify(graph)); } catch(e){}
+        showToast && showToast('You and @' + targetId + ' are now friends! 🤝');
+        console.log('[HL] Mutual follow → friend:', targetId);
+      }
+    }
+  }
+
+  // Supabase: upsert follow, then check mutual and upgrade both
+  if (_supabase && _sbSession && _currentUser.id) {
+    var myId = _currentUser.id;
+    var theirId = String(targetId);
+    _supabase.from('connections').upsert({
+      follower_id: myId,
+      following_id: theirId,
+      type: 'follow',
+      status: 'active'
+    }).then(function() {
+      // Check reverse connection
+      return _supabase.from('connections')
+        .select('id,type')
+        .eq('follower_id', theirId)
+        .eq('following_id', myId)
+        .eq('status', 'active')
+        .maybeSingle();
+    }).then(function(res) {
+      if (res && res.data) {
+        // Mutual follow — upgrade both to friend
+        return Promise.all([
+          _supabase.from('connections')
+            .update({ type: 'friend' })
+            .eq('follower_id', myId).eq('following_id', theirId),
+          _supabase.from('connections')
+            .update({ type: 'friend' })
+            .eq('follower_id', theirId).eq('following_id', myId)
+        ]).then(function() {
+          console.log('[HL] Supabase mutual follow → friend:', theirId, '✓');
+          showToast && showToast('You\'re now friends! 🤝');
+        });
+      }
+    }).catch(function(err) {
+      console.warn('[HL] followUser Supabase error:', err && err.message);
+    });
+  }
+};
+
+// ── 2. Map UI: Verify openMap has Uber/Lyft + backstack ──
+// Already in Sprint 41 — but ensure the map modal is found correctly.
+// The mobile map view uses a panel created by renderMobileMapModal or similar.
+// Patch to also target mobile map view container.
+
+var _s44_origOpenMap = openMap;
+openMap = function(e, evId) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  _activeView = 'map';
+
+  // Call the Sprint 41 version
+  _s44_origOpenMap(e, evId);
+
+  // Also target the mobile map detail sheet if it exists
+  setTimeout(function() {
+    // Try both possible map modal selectors
+    var mapModal = document.getElementById('map-modal')
+      || document.getElementById('mm-panel')
+      || document.querySelector('.mm-panel')
+      || document.querySelector('[id$="-map-modal"]');
+
+    if (!mapModal) return;
+    if (mapModal.querySelector('.mm-transport-row')) return; // already added
+
+    var evPool = [];
+    Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+    var ev = evPool.find(function(x){ return x.id === evId; });
+    if (!ev) return;
+
+    var transRow = document.createElement('div');
+    transRow.className = 'mm-transport-row';
+    transRow.style.cssText = 'display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0';
+    var addr = encodeURIComponent((ev.addr || ev.venue) + ', ' + (ev.hood || ''));
+    transRow.innerHTML =
+      '<a class="ev-detail-transport-btn uber-btn" style="flex:1;padding:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:2px;font-family:var(--mono);font-size:9px;font-weight:700;background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.15)" href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[formatted_address]=' + addr + '" target="_blank" rel="noopener">▲ UBER</a>'
+      + '<a class="ev-detail-transport-btn lyft-btn" style="flex:1;padding:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:2px;font-family:var(--mono);font-size:9px;font-weight:700;background:rgba(234,0,137,.1);color:#F472B6;border:1px solid rgba(234,0,137,.25)" href="https://lyft.com/ride?destination[address]=' + encodeURIComponent(ev.addr || ev.venue) + '" target="_blank" rel="noopener">◆ LYFT</a>';
+    mapModal.appendChild(transRow);
+  }, 120);
+};
+
+// ── 3. Map X button returns to event detail ──
+// Sprint 41's closeMap already does this via _detailEvId.
+// Re-confirm and also patch the mobile close map button in the DOM.
+var _s44_origCloseMap = closeMap;
+closeMap = function() {
+  var prevId = _detailEvId;
+  _activeView = 'home';
+  _s44_origCloseMap && _s44_origCloseMap();
+  // If we came from a detail view, reopen it after map closes
+  if (prevId !== null && prevId !== undefined) {
+    setTimeout(function() {
+      var evPool = [];
+      Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+      var ev = evPool.find(function(x){ return x.id === prevId; });
+      if (ev && typeof openEvDetail === 'function') {
+        _activeView = 'detail';
+        openEvDetail(ev);
+      }
+    }, 80);
+  }
+};
+
+// ── 4. Trending badge on map dots — friend-circle ≥ 3 ──
+function getFriendCircleCount(evId) {
+  // Count friends who have this event in their going/itinerary
+  var friends = typeof _socialGraph !== 'undefined' ? Object.keys(_socialGraph.friends || {}) : [];
+  // In real Supabase: query user_events table where event_id=evId AND user_id IN (friends)
+  // For now: check sample friend data
+  var count = 0;
+  if (typeof _friendsData !== 'undefined') {
+    _friendsData.forEach(function(f) {
+      if (f.events && f.events.indexOf(evId) !== -1) count++;
+      if (f.itinerary && f.itinerary.indexOf(evId) !== -1) count++;
+    });
+  }
+  // Fallback: trending events with >3 boost
+  var evPool = [];
+  Object.values(ALL_EVENTS || {}).forEach(function(p){ evPool = evPool.concat(p); });
+  var ev = evPool.find(function(e){ return e.id === evId; });
+  if (ev && ev.trending && count === 0) count = Math.floor(Math.random() * 3) + 3; // 3-5 for demo
+  return count;
+}
+
+function updateMapDotsWithTrending() {
+  // Add trending badges to map dots on the live map
+  document.querySelectorAll('.map-page-dot[data-id]').forEach(function(dot) {
+    var evId = parseInt(dot.getAttribute('data-id'));
+    var friendCount = getFriendCircleCount(evId);
+    if (friendCount >= 3 && !dot.querySelector('.map-trending-badge')) {
+      var badge = document.createElement('span');
+      badge.className = 'map-trending-badge';
+      badge.textContent = friendCount + ' friends';
+      dot.appendChild(badge);
+      dot.style.boxShadow = '0 0 16px var(--red), 0 0 6px var(--red)';
+    }
+  });
+
+  // Update the desktop map count to highlight trending
+  var countEl = document.getElementById('desktop-map-count');
+  if (countEl) {
+    var dots = document.querySelectorAll('.map-page-dot[data-id]');
+    var trending = Array.from(dots).filter(function(d) {
+      return getFriendCircleCount(parseInt(d.getAttribute('data-id'))) >= 3;
+    });
+    var total = dots.length;
+    if (trending.length > 0) {
+      countEl.innerHTML = total + ' VENUES <span style="color:var(--red);margin-left:6px">● ' + trending.length + ' TRENDING</span>';
+    } else {
+      countEl.textContent = total + ' VENUES';
+    }
+  }
+}
+
+// Run after map renders
+var _s44_origRenderDesktopMap = typeof renderDesktopMap === 'function' ? renderDesktopMap : null;
+renderDesktopMap = function(filter) {
+  if (_s44_origRenderDesktopMap) _s44_origRenderDesktopMap(filter);
+  setTimeout(updateMapDotsWithTrending, 100);
+};
+
+// ── 5. DM only active for friends ──
+var _s44_origOpenChatWindow = openChatWindow;
+openChatWindow = function(userId, name, avatar) {
+  // Check if user is a friend (local or Supabase)
+  var isFriend = false;
+
+  // Local graph check
+  if (typeof _socialGraph !== 'undefined' && _socialGraph.friends) {
+    isFriend = !!(_socialGraph.friends[userId] || _socialGraph.friends['user_' + name.replace(/\s+/g,'_').toLowerCase()]);
+  }
+
+  // Also check _currentUser.friends array
+  if (!isFriend && _currentUser && _currentUser.friends) {
+    isFriend = _currentUser.friends.indexOf(userId) !== -1 || _currentUser.friends.indexOf(String(userId)) !== -1;
+  }
+
+  // Demo: treat any user that starts with 'user_' as potentially a friend for testing
+  // (real check is Supabase connections table)
+  if (!isFriend && _supabase && _sbSession) {
+    // Fire async Supabase check — open chat optimistically, lock if not friend
+    _supabase.from('connections')
+      .select('type')
+      .or('and(follower_id.eq.' + _currentUser.id + ',following_id.eq.' + userId + '),and(follower_id.eq.' + userId + ',following_id.eq.' + _currentUser.id + ')')
+      .eq('type', 'friend')
+      .eq('status', 'active')
+      .maybeSingle()
+      .then(function(res) {
+        if (!res || !res.data) {
+          // Not a friend — show locked UI
+          showChatLocked(userId, name);
+        }
+      });
+    // Open optimistically while we check
+    _s44_origOpenChatWindow(userId, name, avatar);
+    return;
+  }
+
+  if (!isFriend && !_supabase) {
+    // No Supabase — show locked UI for non-demo users
+    var isDemo = userId.startsWith('user_') || (typeof _demoFollowers !== 'undefined' && _demoFollowers.some(function(f){ return f.username === '@'+name.toLowerCase(); }));
+    if (!isDemo) {
+      // Show the locked chat UI
+      showChatLocked(userId, name);
+      return;
+    }
+  }
+
+  _s44_origOpenChatWindow(userId, name, avatar);
+};
+
+function showChatLocked(userId, name) {
+  // Open chat window but show friends-only message
+  var win = document.getElementById('chat-window');
+  var overlay = document.getElementById('chat-overlay');
+  var avEl = document.getElementById('chat-avatar');
+  var nameEl = document.getElementById('chat-name');
+  var msgsEl = document.getElementById('chat-messages');
+
+  if (!win) return;
+
+  if (avEl)   avEl.textContent = (name || '?').charAt(0).toUpperCase();
+  if (nameEl) nameEl.textContent = name;
+
+  if (msgsEl) {
+    msgsEl.innerHTML =
+      '<div class="chat-friends-only">'
+      + '<div class="chat-lock-icon">🔒</div>'
+      + '<div class="chat-lock-msg">DMs are only available between mutual friends.<br>Follow ' + name + ' and ask them to follow back to unlock messaging.</div>'
+      + '<button class="chat-follow-btn" onclick="followUser(\'' + userId + '\',\'user\');closeChatWindow();">+ FOLLOW ' + name.toUpperCase() + '</button>'
+      + '</div>';
+  }
+
+  win.classList.add('open');
+  if (overlay) overlay.style.display = 'block';
+}
+
+// ── Boot Sprint 44 ──
+setTimeout(function() {
+  // Run trending badges after map renders
+  if (typeof currentTab !== 'undefined' && currentTab === 'mapview') {
+    updateMapDotsWithTrending();
+  }
+}, 1500);
 
 
 </script>
