@@ -5507,6 +5507,42 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+
+// Sprint 43: Update map dots when real event data arrives from proxy
+function updateMapDotsFromEvents(events, zip) {
+  if (!events || !events.length) return;
+  // Build dot positions from events that have lat/lng
+  var geoEvents = events.filter(function(ev) { return ev.lat && ev.lng; });
+  if (!geoEvents.length) return;
+  // Convert lat/lng to map page relative positions
+  // Map page uses percentage-based positions — approximate from NYC center
+  var metro = (typeof METRO_CONFIG !== 'undefined' && typeof _currentMetro !== 'undefined')
+    ? METRO_CONFIG[_currentMetro] : { lat: 40.7128, lng: -74.006 };
+  var COLORS = { afterdark:'#C084FC', themenu:'#FF8C00', theladder:'#00E676', professional:'#7AABFF', worship:'#E879F9', terminal:'#0047FF' };
+  var newDots = geoEvents.slice(0, 20).map(function(ev) {
+    // Convert lat/lng offset to approximate % position on map panel
+    var latOff = (metro.lat - ev.lat) * 180;
+    var lngOff = (ev.lng - metro.lng) * 120;
+    var x = Math.max(5, Math.min(95, 50 + lngOff)) + '%';
+    var y = Math.max(5, Math.min(95, 50 + latOff)) + '%';
+    return { id: ev.id, label: ev.venue, x: x, y: y, r: 6, color: COLORS[ev.vertical] || '#0047FF', filter: ev.vertical || 'all' };
+  });
+  // Merge into MAP_PAGE_DOTS
+  if (typeof MAP_PAGE_DOTS !== 'undefined') {
+    newDots.forEach(function(dot) {
+      if (!MAP_PAGE_DOTS.all.find(function(d){ return d.id === dot.id; })) {
+        MAP_PAGE_DOTS.all.push(dot);
+        var key = dot.filter;
+        if (!MAP_PAGE_DOTS[key]) MAP_PAGE_DOTS[key] = [];
+        MAP_PAGE_DOTS[key].push(dot);
+      }
+    });
+    // Re-render map if currently on map tab
+    if (typeof currentTab !== 'undefined' && currentTab === 'mapview' && typeof renderDesktopMap === 'function') {
+      renderDesktopMap(_desktopMapFilter || 'all');
+    }
+  }
+}
 // Sprint 43: Netlify proxy for event data (bypasses CORS)
 var _netlifyEvFetched = {};
 function fetchEventsFromProxy(zip, vertical, callback) {
@@ -5520,16 +5556,20 @@ function fetchEventsFromProxy(zip, vertical, callback) {
       console.log('[HL] Proxy:', evs.length, 'events for', zip, vertical);
       if(!ALL_EVENTS[zip]) ALL_EVENTS[zip]=[];
       evs.forEach(function(ev){ if(!ALL_EVENTS[zip].find(function(e){return e.id===ev.id;})) ALL_EVENTS[zip].push(ev); });
-      if(evs.length>0 && typeof renderAll==='function') renderAll(currentTab,currentZip,pulseOn);
+      if(evs.length>0 && typeof renderAll==='function') renderAll(currentTab,currentZip,pulseOn); updateMapDotsFromEvents && updateMapDotsFromEvents(evs,zip);
       callback(evs);
     })
     .catch(function(err){ console.warn('[HL] Proxy failed:', err.message); callback([]); });
 }
 
 // Patch fetchers to use proxy first
-var _s43p=fetchPoshEvents, _s43l=fetchLumaEvents;
-fetchPoshEvents=function(slug,zip,cb){ fetchEventsFromProxy(zip,'afterdark',function(evs){ if(!evs.length)_s43p(slug,zip,cb); else cb(evs); }); };
-fetchLumaEvents=function(q,zip,cb){ fetchEventsFromProxy(zip,'professional',function(evs){ if(!evs.length)_s43l(q,zip,cb); else cb(evs); }); };
+// Sprint 43: Proxy-only — no direct CORS calls to Posh/Luma
+fetchPoshEvents = function(slug, zip, cb) {
+  fetchEventsFromProxy(zip, 'afterdark', function(evs) { cb(evs); });
+};
+fetchLumaEvents = function(q, zip, cb) {
+  fetchEventsFromProxy(zip, 'professional', function(evs) { cb(evs); });
+};
 
 setTimeout(function() {
   // Re-init gmap with improved key resolution
@@ -7246,8 +7286,11 @@ function showAuthDebugToast(errorCode, errorMsg) {
 // Improved initSupabase with error handling
 var _s37_origInitSupabase = typeof initSupabase === 'function' ? initSupabase : null;
 initSupabase = function() {
-  var url = localStorage.getItem('hl_sb_url') || '';
-  var key = localStorage.getItem('hl_sb_key') || '';
+  // Sprint 43: window.* vars from Netlify snippet take priority
+  var url = window.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || localStorage.getItem('hl_sb_url') || '';
+  var key = window.SUPABASE_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || localStorage.getItem('hl_sb_key') || '';
+  if (url) localStorage.setItem('hl_sb_url', url);
+  if (key) localStorage.setItem('hl_sb_key', key);
   if (!url || !key) {
     console.log('[HL] Supabase: no credentials. Demo mode active.');
     return false;
