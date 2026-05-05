@@ -4,10 +4,44 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>HyperLocal — Bloomberg Terminal</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#0047FF;--lime:#A8FF3E;--yellow:#FACC15;--bg0:#0D0D0D;--bg1:#121212;--bg2:#1A1A1A;--bg3:#222222;--bg4:#2A2A2A;--border:rgba(255,255,255,0.08);--border-blue:rgba(0,71,255,0.35);--text:#F0F0F0;--text-dim:#808080;--text-muted:#484848;--mono:'Roboto Mono',monospace;--sans:'Space Grotesk',sans-serif;--red:#FF3355;--green:#00E676;--orange:#FF8C00;--purple:#9B5DE5;--glass:rgba(18,18,18,0.82)}
+:root {
+  /* Material You — Deep Navy + Electric Blue seed */
+  --md-primary: #4F8EF7;        /* Electric Blue — primary */
+  --md-primary-container: #1A2E52;
+  --md-on-primary: #fff;
+  --md-secondary: #E87040;      /* Terracotta — secondary */
+  --md-secondary-container: #3A1E0F;
+  --md-tertiary: #4DB6AC;       /* Teal — tertiary */
+  --md-surface: #0F1117;        /* Surface */
+  --md-surface-variant: #1A1F2E;/* Surface Variant */
+  --md-surface-container: #141922; /* Container */
+  --md-surface-container-high: #1E2434;
+  --md-outline: rgba(255,255,255,.12);
+  --md-outline-variant: rgba(255,255,255,.06);
+  --md-on-surface: #E3E8F5;
+  --md-on-surface-variant: #8B93A8;
+  --md-error: #F44336;
+  /* Aliases for HL codebase */
+  --blue: #4F8EF7; --lime: #4DB6AC; --yellow: #FFB300;
+  --bg0: #090C14; --bg1: #0F1117; --bg2: #141922; --bg3: #1A1F2E; --bg4: #1E2434;
+  --border: rgba(255,255,255,0.08); --border-blue: rgba(79,142,247,0.35);
+  --text: #E3E8F5; --text-dim: #8B93A8; --text-muted: #4A5270;
+  --mono: 'Roboto Mono', 'Courier New', monospace;
+  --sans: 'Roboto', 'Google Sans', system-ui, sans-serif;
+  --red: #F44336; --green: #4DB6AC; --orange: #E87040; --purple: #9C72F0;
+  --glass: rgba(15,17,23,0.88);
+  /* Elevation tokens */
+  --elev-1: 0 1px 3px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.3);
+  --elev-2: 0 3px 8px rgba(0,0,0,.5),  0 1px 4px rgba(0,0,0,.35);
+  --elev-3: 0 8px 20px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);
+  --elev-4: 0 16px 40px rgba(0,0,0,.6), 0 4px 16px rgba(0,0,0,.45);
+  /* Radius */
+  --md-r-xs: 4px; --md-r-sm: 8px; --md-r-md: 12px; --md-r-lg: 16px;
+  --md-r-xl: 24px; --md-r-full: 28px; --md-r-pill: 50px;
+}
 html,body{width:100%;height:100%;background:var(--bg0);color:var(--text);font-family:var(--sans);overflow:hidden}
 #app{display:flex;flex-direction:column;height:100vh;width:100%}
 .topbar{display:flex;align-items:center;gap:10px;padding:0 14px;height:42px;background:var(--bg0);border-bottom:1px solid var(--border);flex-shrink:0;z-index:20}
@@ -329,7 +363,7 @@ body.pub-mode .hero-wrap{display:none}
 @media(max-width:767px){.topbar{flex-wrap:wrap;height:auto;padding:0;position:sticky;top:0;z-index:30}
 .topbar-row1>.terminal-mode-btn{display:none!important}
 .topbar-row1{display:flex!important;align-items:center;gap:8px;padding:7px 12px;width:100%;border-bottom:1px solid var(--border)}
-.topbar-row2{display:flex!important;align-items:center;justify-content:center;gap:8px;padding:5px 12px;width:100%;min-height:36px}
+/* topbar-row2: controlled by original media query */
 .topbar>.tb-div,.topbar>.brand,.topbar>.live-pill,.topbar>.theme-btn,.topbar>.datetime,.topbar>.zip-pulse-group,.topbar>.pro-toggle-wrap,.topbar>.terminal-mode-btn,#tbar-extra-btns{display:none!important}
 .tab-nav{overflow-x:auto;padding:0 4px;-webkit-overflow-scrolling:touch}
 .tab-btn{padding:0 10px;font-size:9px;min-height:44px;min-width:44px}
@@ -348,7 +382,7 @@ body.pub-mode .hero-wrap{display:none}
 .ev-card{padding:10px 12px}
 .social-ticker-wrap{display:none}
 .mobile-status-bar{display:flex!important;position:sticky;bottom:0;z-index:25;background:var(--bg1);border-top:1px solid var(--border-blue);height:32px;align-items:center;gap:0;flex-shrink:0;overflow:hidden}}
-@media(min-width:768px){.topbar-row1,.topbar-row2{display:none}.mobile-status-bar{display:none!important}.topbar>.terminal-mode-btn{display:none!important}.topbar>.pro-toggle-wrap{display:none!important}}
+@media(min-width:768px){.topbar-row1,.topbar-row2,.mobile-status-bar{display:none!important}.topbar>.terminal-mode-btn{display:none!important}.topbar>.pro-toggle-wrap{display:none!important}}
 .mobile-status-bar{display:none;background:var(--bg1);border-top:1px solid var(--border-blue);height:32px;align-items:center;gap:0;flex-shrink:0}
 .msb-segment{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;border-right:1px solid var(--border);height:100%;padding:0 6px;overflow:hidden}
 .msb-segment:last-child{border-right:none}
@@ -410,8 +444,8 @@ body.pub-mode .hero-wrap{display:none}
 .bnav-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .bnav-icon svg{width:18px;height:18px}
 .bnav-label{font-family:var(--mono);font-size:7px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1}
-.bnav-hl-logo{width:22px;height:18px;background:var(--yellow);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;color:#000;line-height:1;letter-spacing:-.5px;transition:background .15s}
-.bnav-item:not(.active) .bnav-hl-logo{background:rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
+
+.bnav-item:not(.active) 
 #app{padding-bottom:58px}@media(max-width:767px){#app{padding-bottom:58px}.bottom-nav{display:flex}.mobile-status-bar{bottom:58px}.main-body{height:calc(100dvh - 120px - 58px)}}
 @media(min-width:768px){.bottom-nav{display:flex}.bottom-nav .bnav-label{font-size:8px}}
 .urgency-bar{display:none;background:#C00;border-bottom:1px solid rgba(255,255,255,.2);height:26px;align-items:center;gap:8px;padding:0 12px;flex-shrink:0;overflow:hidden;position:relative;z-index:22}
@@ -559,8 +593,8 @@ body.pub-mode .hero-wrap{display:none}
   .bottom-nav { height: 52px; }
   .bnav-label { font-size: 8px; }
   .bnav-icon svg { width: 16px; height: 16px; }
-  .bnav-hl-logo { width: 16px; height: 16px; font-size: 9px; }
-  #app { padding-bottom: 52px !important; }
+  
+  /* app padding handled by 86px rule below */
   .main-body { height: calc(100vh - 180px); }
 }
 /* Mobile: ensure bnav always on top of everything */
@@ -1957,6 +1991,855 @@ body.metro-miami { --metro-color: #00E676; }
   padding: 6px 14px; border-radius: 3px; z-index: 25;
   letter-spacing: .06em; pointer-events: none;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   SPRINT 44 — MATERIAL YOU (Material Design 3)
+   Deep Navy + Electric Blue seed · Elevation · Roboto · FAB
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── Global ── */
+* { -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--sans) !important;
+  background: var(--md-surface) !important;
+}
+
+/* ── Top App Bar (Material M3 style) ── */
+
+/* topbar-row1 brand: use original */
+
+
+
+
+/* ── Tab Nav → Material Navigation Rail/Tab style ── */
+/* tab-nav: use UI polish override */
+.tab-btn {
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+  border-radius: var(--md-r-pill) !important;
+  padding: 6px 14px !important;
+  transition: background .2s, color .2s !important;
+  position: relative !important;
+}
+.tab-btn.active {
+  background: rgba(79,142,247,.16) !important;
+  color: var(--md-primary) !important;
+  border-bottom: none !important;
+}
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 25%; right: 25%;
+  height: 2px;
+  background: var(--md-primary);
+  border-radius: 1px 1px 0 0;
+}
+
+/* ── Vibe Filter Pills ── */
+.vibe-pill {
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: var(--md-r-pill) !important;
+  padding: 5px 14px !important;
+  background: var(--md-surface-variant) !important;
+  border: 1px solid var(--md-outline) !important;
+  letter-spacing: .01em !important;
+  transition: all .2s !important;
+}
+.vibe-pill.active, .vibe-pill:hover {
+  background: var(--md-primary) !important;
+  border-color: var(--md-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(79,142,247,.4) !important;
+}
+
+/* ── Search Bar → Material Docked Search Bar ── */
+
+.home-search-input {
+  background: var(--md-surface-variant) !important;
+  border: 1px solid var(--md-outline) !important;
+  border-radius: var(--md-r-full) !important;
+  font-family: var(--sans) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  padding: 8px 16px 8px 40px !important;
+  color: var(--text) !important;
+  transition: border-color .2s, box-shadow .2s !important;
+}
+.home-search-input:focus {
+  border-color: var(--md-primary) !important;
+  box-shadow: 0 0 0 2px rgba(79,142,247,.25) !important;
+  outline: none !important;
+}
+.home-search-ai-btn {
+  border-radius: var(--md-r-pill) !important;
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  background: var(--md-secondary-container) !important;
+  border: 1px solid var(--md-secondary) !important;
+  color: var(--md-secondary) !important;
+  padding: 7px 14px !important;
+  transition: background .2s !important;
+}
+
+/* ── News / Feed Panel → Material Filled Card ── */
+.news-panel {
+  background: var(--md-surface-container) !important;
+  border-right: 1px solid var(--md-outline-variant) !important;
+}
+.news-panel .panel-hdr {
+  font-family: var(--sans) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+  background: var(--md-surface-container) !important;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface-variant) !important;
+}
+.news-item {
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  transition: background .15s !important;
+}
+.news-item:hover { background: var(--md-surface-container-high) !important; }
+.news-item-title {
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  color: var(--md-on-surface) !important;
+}
+.news-item-meta {
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  color: var(--md-on-surface-variant) !important;
+}
+
+/* ── Event Cards → Material Filled Cards with Elevation ── */
+.ev-list-card {
+  background: var(--md-surface-container-high) !important;
+  border-radius: var(--md-r-lg) !important;
+  margin: 6px 12px !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  box-shadow: var(--elev-2) !important;
+  padding: 12px 14px !important;
+  transition: box-shadow .2s, transform .15s !important;
+}
+.ev-list-card:hover {
+  box-shadow: var(--elev-3) !important;
+  transform: translateY(-1px) !important;
+}
+.ev-list-card:active {
+  box-shadow: var(--elev-1) !important;
+  transform: translateY(0) !important;
+}
+.ev-list-name {
+  font-family: var(--sans) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: var(--md-on-surface) !important;
+}
+.ev-list-meta {
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  color: var(--md-on-surface-variant) !important;
+}
+.ev-list-price {
+  font-family: 'Roboto Mono', monospace !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  color: var(--md-primary) !important;
+}
+.ev-list-avail { font-family: var(--sans) !important; font-size: 10px !important; }
+.ev-list-thumb {
+  border-radius: var(--md-r-md) !important;
+  width: 44px !important; height: 44px !important;
+}
+.ev-list-tag {
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  border-radius: var(--md-r-sm) !important;
+  letter-spacing: .03em !important;
+  text-transform: none !important;
+}
+
+/* ── Hero card ── */
+.ev-list-hero {
+  border-radius: var(--md-r-xl) !important;
+  margin: 8px 12px !important;
+  box-shadow: var(--elev-3) !important;
+  border: 1px solid var(--md-outline) !important;
+}
+.ev-list-hero-name {
+  font-family: 'Nunito','Roboto',sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 22px !important;
+  letter-spacing: -.01em !important;
+}
+
+/* ── GET TICKET Button → Material Filled Button ── */
+.ev-detail-ticket-btn, [class*="ticket-btn"] {
+  background: var(--md-primary) !important;
+  border-radius: var(--md-r-pill) !important;
+  font-family: var(--sans) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: .03em !important;
+  box-shadow: 0 2px 8px rgba(79,142,247,.4) !important;
+  border: none !important;
+  transition: box-shadow .2s, transform .1s !important;
+}
+.ev-detail-ticket-btn:hover { box-shadow: 0 4px 16px rgba(79,142,247,.5) !important; }
+
+/* ── Bottom Nav → Material Navigation Bar with Pill indicator ── */
+.bottom-nav {
+  background: var(--md-surface-container) !important;
+  border-top: 1px solid var(--md-outline-variant) !important;
+  box-shadow: 0 -2px 8px rgba(0,0,0,.4) !important;
+  height: 58px !important;
+  padding-bottom: 4px !important;
+}
+/* Mobile ticker bar — keep above nav */
+.mobile-bottom-bar {
+  bottom: 58px !important;
+}
+.bnav-item {
+  position: relative !important;
+  gap: 2px !important;
+  padding-top: 4px !important;
+  border-radius: var(--md-r-pill) !important;
+  transition: background .2s !important;
+  flex: 1 !important;
+}
+
+.bnav-item.active .bnav-icon { position: relative; z-index: 1; }
+.bnav-icon svg { width: 22px !important; height: 22px !important; stroke-width: 1.75 !important; }
+.bnav-item.active .bnav-icon svg { stroke: var(--md-primary) !important; fill: rgba(79,142,247,.15) !important; }
+.bnav-label {
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+}
+.bnav-item.active .bnav-label { color: var(--md-primary) !important; font-weight: 700 !important; }
+
+/* ── Live Itinerary Sidebar → Material Navigation Drawer ── */
+.sidebar, #sidebar-terminal {
+  background: var(--md-surface-container) !important;
+  border-left: 1px solid var(--md-outline-variant) !important;
+}
+.ud-itin-col {
+  background: var(--md-surface-container) !important;
+  border-left: 1px solid var(--md-outline-variant) !important;
+}
+.ud-triple-item {
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  transition: background .15s !important;
+}
+.ud-triple-item:hover { background: var(--md-surface-container-high) !important; }
+
+/* ── Material LIVE badge ── */
+.live-pill {
+  background: var(--md-error) !important;
+  border-radius: var(--md-r-sm) !important;
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  padding: 3px 8px !important;
+}
+
+/* ── Urgency banner → Material Banner ── */
+.urgency-bar {
+  background: rgba(244,67,54,.1) !important;
+  border-top: 1px solid rgba(244,67,54,.25) !important;
+  border-bottom: 1px solid rgba(244,67,54,.15) !important;
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+}
+
+/* ── Map search bar → Material Docked ── */
+#map-search-wrap {
+  border-radius: var(--md-r-full) !important;
+  background: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-outline) !important;
+  box-shadow: var(--elev-3) !important;
+}
+#map-search-input {
+  font-family: var(--sans) !important;
+  font-size: 13px !important;
+}
+#map-search-btn {
+  border-radius: var(--md-r-pill) !important;
+  background: var(--md-primary) !important;
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: .02em !important;
+}
+#map-search-area-btn {
+  border-radius: var(--md-r-pill) !important;
+  font-family: var(--sans) !important;
+  font-weight: 500 !important;
+  background: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-primary) !important;
+  color: var(--md-primary) !important;
+}
+
+/* ── FAB → Floating Action Button ── */
+
+
+
+
+
+.chat-bubble.mine {
+  background: var(--md-primary) !important;
+  border-radius: var(--md-r-lg) var(--md-r-lg) var(--md-r-xs) var(--md-r-lg) !important;
+}
+.chat-bubble.theirs {
+  background: var(--md-surface-container-high) !important;
+  border-radius: var(--md-r-lg) var(--md-r-lg) var(--md-r-lg) var(--md-r-xs) !important;
+}
+.chat-input {
+  border-radius: var(--md-r-full) !important;
+  font-family: var(--sans) !important;
+  background: var(--md-surface-variant) !important;
+  border: 1px solid var(--md-outline) !important;
+}
+.chat-send-btn { background: var(--md-primary) !important; }
+
+/* ── Event detail → Material Bottom Sheet ── */
+.ev-detail-card {
+  border-radius: var(--md-r-xl) var(--md-r-xl) 0 0 !important;
+  background: var(--md-surface-container) !important;
+}
+.ev-detail-title {
+  font-family: 'Nunito','Roboto',sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 22px !important;
+  letter-spacing: -.01em !important;
+}
+.ev-detail-meta { font-family: var(--sans) !important; color: var(--md-on-surface-variant) !important; }
+
+/* ── Login modal → Material Dialog ── */
+.login-modal-card {
+  border-radius: var(--md-r-xl) !important;
+  background: var(--md-surface-container) !important;
+  box-shadow: var(--elev-4) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+}
+.login-title { font-family: 'Nunito','Roboto',sans-serif !important; font-weight: 800 !important; }
+.login-btn, .login-social-btn {
+  border-radius: var(--md-r-pill) !important;
+  font-family: var(--sans) !important;
+  font-weight: 500 !important;
+}
+
+/* ── Scrollbar → Material thin ── */
+::-webkit-scrollbar { width: 4px !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb { background: var(--md-outline) !important; border-radius: 2px !important; }
+::-webkit-scrollbar-thumb:hover { background: rgba(79,142,247,.4) !important; }
+
+/* ── Section headers → Material Label ── */
+.panel-hdr, .ev-list-section-hdr {
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--md-on-surface-variant) !important;
+}
+
+/* ── Search icon pseudo ── */
+.home-search-bar { position: relative; }
+.home-search-bar::before {
+  content: '';
+  position: absolute;
+  left: 28px; top: 50%;
+  transform: translateY(-50%);
+  width: 15px; height: 15px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B93A8' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events: none; z-index: 1;
+}
+
+/* ── Surface tint on hover (Material ripple-like) ── */
+.ev-list-card::after, .bnav-item::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: var(--md-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.ev-list-card:hover::after { opacity: .04; }
+.bnav-item { position: relative; overflow: hidden; }
+
+
+/* ════ SPRINTS 45-48: Geo, Pass, Privacy, Filters ════ */
+
+/* Sprint 45: Live data status bar on map */
+.map-data-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 14px;
+  background: var(--md-surface-container);
+  border-bottom: 1px solid var(--md-outline-variant);
+  font-family: var(--sans); font-size: 10px; color: var(--md-on-surface-variant);
+  flex-shrink: 0; min-height: 28px;
+}
+.map-data-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--md-outline); flex-shrink: 0; }
+.map-data-dot.live { background: var(--green); animation: pulse-dot 1.2s ease-in-out infinite; }
+.map-data-dot.loading { background: var(--md-primary); animation: pulse-dot .7s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* Sprint 46: Party Pass — locked event overlay */
+.pass-locked-overlay {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: rgba(10,12,20,.82);
+  backdrop-filter: blur(3px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; z-index: 4; cursor: pointer;
+}
+.pass-lock-icon { font-size: 22px; }
+.pass-lock-label {
+  font-family: var(--sans); font-size: 9px; font-weight: 700;
+  letter-spacing: .08em; color: var(--md-secondary);
+  text-transform: uppercase;
+}
+.pass-unlock-btn {
+  background: var(--md-secondary); color: #fff;
+  font-family: var(--sans); font-size: 10px; font-weight: 600;
+  border: none; border-radius: var(--md-r-pill);
+  padding: 5px 14px; cursor: pointer; margin-top: 2px;
+  transition: opacity .15s;
+}
+.pass-unlock-btn:hover { opacity: .85; }
+/* Pass badge on unlocked events */
+.pass-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(232,112,64,.12); color: var(--md-secondary);
+  border: 1px solid rgba(232,112,64,.3);
+  font-family: var(--sans); font-size: 8px; font-weight: 700;
+  padding: 2px 8px; border-radius: var(--md-r-pill);
+  letter-spacing: .05em; text-transform: uppercase;
+}
+
+/* Sprint 47: Private itinerary group chip */
+.priv-itin-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-bottom: 1px solid var(--md-outline-variant);
+}
+.priv-itin-avatar-stack { display: flex; }
+.priv-itin-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--md-primary); color: #fff;
+  font-family: var(--sans); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--md-surface-container);
+  margin-left: -6px; flex-shrink: 0;
+}
+.priv-itin-avatar:first-child { margin-left: 0; }
+.priv-itin-name {
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  color: var(--md-on-surface); flex: 1;
+}
+.priv-itin-badge {
+  font-family: var(--sans); font-size: 8px; font-weight: 700;
+  background: rgba(79,142,247,.15); color: var(--md-primary);
+  border: 1px solid rgba(79,142,247,.3);
+  padding: 2px 8px; border-radius: var(--md-r-pill);
+  letter-spacing: .05em; text-transform: uppercase;
+}
+/* Location sharing toggle */
+.loc-share-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-bottom: 1px solid var(--md-outline-variant);
+}
+.loc-share-label { font-family: var(--sans); font-size: 12px; font-weight: 500; flex: 1; color: var(--md-on-surface); }
+.loc-share-sub { font-size: 10px; color: var(--md-on-surface-variant); }
+.loc-toggle {
+  width: 40px; height: 22px; border-radius: 11px;
+  background: var(--md-outline); border: none; cursor: pointer;
+  position: relative; transition: background .2s; flex-shrink: 0;
+}
+.loc-toggle.on { background: var(--md-primary); }
+.loc-toggle::after {
+  content: ''; position: absolute;
+  top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff;
+  transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.4);
+}
+.loc-toggle.on::after { transform: translateX(18px); }
+
+/* Sprint 48: Map filter alignment */
+.map-filter-pill {
+  font-family: var(--sans) !important; font-size: 11px !important;
+  font-weight: 500 !important; border-radius: var(--md-r-pill) !important;
+  padding: 5px 14px !important;
+  background: var(--md-surface-container-high) !important;
+  border: 1px solid var(--md-outline) !important;
+  color: var(--md-on-surface-variant) !important;
+  transition: all .2s !important; cursor: pointer !important;
+}
+.map-filter-pill.active {
+  background: var(--md-primary) !important;
+  border-color: var(--md-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(79,142,247,.4) !important;
+}
+/* Marker fade on filter */
+.gm-style img { transition: opacity .3s; }
+.marker-faded { opacity: 0.15 !important; }
+
+
+/* ════ UI POLISH — Material refinement pass ════ */
+
+/* ── 1. Topbar: clean Material Top App Bar ── */
+
+
+
+
+/* Zip input — keep original terminal style */
+
+
+
+/* ── 2. HOME tab button — clean active state ── */
+
+
+/* ── 3. Tab nav — clean Material tabs, no terminal caps ── */
+
+.tab-nav::-webkit-scrollbar { display: none !important; }
+.tab-btn {
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: .02em !important;
+  text-transform: uppercase !important;
+  padding: 0 14px !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+  color: var(--text-dim) !important;
+  transition: color .15s !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  border-bottom: 2px solid transparent !important;
+}
+.tab-btn:hover { color: var(--text) !important; }
+.tab-btn .tab-count {
+  background: rgba(79,142,247,.2) !important;
+  border-radius: 10px !important;
+  padding: 1px 7px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  min-width: 18px !important;
+  text-align: center !important;
+  color: var(--text) !important;
+  display: inline-block !important;
+}
+.tab-btn.active .tab-count {
+  background: var(--md-primary) !important;
+  color: #fff !important;
+}
+.tab-btn.active {
+  background: rgba(79,142,247,.18) !important;
+  color: var(--md-primary) !important;
+  border-bottom: none !important;
+  font-weight: 600 !important;
+}
+.tab-btn.active .tab-count {
+  background: rgba(79,142,247,.25) !important;
+  color: var(--md-primary) !important;
+}
+.tab-btn.active::after { display: none !important; }
+
+/* ── 4. Vibe pills — consistent Material chip style ── */
+.vibe-filter-bar {
+  padding: 6px 12px !important;
+  gap: 6px !important;
+  background: #0F1117 !important;
+  border-bottom: 1px solid rgba(255,255,255,.05) !important;
+  overflow-x: auto !important; scrollbar-width: none !important;
+}
+.vibe-filter-bar::-webkit-scrollbar { display: none !important; }
+.vibe-pill {
+  font-family: var(--sans) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 20px !important;
+  padding: 5px 14px !important;
+  height: 30px !important;
+  display: inline-flex !important; align-items: center !important; gap: 5px !important;
+  white-space: nowrap !important;
+  background: rgba(255,255,255,.07) !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  color: var(--md-on-surface) !important;
+  cursor: pointer !important;
+  transition: all .15s !important;
+  flex-shrink: 0 !important;
+}
+.vibe-pill:hover {
+  background: rgba(255,255,255,.11) !important;
+  border-color: rgba(255,255,255,.15) !important;
+}
+.vibe-pill.active {
+  background: var(--md-primary) !important;
+  border-color: var(--md-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(79,142,247,.35) !important;
+}
+
+/* ── 5. Search bar — polished Material search field ── */
+.home-search-bar {
+  background: #0F1117 !important;
+  padding: 8px 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,.05) !important;
+  position: relative !important;
+  display: flex !important; align-items: center !important; gap: 8px !important;
+}
+.home-search-bar::before {
+  content: '';
+  position: absolute; left: 26px; top: 50%;
+  transform: translateY(-50%);
+  width: 16px; height: 16px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B93A8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E")
+  center/contain no-repeat; z-index: 2;
+}
+/* Remove the old ◆ diamond icon */
+.home-search-bar > span:first-child { display: none !important; }
+#home-search-bar > span:first-child { display: none !important; }
+.home-search-input {
+  flex: 1 !important;
+  background: rgba(255,255,255,.07) !important;
+  border: 1px solid rgba(255,255,255,.09) !important;
+  border-radius: 12px !important;
+  font-family: var(--sans) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--md-on-surface) !important;
+  padding: 9px 14px 9px 38px !important;
+  transition: border-color .2s, background .2s !important;
+  min-width: 0 !important;
+}
+.home-search-input::placeholder { color: var(--md-on-surface-variant) !important; }
+.home-search-input:focus {
+  border-color: var(--md-primary) !important;
+  background: rgba(79,142,247,.06) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(79,142,247,.2) !important;
+}
+.home-search-ai-btn {
+  flex-shrink: 0 !important;
+  border-radius: 10px !important;
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 7px 12px !important;
+  background: rgba(191,90,242,.15) !important;
+  border: 1px solid rgba(191,90,242,.3) !important;
+  color: #BF5AF2 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background .15s !important;
+}
+.home-search-ai-btn:hover { background: rgba(191,90,242,.25) !important; }
+
+/* ── 6. Event list cards — tighter, cleaner ── */
+.ev-list-card {
+  margin: 5px 10px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  background: #141922 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3) !important;
+  padding: 11px 12px !important;
+}
+.ev-list-card:hover {
+  background: #1A2030 !important;
+  border-color: rgba(79,142,247,.25) !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,.4) !important;
+  transform: translateY(-1px) !important;
+}
+.ev-list-name {
+  font-family: var(--sans) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #E3E8F5 !important;
+  letter-spacing: -.01em !important;
+}
+.ev-list-meta {
+  font-family: var(--sans) !important;
+  font-size: 11px !important;
+  color: #8B93A8 !important;
+  margin-top: 1px !important;
+}
+.ev-list-price {
+  font-family: 'Roboto Mono', monospace !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--md-primary) !important;
+}
+.ev-list-tag {
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 2px 7px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* ── 7. Bottom nav — clean 58px bar ── */
+.bottom-nav {
+  height: 58px !important;
+  padding: 0 !important;
+  background: rgba(15,17,23,.95) !important;
+  border-top: 1px solid rgba(255,255,255,.07) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.bnav-item {
+  flex: 1 !important; gap: 2px !important; padding-top: 6px !important;
+  border-radius: 0 !important;
+  transition: background .15s !important;
+}
+
+.bnav-label {
+  font-family: var(--sans) !important;
+  font-size: 10px !important; font-weight: 500 !important;
+  letter-spacing: 0 !important; text-transform: none !important;
+  color: var(--md-on-surface-variant) !important;
+}
+.bnav-item.active .bnav-label {
+  color: var(--md-primary) !important; font-weight: 600 !important;
+}
+.bnav-icon svg { width: 20px !important; height: 20px !important; stroke-width: 1.8 !important; }
+.bnav-item.active .bnav-icon svg { stroke: var(--md-primary) !important; }
+
+/* ── 8. Ticker / mobile-bottom-bar — tighter ── */
+.mobile-bottom-bar {
+  height: 24px !important;
+  bottom: 58px !important;
+  font-family: var(--sans) !important;
+  font-size: 10px !important;
+  background: rgba(9,12,20,.9) !important;
+  backdrop-filter: blur(8px) !important;
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+}
+
+/* ── 9. Panel headers — clean label style ── */
+.panel-hdr {
+  font-family: var(--sans) !important;
+  font-size: 10px !important; font-weight: 600 !important;
+  letter-spacing: .06em !important; text-transform: uppercase !important;
+  color: var(--md-on-surface-variant) !important;
+  background: rgba(15,17,23,.8) !important;
+  padding: 8px 14px !important;
+  border-bottom: 1px solid rgba(255,255,255,.05) !important;
+}
+
+/* ── 10. GET TICKET button ── */
+.ev-detail-ticket-btn, a.ev-detail-ticket-btn {
+  background: var(--md-primary) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-family: var(--sans) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 13px !important;
+  border: none !important;
+  box-shadow: 0 2px 10px rgba(79,142,247,.4) !important;
+  text-decoration: none !important;
+  display: block !important; text-align: center !important;
+  letter-spacing: .01em !important;
+}
+
+/* ── 11. LIVE pill ── */
+.live-pill {
+  background: #E53935 !important;
+  border-radius: 8px !important;
+  font-family: var(--sans) !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  padding: 3px 9px !important; letter-spacing: .04em !important;
+}
+
+
+/* HL logo — matches live site exactly */
+.bnav-hl-logo {
+  background: #FACC15;
+  color: #000;
+  border-radius: 2px;
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+}
+
+
+
+
+/* Topbar: enforce center alignment, correct height */
+
+
+/* Zip group: single inline row, vertically centered */
+
+
+/* Metro label + location label: same size, inline */
+
+
+/* Zip input: vertically centered, consistent height */
+
+
+/* Brand: vertically centered */
+
+
+/* Live pill: vertically centered */
+
+
+/* Datetime: vertically centered */
+
+
+/* Dividers: vertically centered */
+
+
+
+
+
+/* Topbar: force all direct children to same visual baseline */
+
+
+/* zip-pulse-group: make it a compact single row */
+
+
+/* Hide the redundant LOCATION label — NY METRO already explains context */
+
+
+/* Metro label: inline, same height as input */
+
+
+/* Zip input: fixed 28px height to match group */
+
+
+/* Brand: same visual height */
+
+
+/* Datetime: match group height */
+
+
 </style>
 
 </head>
@@ -4836,7 +5719,7 @@ if (!ALL_EVENTS['23510']) ALL_EVENTS['23510'] = [
 
 // ── City name → ZIP mapping ──
 var CITY_TO_ZIP = {
-  'waldorf': '20601', 'bowie': '20715', 'laurel': '20707',
+  'waldorf': '20601', 'bowie': '20715', 'bowie md': '20715','laurel': '20707',
   'greenbelt': '20770', 'hyattsville': '20781', 'arlington': '22201',
   'alexandria': '22301', 'reston': '20190', 'ashburn': '20147',
   'sterling': '20164', 'chicago': '60601', 'dc': '20001',
@@ -5620,6 +6503,9 @@ function updateMapDotsFromEvents(events, zip) {
 // Sprint 43: Netlify proxy for event data (bypasses CORS)
 var _netlifyEvFetched = {};
 function fetchEventsFromProxy(zip, vertical, callback) {
+  // Normalise Bowie-area ZIPs — all four are the same metro area
+  var _BOWIE_ZIPS = {'20715':1,'20716':1,'20720':1,'20721':1};
+  if (_BOWIE_ZIPS[zip]) zip = '20715';
   var key = zip + '_' + (vertical||'all');
   if (_netlifyEvFetched[key]) { callback([]); return; }
   _netlifyEvFetched[key] = true;
@@ -8900,6 +9786,711 @@ setTimeout(function() {
   var mapInput = document.getElementById('map-search-input');
   if (mapInput && typeof currentZip !== 'undefined') mapInput.placeholder = 'Current: ' + currentZip + ' — search city, ZIP, vibe...';
 }, 1200);
+
+
+
+
+// ═══════════════════════════════════════════════════════════════
+// SPRINT 44 — MATERIAL YOU JS
+// Material map styles · Pin markers · FAB · Ripple · Nav pill
+// ═══════════════════════════════════════════════════════════════
+
+// ── Material You map style (dark navy, high contrast labels) ──
+var MATERIAL_MAP_STYLES = [
+  { elementType: 'geometry',               stylers: [{ color: '#0F1117' }] },
+  { elementType: 'labels.text.fill',       stylers: [{ color: '#8B93A8' }] },
+  { elementType: 'labels.text.stroke',     stylers: [{ color: '#090C14' }] },
+  { featureType: 'road',                   elementType: 'geometry',         stylers: [{ color: '#1A1F2E' }] },
+  { featureType: 'road.arterial',          elementType: 'geometry',         stylers: [{ color: '#1E2434' }] },
+  { featureType: 'road.highway',           elementType: 'geometry',         stylers: [{ color: '#252D42' }] },
+  { featureType: 'road.highway',           elementType: 'geometry.stroke',  stylers: [{ color: '#1A1F2E' }] },
+  { featureType: 'road',                   elementType: 'labels.text.fill', stylers: [{ color: '#5B6480' }] },
+  { featureType: 'water',                  elementType: 'geometry',         stylers: [{ color: '#06080E' }] },
+  { featureType: 'water',                  elementType: 'labels.text.fill', stylers: [{ color: '#2D3656' }] },
+  { featureType: 'poi',                    elementType: 'geometry',         stylers: [{ color: '#131828' }] },
+  { featureType: 'poi',                    elementType: 'labels',           stylers: [{ visibility: 'simplified' }] },
+  { featureType: 'poi',                    elementType: 'labels.text.fill', stylers: [{ color: '#4A5270' }] },
+  { featureType: 'poi.park',               elementType: 'geometry',         stylers: [{ color: '#0A1020' }] },
+  { featureType: 'transit',                elementType: 'geometry',         stylers: [{ color: '#131828' }] },
+  { featureType: 'administrative',         elementType: 'geometry.stroke',  stylers: [{ color: '#1E2434' }] },
+  { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#6878A0' }] },
+  { featureType: 'landscape',              elementType: 'geometry',         stylers: [{ color: '#0C0F1A' }] },
+];
+
+// ── Material Pin marker — teardrop with icon cutout ──
+function buildMaterialPinSVG(color, label, vertical) {
+  var icons = {
+    afterdark:    '♪', themenu: '🍴', theladder: '★',
+    professional: '◈', worship: '✦', terminal: '●'
+  };
+  var icon = icons[vertical] || '●';
+  // Encode SVG as data URL for Marker icon
+  var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="42" viewBox="0 0 32 42">
+    <defs>
+      <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-opacity=".5"/></filter>
+    </defs>
+    <!-- Teardrop pin shape -->
+    <path d="M16 2 C8 2 2 8 2 16 C2 26 16 40 16 40 C16 40 30 26 30 16 C30 8 24 2 16 2Z"
+          fill="${color}" filter="url(#sh)"/>
+    <!-- White cutout circle -->
+    <circle cx="16" cy="16" r="8" fill="rgba(255,255,255,0.92)"/>
+    <!-- Icon inside -->
+    <text x="16" y="20" font-size="9" text-anchor="middle" fill="${color}" font-weight="700"
+          font-family="sans-serif">${icon}</text>
+  </svg>`;
+  return {
+    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+    scaledSize: new google.maps.Size(32, 42),
+    anchor: new google.maps.Point(16, 40),
+  };
+}
+
+// Vertical → Material color
+var MD_COLORS = {
+  afterdark:    '#9C72F0',  // Purple
+  themenu:      '#E87040',  // Terracotta
+  theladder:    '#4DB6AC',  // Teal
+  professional: '#4F8EF7',  // Blue
+  worship:      '#FFB300',  // Amber
+  terminal:     '#4F8EF7',  // Blue default
+};
+
+// ── Patch _createGmapInstance for Material styles ──
+var _md_origCreateGmap = typeof _s441_origCreateGmap !== 'undefined' ? _s441_origCreateGmap : _createGmapInstance;
+_createGmapInstance = function(container) {
+  // Run existing init
+  _md_origCreateGmap(container);
+  // Apply Material map styles
+  setTimeout(function() {
+    var map = container._gmapInstance;
+    if (!map) return;
+    map.setOptions({ styles: MATERIAL_MAP_STYLES });
+    console.log('[HL] Material map style applied ✓');
+  }, 80);
+};
+
+// ── Patch placeEventMarker for Material teardrop pins ──
+var _md_origPlaceMarker = typeof placeEventMarker === 'function' ? placeEventMarker : null;
+placeEventMarker = function(map, ev) {
+  if (!map || !ev || !ev.lat || !ev.lng) return null;
+  var color = MD_COLORS[ev.vertical] || '#4F8EF7';
+  var goingCount = ev.going_count || (ev.trending ? 5 : 1);
+
+  // Halo ring for popular events
+  if (goingCount >= 3) {
+    new google.maps.Marker({
+      position: { lat: parseFloat(ev.lat), lng: parseFloat(ev.lng) },
+      map: map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 20,
+        fillColor: color,
+        fillOpacity: 0.1,
+        strokeColor: color,
+        strokeWeight: 1.5,
+        strokeOpacity: 0.35,
+      },
+      zIndex: 1, clickable: false,
+    });
+  }
+
+  // Teardrop pin — use custom SVG if Maps API is loaded
+  var icon;
+  try {
+    icon = buildMaterialPinSVG(color, (ev.name||'').charAt(0), ev.vertical);
+  } catch(e) {
+    icon = {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 9, fillColor: color, fillOpacity: 1,
+      strokeColor: '#fff', strokeWeight: 2,
+    };
+  }
+
+  var marker = new google.maps.Marker({
+    position: { lat: parseFloat(ev.lat), lng: parseFloat(ev.lng) },
+    map: map,
+    title: ev.name + ' · ' + ev.venue,
+    icon: icon,
+    zIndex: 10,
+  });
+
+  // Material-styled InfoWindow
+  var infoContent = `<div style="background:#141922;color:#E3E8F5;font-family:'Roboto',sans-serif;
+      padding:12px 14px;border-radius:12px;min-width:170px;max-width:230px;
+      border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 16px rgba(0,0,0,.5);">
+    <div style="font-weight:700;font-size:13px;margin-bottom:3px">${ev.name}</div>
+    <div style="color:#8B93A8;font-size:11px;margin-bottom:8px">${ev.venue} · ${ev.time}</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="font-weight:700;font-size:14px;color:${color}">${ev.price}</span>
+      ${ev.avail < 20
+        ? `<span style="background:rgba(244,67,54,.15);color:#F44336;font-size:10px;
+               font-weight:600;padding:2px 8px;border-radius:999px">Few left</span>`
+        : ''}
+    </div>
+  </div>`;
+  var iw = new google.maps.InfoWindow({
+    content: infoContent,
+    pixelOffset: new google.maps.Size(0, -42),
+  });
+  marker.addListener('click', function() {
+    iw.open(map, marker);
+    setTimeout(function() { if (typeof openEvDetailById === 'function') openEvDetailById(ev.id); }, 280);
+  });
+
+  if (typeof _gmapMarkers !== 'undefined') _gmapMarkers.push(marker);
+  return marker;
+};
+
+// ── Friend pins → Material-style circle with initials ──
+var _md_origFriendPins = typeof renderFriendPins === 'function' ? renderFriendPins : null;
+renderFriendPins = function(containerId, friends) {
+  if (_md_origFriendPins) _md_origFriendPins(containerId, friends);
+  // Style existing friend dots as Material avatar pins
+  setTimeout(function() {
+    document.querySelectorAll('.friend-map-pin, .map-friend-pin, .fp').forEach(function(pin) {
+      pin.style.cssText = (pin.style.cssText || '') +
+        ';border-radius:50%;border:2.5px solid #4F8EF7;box-shadow:0 2px 8px rgba(79,142,247,.5);' +
+        'background:#1A1F2E;display:flex;align-items:center;justify-content:center;font-size:14px;';
+    });
+  }, 150);
+};
+
+// ── FAB action ──
+function openMdFab() {
+  if (!window._currentUser) {
+    if (typeof openLoginModal === 'function') openLoginModal();
+    return;
+  }
+  // Show a Material snackbar-style toast
+  if (typeof showToast === 'function') showToast('📍 Check In / Create Event — coming soon!');
+}
+
+// ── Material Ripple effect on card tap ──
+(function addRippleEffect() {
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.ev-list-card, .bnav-item');
+    if (!card) return;
+    var ripple = document.createElement('span');
+    var rect = card.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height) * 2;
+    var x = e.clientX - rect.left - size / 2;
+    var y = e.clientY - rect.top - size / 2;
+    ripple.style.cssText = 'position:absolute;width:' + size + 'px;height:' + size + 'px;'
+      + 'left:' + x + 'px;top:' + y + 'px;'
+      + 'border-radius:50%;background:rgba(79,142,247,.25);transform:scale(0);'
+      + 'pointer-events:none;animation:md-ripple .5s ease-out forwards;';
+    card.style.overflow = 'hidden';
+    card.style.position = 'relative';
+    card.appendChild(ripple);
+    setTimeout(function() { ripple.remove(); }, 520);
+  });
+  // Inject ripple keyframes
+  var s = document.createElement('style');
+  s.textContent = '@keyframes md-ripple { to { transform:scale(1); opacity:0; } }';
+  document.head.appendChild(s);
+})();
+
+// ── Search icon in map search bar ──
+(function patchMapSearchIcon() {
+  var style = document.createElement('style');
+  style.textContent = '#map-search-overlay #map-search-wrap::before {'
+    + 'content:"";position:absolute;left:14px;top:50%;transform:translateY(-50%);'
+    + 'width:16px;height:16px;pointer-events:none;'
+    + 'background:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%234F8EF7\' stroke-width=\'2\' stroke-linecap=\'round\'%3E%3Ccircle cx=\'11\' cy=\'11\' r=\'8\'/%3E%3Cpath d=\'M21 21l-4.35-4.35\'/%3E%3C/svg%3E") center/contain no-repeat;}'
+    + '#map-search-wrap { position:relative; }'
+    + '#map-search-input { padding-left: 38px !important; }';
+  document.head.appendChild(style);
+})();
+
+console.log('[HL] Material You design system active ✓');
+
+
+
+
+// ══════════════════════════════════════════════════════════════════
+// SPRINTS 45-48: Geo Precision · Party Pass · Privacy · Filters
+// ══════════════════════════════════════════════════════════════════
+
+// ── SPRINT 45: Live data status helpers ──
+function setMapDataStatus(status, count) {
+  var dot = document.getElementById('map-data-dot');
+  var statusEl = document.getElementById('map-data-status');
+  var countEl = document.getElementById('map-data-count');
+  var statuses = {
+    loading: { cls: 'loading', text: 'Fetching live events…' },
+    live:    { cls: 'live',    text: 'Live data active' },
+    offline: { cls: '',        text: 'Sample data (set EVENTBRITE_TOKEN)' },
+    geocoding: { cls: 'loading', text: 'Geocoding addresses…' },
+  };
+  var s = statuses[status] || { cls: '', text: status };
+  if (dot) { dot.className = 'map-data-dot' + (s.cls ? ' ' + s.cls : ''); }
+  if (statusEl) statusEl.textContent = s.text;
+  if (countEl && count !== undefined) countEl.textContent = count + ' venue' + (count !== 1 ? 's' : '');
+}
+
+// ── SPRINT 45: Patch fetchEventsFromProxy to update live count + map ──
+var _s45_origProxy = fetchEventsFromProxy;
+fetchEventsFromProxy = function(zip, vertical, callback) {
+  setMapDataStatus('loading');
+  _s45_origProxy(zip, vertical, function(evs) {
+    if (evs && evs.length > 0) {
+      setMapDataStatus('live', evs.length);
+      // Geocode any that lack coords, then place on map
+      var withCoords = evs.filter(function(e) { return e.lat && e.lng; });
+      var needGeo    = evs.filter(function(e) { return !e.lat && e.addr; }).slice(0, 12);
+      var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
+      if (map && withCoords.length) {
+        withCoords.forEach(function(ev) {
+          if (typeof placeEventMarker === 'function') placeEventMarker(map, ev);
+        });
+      }
+      if (map && needGeo.length) {
+        setMapDataStatus('geocoding');
+        var done = 0;
+        needGeo.forEach(function(ev) {
+          geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || ''), function(coords) {
+            if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; if (map) placeEventMarker(map, ev); }
+            if (++done === needGeo.length) { setMapDataStatus('live'); updateVenueCount(); }
+          });
+        });
+      }
+      updateVenueCount();
+      // Update "X FOUND" in event list header
+      var foundEl = document.querySelector('.ev-list-count, [id*="found"]');
+      if (foundEl && foundEl.textContent.includes('FOUND')) foundEl.textContent = evs.length + ' FOUND';
+    } else {
+      setMapDataStatus('offline');
+    }
+    callback(evs);
+  });
+};
+
+// ── SPRINT 45: Patch updateVenueCount to sync ALL count displays ──
+var _s45_origUpdateCount = typeof updateVenueCount === 'function' ? updateVenueCount : function(){};
+updateVenueCount = function() {
+  _s45_origUpdateCount();
+  // Count only core markers (zIndex 10)
+  var coreCount = typeof _gmapMarkers !== 'undefined'
+    ? _gmapMarkers.filter(function(m) { try { return m.getZIndex() === 10; } catch(e) { return true; } }).length
+    : 0;
+  // Update data bar
+  var countEl = document.getElementById('map-data-count');
+  if (countEl) countEl.textContent = coreCount + ' venue' + (coreCount !== 1 ? 's' : '');
+  // Update the LIVE MAP badge
+  var desktopCount = document.getElementById('desktop-map-count');
+  if (desktopCount) desktopCount.textContent = coreCount + ' VENUES';
+  // Log
+  if (coreCount > 0) console.log('[HL] Map:', coreCount, 'venue markers placed');
+};
+
+// ── SPRINT 45: Boot — fetch DC/Bowie events on map tab open ──
+var _s45_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
+bnavGo = function(dest, btn) {
+  if (_s45_origBnavGo) _s45_origBnavGo(dest, btn);
+  if (dest === 'map') {
+    // Fetch for current zip + Bowie/DC specifically
+    var zip = typeof currentZip !== 'undefined' ? currentZip : '10001';
+    setTimeout(function() {
+      setMapDataStatus('loading');
+      fetchEventsFromProxy(zip, 'all', function() {});
+    }, 400);
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════
+// SPRINT 46: Party Pass & Premium Tiers
+// ══════════════════════════════════════════════════════════════════
+
+// Supabase schema (run in SQL editor)
+var PARTY_PASS_SCHEMA = `
+CREATE TABLE IF NOT EXISTS party_passes (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+  pass_type text NOT NULL,
+  pass_name text,
+  organization text,
+  valid_from timestamptz DEFAULT now(),
+  valid_until timestamptz,
+  status text DEFAULT 'active' CHECK (status IN ('active','expired','revoked')),
+  metadata jsonb DEFAULT '{}',
+  created_at timestamptz DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_passes_user ON party_passes(user_id);
+ALTER TABLE party_passes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own passes" ON party_passes FOR SELECT USING (auth.uid() = user_id);
+
+-- Pass → event group mapping
+CREATE TABLE IF NOT EXISTS pass_events (
+  pass_type text NOT NULL,
+  event_id text NOT NULL,
+  is_gated boolean DEFAULT true,
+  PRIMARY KEY (pass_type, event_id)
+);
+`;
+
+// Pass type → unlocked event IDs
+var PASS_CONFIGS = {
+  'alumni_weekend':  { name: 'Alumni Weekend Pass',   events: [800,801,802,803,804,805], org: 'HU Alumni' },
+  'dc_gala':         { name: 'DC Gala Full Access',    events: [600,601,602,603,900,901], org: 'DC Events' },
+  'reunion_full':    { name: 'Reunion Full Access',    events: [700,701,702,703,704,705], org: 'Class Reunion' },
+};
+
+// Current user's active passes
+var _userPasses = [];
+
+async function loadUserPasses() {
+  if (!_supabase || !_currentUser) return;
+  var { data, error } = await _supabase
+    .from('party_passes')
+    .select('*')
+    .eq('user_id', _currentUser.id)
+    .eq('status', 'active');
+  if (!error && data) {
+    _userPasses = data;
+    console.log('[HL] Party passes loaded:', _userPasses.length);
+    // Re-render current tab with pass-gated content unlocked
+    if (typeof renderAll === 'function') renderAll(currentTab, currentZip, pulseOn);
+    checkPassGatedContent();
+  }
+}
+
+function hasPass(passType) {
+  return _userPasses.some(function(p) { return p.pass_type === passType || p.pass_type === 'vip_all'; });
+}
+
+function getUnlockedEventIds() {
+  var ids = new Set(_myEventIds || []);
+  _userPasses.forEach(function(p) {
+    var cfg = PASS_CONFIGS[p.pass_type];
+    if (cfg) cfg.events.forEach(function(id) { ids.add(id); });
+  });
+  return Array.from(ids);
+}
+
+function checkPassGatedContent() {
+  // Add pass badge to unlocked events in the list
+  var unlockedIds = getUnlockedEventIds();
+  document.querySelectorAll('.ev-list-card[data-ev-id]').forEach(function(card) {
+    var evId = parseInt(card.dataset.evId);
+    if (unlockedIds.indexOf(evId) !== -1 && !card.querySelector('.pass-badge')) {
+      var badge = document.createElement('span');
+      badge.className = 'pass-badge';
+      badge.innerHTML = '🎟 PASS';
+      var nameEl = card.querySelector('.ev-list-name');
+      if (nameEl) nameEl.insertAdjacentElement('afterend', badge);
+    }
+    // Remove locked overlay if now unlocked
+    var overlay = card.querySelector('.pass-locked-overlay');
+    if (overlay && unlockedIds.indexOf(evId) !== -1) overlay.remove();
+  });
+}
+
+// Patch openEvDetail to show pass gate if event is locked
+var _s46_origOpenEvDetail = typeof openEvDetail === 'function' ? openEvDetail : null;
+openEvDetail = function(ev) {
+  if (!ev) return;
+  // Check if event is pass-gated
+  var isGated = ev.tags && (ev.tags.includes('PASS') || ev.tags.includes('GATED') || ev.tags.includes('MEMBERS'));
+  var unlockedIds = getUnlockedEventIds();
+  if (isGated && unlockedIds.indexOf(ev.id) === -1 && !hasPass('vip_all')) {
+    showPassGateModal(ev);
+    return;
+  }
+  if (_s46_origOpenEvDetail) _s46_origOpenEvDetail(ev);
+};
+
+function showPassGateModal(ev) {
+  var existing = document.getElementById('pass-gate-modal');
+  if (existing) existing.remove();
+  var cfg = Object.values(PASS_CONFIGS).find(function(c) { return c.events.includes(ev.id); });
+  var passName = cfg ? cfg.name : 'Event Pass';
+  var modal = document.createElement('div');
+  modal.id = 'pass-gate-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:500;display:flex;align-items:flex-end;'
+    + 'background:rgba(0,0,0,.6);backdrop-filter:blur(4px)';
+  modal.innerHTML = '<div style="background:var(--md-surface-container);border-radius:var(--md-r-xl) var(--md-r-xl) 0 0;'
+    + 'padding:24px 20px 32px;width:100%;max-width:500px;margin:0 auto;border-top:1px solid var(--md-outline-variant)">'
+    + '<div style="text-align:center;font-size:36px;margin-bottom:8px">🎟</div>'
+    + '<div style="font-family:var(--sans);font-weight:800;font-size:20px;text-align:center;margin-bottom:6px;color:var(--md-on-surface)">'
+    + ev.name + '</div>'
+    + '<div style="font-family:var(--sans);font-size:13px;text-align:center;color:var(--md-on-surface-variant);margin-bottom:20px">'
+    + 'This event requires a <strong style="color:var(--md-secondary)">' + passName + '</strong> to access.</div>'
+    + '<button onclick="document.getElementById(\'pass-gate-modal\').remove()" '
+    + 'style="width:100%;background:var(--md-secondary);color:#fff;border:none;border-radius:var(--md-r-pill);'
+    + 'font-family:var(--sans);font-weight:600;font-size:15px;padding:14px;cursor:pointer;margin-bottom:10px">'
+    + 'Get ' + passName + '</button>'
+    + '<button onclick="document.getElementById(\'pass-gate-modal\').remove()" '
+    + 'style="width:100%;background:none;border:1px solid var(--md-outline);color:var(--md-on-surface-variant);'
+    + 'border-radius:var(--md-r-pill);font-family:var(--sans);font-size:14px;padding:12px;cursor:pointer">Not now</button>'
+    + '</div>';
+  modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SPRINT 47: Private Circles & Location Privacy
+// ══════════════════════════════════════════════════════════════════
+
+// Supabase schemas
+var PRIVACY_SCHEMA = `
+CREATE TABLE IF NOT EXISTS private_itineraries (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  name text NOT NULL,
+  owner_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+  member_ids uuid[] DEFAULT '{}',
+  event_ids text[] DEFAULT '{}',
+  is_public boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS location_sharing (
+  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  sharing_enabled boolean DEFAULT false,
+  lat double precision,
+  lng double precision,
+  last_updated timestamptz DEFAULT now()
+);
+`;
+
+var _locationSharingOn = false;
+var _locationWatchId   = null;
+var _friendLocations   = {};  // userId → {lat,lng,name,avatar,lastSeen}
+
+// Location sharing toggle
+function toggleLocationSharing(enabled) {
+  _locationSharingOn = enabled !== undefined ? enabled : !_locationSharingOn;
+  localStorage.setItem('hl_loc_share', _locationSharingOn ? '1' : '0');
+  var btn = document.getElementById('loc-share-toggle');
+  if (btn) btn.className = 'loc-toggle' + (_locationSharingOn ? ' on' : '');
+
+  if (_locationSharingOn) {
+    startLocationSharing();
+    if (typeof showToast === 'function') showToast('📍 Location sharing ON — friends can see you');
+  } else {
+    stopLocationSharing();
+    if (typeof showToast === 'function') showToast('Location sharing OFF');
+  }
+}
+
+function startLocationSharing() {
+  if (!navigator.geolocation) return;
+  if (_locationWatchId) navigator.geolocation.clearWatch(_locationWatchId);
+  _locationWatchId = navigator.geolocation.watchPosition(
+    function(pos) { pushLocationToSupabase(pos.coords.latitude, pos.coords.longitude); },
+    function() {},
+    { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
+  );
+  // Refresh friend locations every 60s
+  setInterval(loadFriendLocations, 60000);
+  loadFriendLocations();
+}
+
+function stopLocationSharing() {
+  if (_locationWatchId) { navigator.geolocation.clearWatch(_locationWatchId); _locationWatchId = null; }
+  if (_supabase && _currentUser) {
+    _supabase.from('location_sharing').upsert({ user_id: _currentUser.id, sharing_enabled: false });
+  }
+}
+
+async function pushLocationToSupabase(lat, lng) {
+  if (!_supabase || !_currentUser) return;
+  await _supabase.from('location_sharing').upsert({
+    user_id: _currentUser.id, sharing_enabled: true,
+    lat: lat, lng: lng, last_updated: new Date().toISOString()
+  });
+}
+
+async function loadFriendLocations() {
+  if (!_supabase || !_currentUser) return;
+  // Get friends who have sharing enabled
+  var { data: friends } = await _supabase
+    .from('connections')
+    .select('follower_id,following_id')
+    .or('follower_id.eq.' + _currentUser.id + ',following_id.eq.' + _currentUser.id)
+    .eq('type', 'friend').eq('status', 'active');
+  if (!friends) return;
+  var friendIds = friends.map(function(c) {
+    return c.follower_id === _currentUser.id ? c.following_id : c.follower_id;
+  });
+  if (!friendIds.length) return;
+  var { data: locs } = await _supabase
+    .from('location_sharing')
+    .select('*')
+    .in('user_id', friendIds)
+    .eq('sharing_enabled', true);
+  if (!locs) return;
+  locs.forEach(function(loc) { _friendLocations[loc.user_id] = loc; });
+  placeFriendMarkersOnGmap();
+}
+
+function placeFriendMarkersOnGmap() {
+  var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
+  if (!map) return;
+  Object.values(_friendLocations).forEach(function(loc) {
+    if (!loc.lat || !loc.lng) return;
+    var stale = (new Date() - new Date(loc.last_updated)) > 300000; // >5 min = stale
+    var color = stale ? '#8B93A8' : '#4F8EF7';
+    var marker = new google.maps.Marker({
+      position: { lat: loc.lat, lng: loc.lng },
+      map: map,
+      title: loc.user_id,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        fillColor: color, fillOpacity: 1,
+        strokeColor: '#fff', strokeWeight: 2.5,
+      },
+      zIndex: 20,
+    });
+    if (typeof _gmapMarkers !== 'undefined') _gmapMarkers.push(marker);
+    // Pulse ring for fresh location
+    if (!stale) {
+      var ring = new google.maps.Marker({
+        position: { lat: loc.lat, lng: loc.lng },
+        map: map,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 18,
+                fillColor: color, fillOpacity: 0.1, strokeColor: color, strokeWeight: 1, strokeOpacity: 0.4 },
+        zIndex: 19, clickable: false,
+      });
+      if (typeof _gmapMarkers !== 'undefined') _gmapMarkers.push(ring);
+    }
+  });
+}
+
+// Add location sharing toggle to the profile/friends section
+function renderLocationSharingUI(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var saved = localStorage.getItem('hl_loc_share') === '1';
+  if (saved !== _locationSharingOn) toggleLocationSharing(saved);
+  var row = document.createElement('div');
+  row.className = 'loc-share-row';
+  row.innerHTML = '<div><div class="loc-share-label">Share Location with Friends</div>'
+    + '<div class="loc-share-sub">Requires mutual friend status</div></div>'
+    + '<button id="loc-share-toggle" class="loc-toggle' + (_locationSharingOn ? ' on' : '') + '" '
+    + 'onclick="toggleLocationSharing()"></button>';
+  el.insertAdjacentElement('afterbegin', row);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SPRINT 48: Filter Alignment & Night Map Glow
+// ══════════════════════════════════════════════════════════════════
+
+// Category → neon glow color (final palette)
+var NEON_GLOW = {
+  all:          '#4F8EF7',  // Electric Blue
+  afterdark:    '#9C72F0',  // Purple
+  social:       '#9C72F0',
+  themenu:      '#E87040',  // Terracotta
+  food:         '#E87040',
+  theladder:    '#4DB6AC',  // Teal/Green
+  gigs:         '#4DB6AC',
+  professional: '#4F8EF7',  // Blue
+  pro:          '#4F8EF7',
+  worship:      '#FFD60A',  // Gold
+  faith:        '#FFD60A',
+  terminal:     '#4F8EF7',
+};
+
+// Map filter → vertical mapping
+var FILTER_VERTICALS = {
+  all:      null,
+  social:   ['afterdark'],
+  food:     ['themenu'],
+  gigs:     ['theladder'],
+};
+
+// Patch setDesktopMapFilter to fade non-matching markers
+var _s48_origSetFilter = typeof setDesktopMapFilter === 'function' ? setDesktopMapFilter : null;
+setDesktopMapFilter = function(filter, btn) {
+  if (_s48_origSetFilter) _s48_origSetFilter(filter, btn);
+  _desktopMapFilter = filter;
+
+  // Update pill active state
+  document.querySelectorAll('.map-filter-pill').forEach(function(p) {
+    p.classList.toggle('active', p.textContent.trim().toLowerCase() === filter.toLowerCase()
+      || (filter === 'all' && p.textContent.trim().toUpperCase() === 'ALL'));
+  });
+
+  // Fade/show markers by vertical
+  if (typeof _gmapMarkers === 'undefined') return;
+  var targetVerticals = FILTER_VERTICALS[filter.toLowerCase()] || null;
+
+  _gmapMarkers.forEach(function(marker) {
+    if (!marker.getTitle) return;
+    var title = marker.getTitle() || '';
+    // Find the event by marker title
+    var evPool = [];
+    Object.values(ALL_EVENTS || {}).forEach(function(p) { evPool = evPool.concat(p); });
+    var ev = evPool.find(function(e) {
+      return e.name && title.startsWith(e.name);
+    });
+    if (!targetVerticals) {
+      // Show all
+      marker.setOpacity ? marker.setOpacity(1) : null;
+    } else {
+      var match = ev && targetVerticals.indexOf(ev.vertical) !== -1;
+      try { marker.setOpacity(match ? 1 : 0.15); } catch(e) {}
+    }
+  });
+
+  // Update data bar
+  var color = NEON_GLOW[filter.toLowerCase()] || NEON_GLOW.all;
+  var dot = document.getElementById('map-data-dot');
+  if (dot && dot.classList.contains('live')) dot.style.background = color;
+};
+
+// Patch placeEventMarker color to use NEON_GLOW palette
+var _s48_origPlaceMarker = typeof placeEventMarker === 'function' ? placeEventMarker : null;
+placeEventMarker = function(map, ev) {
+  if (!map || !ev || !ev.lat || !ev.lng) return null;
+  // Override color with neon glow palette
+  var origColors = typeof MD_COLORS !== 'undefined' ? MD_COLORS : {};
+  var savedColor = origColors[ev.vertical];
+  origColors[ev.vertical] = NEON_GLOW[ev.vertical] || NEON_GLOW.all;
+  var result = _s48_origPlaceMarker ? _s48_origPlaceMarker(map, ev) : null;
+  origColors[ev.vertical] = savedColor;
+  return result;
+};
+
+// Persistent map search bar — always visible, fixed styling
+(function ensureMapSearchFixed() {
+  setTimeout(function() {
+    var overlay = document.getElementById('map-search-overlay');
+    if (!overlay) return;
+    overlay.style.position = 'sticky';
+    overlay.style.top = '0';
+    overlay.style.zIndex = '20';
+    overlay.style.pointerEvents = 'auto';
+    var wrap = document.getElementById('map-search-wrap');
+    if (wrap) {
+      wrap.style.border = '1px solid var(--md-outline)';
+      wrap.style.boxShadow = 'var(--elev-3)';
+    }
+    // Update placeholder to show current metro
+    var input = document.getElementById('map-search-input');
+    if (input && typeof currentZip !== 'undefined') {
+      var metro = (typeof METRO_CONFIG !== 'undefined' && typeof _currentMetro !== 'undefined')
+        ? (METRO_CONFIG[_currentMetro] || {}).name : null;
+      input.placeholder = metro
+        ? 'Currently: ' + metro + ' — try "Bowie", "DC", or ZIP'
+        : 'Search city, ZIP, or address…';
+    }
+  }, 1000);
+})();
+
+// ── Boot 45-48 ──
+setTimeout(function() {
+  // Load passes if Supabase active
+  if (typeof _supabase !== 'undefined' && _supabase && typeof _currentUser !== 'undefined' && _currentUser) {
+    loadUserPasses();
+  }
+  // Restore location sharing pref
+  var savedLocShare = localStorage.getItem('hl_loc_share') === '1';
+  if (savedLocShare) toggleLocationSharing(true);
+  // Set initial map status
+  setMapDataStatus('offline');
+  console.log('[HL] Sprints 45-48 active ✓');
+}, 1500);
 
 
 </script>
