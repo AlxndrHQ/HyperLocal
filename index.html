@@ -10011,204 +10011,89 @@ console.log('[HL] Material You design system active ✓');
 // SPRINTS 45-48: Geo Precision · Party Pass · Privacy · Filters
 // ══════════════════════════════════════════════════════════════════
 
-// ══════════════════════════════════════════════════════════════════
-// SPRINT 45.1 — GEOSPATIAL PRECISION & LIVE DATA PIPELINE
-// Fixes: boot zip (DC default), cache-busting, counter sync,
-//        map-page-count badge, proxy marker pipeline
-// ══════════════════════════════════════════════════════════════════
-
-// ── 45.1-A: Status bar helpers (unchanged, kept for boot) ──
+// ── SPRINT 45: Live data status helpers ──
 function setMapDataStatus(status, count) {
-  var dot      = document.getElementById('map-data-dot');
+  var dot = document.getElementById('map-data-dot');
   var statusEl = document.getElementById('map-data-status');
-  var countEl  = document.getElementById('map-data-count');
+  var countEl = document.getElementById('map-data-count');
   var statuses = {
-    loading:   { cls: 'loading', text: 'Fetching live events…' },
-    live:      { cls: 'live',    text: 'Live data active' },
-    offline:   { cls: '',        text: 'Sample data — no EVENTBRITE_TOKEN set' },
+    loading: { cls: 'loading', text: 'Fetching live events…' },
+    live:    { cls: 'live',    text: 'Live data active' },
+    offline: { cls: '',        text: 'Sample data (set EVENTBRITE_TOKEN)' },
     geocoding: { cls: 'loading', text: 'Geocoding addresses…' },
   };
   var s = statuses[status] || { cls: '', text: status };
-  if (dot)      dot.className = 'map-data-dot' + (s.cls ? ' ' + s.cls : '');
+  if (dot) { dot.className = 'map-data-dot' + (s.cls ? ' ' + s.cls : ''); }
   if (statusEl) statusEl.textContent = s.text;
   if (countEl && count !== undefined) countEl.textContent = count + ' venue' + (count !== 1 ? 's' : '');
 }
 
-// ── 45.1-B: updateVenueCount — syncs ALL three counter elements ──
-// Supersedes the Sprint 45 patch. Reads _gmapMarkers (zIndex===10 = core pins).
-updateVenueCount = function() {
-  var coreCount = (typeof _gmapMarkers !== 'undefined')
-    ? _gmapMarkers.filter(function(m) {
-        try { return m.getZIndex() === 10; } catch(e) { return true; }
-      }).length
-    : 0;
-
-  // 1. Desktop sidebar / data bar
-  var desktopCount = document.getElementById('desktop-map-count');
-  if (desktopCount) desktopCount.textContent = coreCount + ' VENUES';
-
-  // 2. Sprint 45 data-bar count
-  var dataCount = document.getElementById('map-data-count');
-  if (dataCount) dataCount.textContent = coreCount + ' venue' + (coreCount !== 1 ? 's' : '');
-
-  // 3. Mobile map-page header badge  ← was missing before
-  var mobileCount = document.getElementById('map-page-count');
-  if (mobileCount) mobileCount.textContent = coreCount + ' VENUES';
-
-  if (coreCount > 0) console.log('[HL] 45.1 counter sync:', coreCount, 'venue markers');
-};
-
-// ── 45.1-C: placeEventsOnMap — core pipeline: coords → marker, addr → geocode ──
-// Called after every proxy response. Clears existing markers first on fresh search.
-function placeEventsOnMap(map, evs, clearFirst) {
-  if (!map || !evs || !evs.length) return;
-  if (clearFirst) clearMapMarkers();
-
-  var withCoords = evs.filter(function(e) { return e.lat && e.lng; });
-  var needGeo    = evs.filter(function(e) { return !e.lat && !e.lng && (e.addr || e.venue); }).slice(0, 10);
-
-  // Place events that already have GPS coordinates immediately
-  withCoords.forEach(function(ev) { placeEventMarker(map, ev); });
-  updateVenueCount();
-
-  // Client-side geocode the remainder (rate-limited to 10 per fetch)
-  if (needGeo.length > 0) {
-    setMapDataStatus('geocoding');
-    var done = 0;
-    needGeo.forEach(function(ev) {
-      var addrQuery = (ev.addr || ev.venue) + ', ' + (ev.hood || 'DC');
-      geocodeAddress(addrQuery, function(coords) {
-        if (coords && map) {
-          ev.lat = coords.lat;
-          ev.lng = coords.lng;
-          placeEventMarker(map, ev);
-        }
-        done++;
-        if (done === needGeo.length) {
-          setMapDataStatus('live');
-          updateVenueCount();
-        }
-      });
-    });
-  } else if (withCoords.length > 0) {
-    setMapDataStatus('live');
-  }
-}
-
-// ── 45.1-D: fetchEventsFromProxy — patched with cache-bust + map pipeline ──
-// Replaces the Sprint 45 proxy patch. Key changes:
-//   • Accepts optional clearMarkers flag (true on fresh zip search)
-//   • Clears cache key before fetching so repeat searches work
-//   • Calls placeEventsOnMap after response
-var _s451_origProxy = (typeof _s441_origFetchProxy === 'function')
-  ? _s441_origFetchProxy  // use the deepest original
-  : (typeof _netlifyEvFetched !== 'undefined' ? null : null); // fallback
-
-function fetchAndRenderEvents(zip, vertical, clearMarkers, callback) {
-  // Always bust the cache for this zip so re-searches actually fire
-  if (typeof _netlifyEvFetched !== 'undefined') {
-    delete _netlifyEvFetched[zip + '_' + (vertical || 'all')];
-    delete _netlifyEvFetched[zip + '_afterdark'];
-    delete _netlifyEvFetched[zip + '_professional'];
-  }
-
+// ── SPRINT 45: Patch fetchEventsFromProxy to update live count + map ──
+var _s45_origProxy = fetchEventsFromProxy;
+fetchEventsFromProxy = function(zip, vertical, callback) {
   setMapDataStatus('loading');
-
-  fetchEventsFromProxy(zip, vertical || 'all', function(evs) {
-    var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
-
+  _s45_origProxy(zip, vertical, function(evs) {
     if (evs && evs.length > 0) {
-      console.log('[HL] 45.1 proxy →', evs.length, 'events for', zip);
-      if (map) {
-        placeEventsOnMap(map, evs, clearMarkers);
-      } else {
-        // Map not ready yet — store and wait
-        console.warn('[HL] 45.1 map not ready, events queued for', zip);
-        setMapDataStatus('live', evs.length);
+      setMapDataStatus('live', evs.length);
+      // Geocode any that lack coords, then place on map
+      var withCoords = evs.filter(function(e) { return e.lat && e.lng; });
+      var needGeo    = evs.filter(function(e) { return !e.lat && e.addr; }).slice(0, 12);
+      var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
+      if (map && withCoords.length) {
+        withCoords.forEach(function(ev) {
+          if (typeof placeEventMarker === 'function') placeEventMarker(map, ev);
+        });
       }
+      if (map && needGeo.length) {
+        setMapDataStatus('geocoding');
+        var done = 0;
+        needGeo.forEach(function(ev) {
+          geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || ''), function(coords) {
+            if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; if (map) placeEventMarker(map, ev); }
+            if (++done === needGeo.length) { setMapDataStatus('live'); updateVenueCount(); }
+          });
+        });
+      }
+      updateVenueCount();
+      // Update "X FOUND" in event list header
+      var foundEl = document.querySelector('.ev-list-count, [id*="found"]');
+      if (foundEl && foundEl.textContent.includes('FOUND')) foundEl.textContent = evs.length + ' FOUND';
     } else {
       setMapDataStatus('offline');
-      console.log('[HL] 45.1 proxy returned 0 events for', zip, '(check EVENTBRITE_TOKEN)');
     }
-
-    if (typeof callback === 'function') callback(evs || []);
+    callback(evs);
   });
-}
-
-// ── 45.1-E: mapSearchSubmit — patch to use fetchAndRenderEvents ──
-// Full override: zip / city / lat-lng all route through the same pipeline.
-mapSearchSubmit = function(val) {
-  if (!val || val.trim().length < 2) return;
-  var q = val.trim();
-  var input = document.getElementById('map-search-input');
-  if (input) input.blur();
-
-  // ZIP code
-  if (/^\d{5}$/.test(q)) {
-    if (typeof handleZip === 'function') handleZip(q);
-    fetchAndRenderEvents(q, 'all', true, function(evs) {
-      console.log('[HL] 45.1 search ZIP', q, ':', evs.length, 'events');
-    });
-    return;
-  }
-
-  // City name → ZIP lookup
-  var cityZip = (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q.toLowerCase()])
-    || (typeof CITY_ZIP !== 'undefined' && CITY_ZIP[q.toLowerCase()]);
-  if (cityZip) {
-    if (typeof handleZip === 'function') handleZip(cityZip);
-    fetchAndRenderEvents(cityZip, 'all', true, function(evs) {
-      console.log('[HL] 45.1 search city', q, '→', cityZip, ':', evs.length, 'events');
-    });
-    return;
-  }
-
-  // Free-text → geocode → lat/lng proxy fetch
-  var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
-  if (map) {
-    showGeocodingToast('Searching ' + q + '...');
-    geocodeAddress(q + ', USA', function(coords) {
-      hideGeocodingToast();
-      if (!coords) { showToast && showToast('Location not found: ' + q); return; }
-      map.panTo(coords);
-      map.setZoom(13);
-      var latLngKey = coords.lat.toFixed(4) + '_' + coords.lng.toFixed(4);
-      setMapDataStatus('loading');
-      fetch('/.netlify/functions/get-events?lat=' + coords.lat + '&lng=' + coords.lng + '&vertical=all')
-        .then(function(r) { return r.ok ? r.json() : { events: [] }; })
-        .then(function(data) {
-          var evs = data.events || [];
-          if (!ALL_EVENTS[latLngKey]) ALL_EVENTS[latLngKey] = [];
-          evs.forEach(function(ev) {
-            if (!ALL_EVENTS[latLngKey].find(function(e) { return e.id === ev.id; })) {
-              ALL_EVENTS[latLngKey].push(ev);
-            }
-          });
-          placeEventsOnMap(map, evs, true);
-          console.log('[HL] 45.1 geocode search', q, ':', evs.length, 'events');
-        })
-        .catch(function(err) {
-          setMapDataStatus('offline');
-          console.warn('[HL] 45.1 geocode fetch failed:', err.message);
-        });
-    });
-  }
 };
 
-// ── 45.1-F: bnavGo patch — boot fetch defaults to 20001 (DC) ──
-// Fixed: no longer inherits stale 10001 default on first load.
-var _s451_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
+// ── SPRINT 45: Patch updateVenueCount to sync ALL count displays ──
+var _s45_origUpdateCount = typeof updateVenueCount === 'function' ? updateVenueCount : function(){};
+updateVenueCount = function() {
+  _s45_origUpdateCount();
+  // Count only core markers (zIndex 10)
+  var coreCount = typeof _gmapMarkers !== 'undefined'
+    ? _gmapMarkers.filter(function(m) { try { return m.getZIndex() === 10; } catch(e) { return true; } }).length
+    : 0;
+  // Update data bar
+  var countEl = document.getElementById('map-data-count');
+  if (countEl) countEl.textContent = coreCount + ' venue' + (coreCount !== 1 ? 's' : '');
+  // Update the LIVE MAP badge
+  var desktopCount = document.getElementById('desktop-map-count');
+  if (desktopCount) desktopCount.textContent = coreCount + ' VENUES';
+  // Log
+  if (coreCount > 0) console.log('[HL] Map:', coreCount, 'venue markers placed');
+};
+
+// ── SPRINT 45: Boot — fetch DC/Bowie events on map tab open ──
+var _s45_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
 bnavGo = function(dest, btn) {
-  if (_s451_origBnavGo) _s451_origBnavGo(dest, btn);
+  if (_s45_origBnavGo) _s45_origBnavGo(dest, btn);
   if (dest === 'map') {
+    // Fetch for current zip + Bowie/DC specifically
+    var zip = typeof currentZip !== 'undefined' ? currentZip : '10001';
     setTimeout(function() {
-      // Prefer user's current zip, fall back to DC (20001) not NYC
-      var zip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
-        ? currentZip
-        : '20001';
-      console.log('[HL] 45.1 map tab open → fetching for', zip);
-      fetchAndRenderEvents(zip, 'all', true, function() {});
-    }, 450);
+      setMapDataStatus('loading');
+      fetchEventsFromProxy(zip, 'all', function() {});
+    }, 400);
   }
 };
 
@@ -10593,7 +10478,7 @@ placeEventMarker = function(map, ev) {
   }, 1000);
 })();
 
-// ── Boot 45.1-48 ──
+// ── Boot 45-48 ──
 setTimeout(function() {
   // Load passes if Supabase active
   if (typeof _supabase !== 'undefined' && _supabase && typeof _currentUser !== 'undefined' && _currentUser) {
@@ -10602,32 +10487,487 @@ setTimeout(function() {
   // Restore location sharing pref
   var savedLocShare = localStorage.getItem('hl_loc_share') === '1';
   if (savedLocShare) toggleLocationSharing(true);
-  // Set initial map status
   setMapDataStatus('offline');
-
-  // Set map search placeholder to DC default
-  var mapInput = document.getElementById('map-search-input');
-  if (mapInput) mapInput.placeholder = 'ZIP, city, vibe — e.g. 20001, Bowie, DC…';
-
-  // Update map-page-zip label to DC on boot if we're in DMV context
-  var mapZipEl = document.getElementById('map-page-zip');
-  var bootZip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001') ? currentZip : '20001';
-  if (mapZipEl) mapZipEl.textContent = bootZip;
-
-  console.log('[HL] Sprint 45.1 active ✓ — boot zip:', bootZip);
+  console.log('[HL] Sprints 45-48 active ✓');
 }, 1500);
 
-// ── 45.1 eager boot: pre-fetch DC on page load (no map tab click required) ──
-// Fires after map API has loaded (2.5s gives the gmap script time to resolve)
+// ══════════════════════════════════════════════════════════════════
+// SPRINT 46 — UNIFIED GEOSPATIAL LAYER
+// Single marker array · DC boot · GPS friend pins · Search bar
+// ══════════════════════════════════════════════════════════════════
+
+// ── 46-A: Category colors (single source of truth) ──
+var HL_COLORS = {
+  afterdark:    '#C084FC',
+  themenu:      '#FF8C00',
+  theladder:    '#00E676',
+  professional: '#60A5FA',
+  worship:      '#E879F9',
+  terminal:     '#A8FF3E',
+  default:      '#4F8EF7',
+};
+
+// ── 46-B: THE ONE TRUE MARKER ARRAY ──
+// All previous sprints used either map._hlMarkers or _gmapMarkers.
+// Sprint 46 consolidates everything into window.HL_MARKERS.
+// clearAllMarkers() is the single clear path going forward.
+window.HL_MARKERS = [];
+
+function clearAllMarkers() {
+  window.HL_MARKERS.forEach(function(m) {
+    try { m.setMap(null); } catch(e) {}
+  });
+  window.HL_MARKERS = [];
+  // Also drain the old arrays so nothing double-renders
+  if (typeof _gmapMarkers !== 'undefined') { _gmapMarkers = []; }
+  var mapEl = document.getElementById('gmap-mobile') || document.getElementById('gmap-desktop');
+  if (mapEl && mapEl._gmapInstance && mapEl._gmapInstance._hlMarkers) {
+    mapEl._gmapInstance._hlMarkers = [];
+  }
+}
+
+// ── 46-C: placePin — the only function that creates markers ──
+// All callers (events + friends) go through here.
+function placePin(map, opts) {
+  // opts: { lat, lng, color, scale, zIndex, clickable, title, infoHTML, glowScale, onClickEvId }
+  if (!map || opts.lat == null || opts.lng == null) return null;
+  var pos = { lat: parseFloat(opts.lat), lng: parseFloat(opts.lng) };
+  var color = opts.color || HL_COLORS.default;
+
+  // Outer glow (decorative, not clickable)
+  if (opts.glowScale) {
+    var glow = new google.maps.Marker({
+      position: pos, map: map, clickable: false, zIndex: (opts.zIndex || 10) - 1,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: opts.glowScale,
+        fillColor: color, fillOpacity: 0.14,
+        strokeColor: color, strokeWeight: 1, strokeOpacity: 0.3,
+      },
+    });
+    window.HL_MARKERS.push(glow);
+  }
+
+  // Core pin
+  var marker = new google.maps.Marker({
+    position: pos, map: map,
+    title: opts.title || '',
+    zIndex: opts.zIndex || 10,
+    clickable: opts.clickable !== false,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: opts.scale || 8,
+      fillColor: color, fillOpacity: 1,
+      strokeColor: '#fff', strokeWeight: 2,
+    },
+  });
+  window.HL_MARKERS.push(marker);
+
+  // Info window
+  if (opts.infoHTML) {
+    var iw = new google.maps.InfoWindow({
+      content: opts.infoHTML,
+      pixelOffset: new google.maps.Size(0, -12),
+    });
+    marker.addListener('click', function() {
+      iw.open(map, marker);
+      if (opts.onClickEvId && typeof openEvDetailById === 'function') {
+        setTimeout(function() { openEvDetailById(opts.onClickEvId); }, 280);
+      }
+    });
+  }
+
+  // Also push to _gmapMarkers so legacy updateVenueCount still works
+  if (typeof _gmapMarkers !== 'undefined' && opts.zIndex >= 10) {
+    _gmapMarkers.push(marker);
+  }
+
+  return marker;
+}
+
+// ── 46-D: placeEventPin — maps an event object → placePin ──
+function placeEventPin(map, ev) {
+  if (!map || !ev || !ev.lat || !ev.lng) return null;
+  var color = HL_COLORS[ev.vertical] || HL_COLORS.default;
+  var scale = ev.trending ? 11 : (ev.avail < 20 ? 10 : 8);
+
+  var infoHTML = '<div style="background:#141922;color:#E3E8F5;font-family:\'Roboto\',sans-serif;'
+    + 'padding:12px 14px;border-radius:12px;min-width:170px;max-width:240px;'
+    + 'border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 16px rgba(0,0,0,.6);">'
+    + '<div style="font-weight:700;font-size:13px;margin-bottom:3px">' + (ev.name || 'Event') + '</div>'
+    + '<div style="color:#8B93A8;font-size:11px;margin-bottom:8px">' + (ev.venue || '') + ' · ' + (ev.time || '') + '</div>'
+    + '<div style="display:flex;gap:8px;align-items:center">'
+    + '<span style="font-weight:700;font-size:14px;color:' + color + '">' + (ev.price || '') + '</span>'
+    + (ev.avail < 20 ? '<span style="background:rgba(244,67,54,.15);color:#F44336;font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px">Few left</span>' : '')
+    + (ev.source ? '<span style="color:#4A5270;font-size:9px;margin-left:auto">' + ev.source.toUpperCase() + '</span>' : '')
+    + '</div>'
+    + (ev.ticketUrl ? '<a href="' + ev.ticketUrl + '" target="_blank" style="display:block;margin-top:8px;background:'
+      + color + ';color:#000;text-align:center;padding:5px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">GET TICKET</a>' : '')
+    + '</div>';
+
+  return placePin(map, {
+    lat: ev.lat, lng: ev.lng,
+    color: color, scale: scale,
+    glowScale: scale + 5,
+    zIndex: 10,
+    title: (ev.name || '') + ' @ ' + (ev.venue || ''),
+    infoHTML: infoHTML,
+    onClickEvId: ev.id,
+  });
+}
+
+// ── 46-E: placeFriendPin — GPS-anchored friend avatar on the map ──
+// If friend has real coords → real marker. Otherwise falls back to CSS overlay.
+var HL_FRIEND_POSITIONS = {
+  nyc: [
+    { name:'Alex',   emoji:'🏃', lat: 40.7282, lng: -74.0776, live: true  },
+    { name:'Jordan', emoji:'🎵', lat: 40.6892, lng: -73.9442, live: false },
+    { name:'Sam',    emoji:'🌙', lat: 40.6501, lng: -73.9496, live: true  },
+    { name:'Casey',  emoji:'🎉', lat: 40.7614, lng: -73.9776, live: false },
+  ],
+  dc: [
+    { name:'Morgan', emoji:'🏛', lat: 38.8977, lng: -77.0366, live: true  },
+    { name:'Riley',  emoji:'🎷', lat: 38.9072, lng: -77.0323, live: false },
+  ],
+  chi: [
+    { name:'Taylor', emoji:'🎸', lat: 41.8827, lng: -87.6233, live: true  },
+    { name:'Quinn',  emoji:'🍕', lat: 41.8955, lng: -87.6244, live: false },
+  ],
+  la:          [{ name:'Blake', emoji:'🌴', lat: 34.0195, lng: -118.4912, live: true }],
+  miami:       [{ name:'Drew',  emoji:'🌊', lat: 25.7907, lng: -80.1300, live: true }],
+  hampton_roads: [{ name:'Avery', emoji:'🤠', lat: 36.8508, lng: -76.2859, live: false }],
+};
+
+function placeFriendPin(map, friend) {
+  // Jitter ±~75m for privacy
+  var jitter = function(v) { return v + (Math.random() - 0.5) * 0.0014; };
+  return placePin(map, {
+    lat: jitter(friend.lat), lng: jitter(friend.lng),
+    color: friend.live ? '#4F8EF7' : '#4A5270',
+    scale: 10, glowScale: friend.live ? 16 : 0,
+    zIndex: 20,
+    infoHTML: '<div style="background:#141922;color:#E3E8F5;font-family:Roboto,sans-serif;'
+      + 'padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);font-size:12px">'
+      + friend.emoji + ' <b>' + friend.name + '</b>'
+      + (friend.live ? ' &nbsp;<span style="color:#4DB6AC;font-size:10px">● LIVE</span>' : '')
+      + '</div>',
+  });
+}
+
+// ── 46-F: renderAllPins(map, zip) — clears and redraws everything ──
+function renderAllPins(map, zip) {
+  if (!map || !window.google) return;
+  clearAllMarkers();
+
+  var pool = (typeof ALL_EVENTS !== 'undefined')
+    ? (ALL_EVENTS[zip] || ALL_EVENTS['20001'] || ALL_EVENTS['10001'] || [])
+    : [];
+
+  var withCoords  = pool.filter(function(e) { return e.lat && e.lng; });
+  var needGeocode = pool.filter(function(e) { return !e.lat && !e.lng && (e.addr || e.venue); }).slice(0, 8);
+
+  // Place events with coordinates immediately
+  withCoords.forEach(function(ev) { placeEventPin(map, ev); });
+
+  // Geocode the rest (rate-limited)
+  if (needGeocode.length) {
+    needGeocode.forEach(function(ev) {
+      if (typeof geocodeAddress !== 'function') return;
+      geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || 'DC'), function(coords) {
+        if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; placeEventPin(map, ev); updateAllCounters(); }
+      });
+    });
+  }
+
+  // Place friend pins on top
+  var metro = (typeof _currentMetro !== 'undefined') ? _currentMetro : 'nyc';
+  var friends = HL_FRIEND_POSITIONS[metro] || HL_FRIEND_POSITIONS.nyc;
+  friends.forEach(function(f) { placeFriendPin(map, f); });
+
+  // Hide old CSS friend-pin overlays — real pins are on the map now
+  ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+
+  updateAllCounters();
+}
+
+// ── 46-G: updateAllCounters — single function, all three elements ──
+function updateAllCounters() {
+  // Count only core event markers (zIndex 10), not glows or friend pins
+  var eventCount = window.HL_MARKERS.filter(function(m) {
+    try { return m.getZIndex() === 10; } catch(e) { return false; }
+  }).length;
+
+  var text = eventCount + ' VENUES';
+  var sText = eventCount + ' venue' + (eventCount !== 1 ? 's' : '');
+
+  var ids = ['desktop-map-count', 'map-page-count'];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  });
+  var dataEl = document.getElementById('map-data-count');
+  if (dataEl) dataEl.textContent = sText;
+
+  if (eventCount > 0) console.log('[HL] 46 counters synced:', eventCount, 'venues');
+}
+
+// ── 46-H: fetchAndPlace(zip) — proxy → geocode fallback → renderAllPins ──
+var _s46_fetching = {};
+function fetchAndPlace(zip, clearFirst) {
+  if (!zip) zip = '20001';
+  // Always force re-fetch (clear cache for this zip)
+  if (typeof _netlifyEvFetched !== 'undefined') {
+    delete _netlifyEvFetched[zip + '_all'];
+    delete _netlifyEvFetched[zip + '_afterdark'];
+    delete _netlifyEvFetched[zip + '_professional'];
+  }
+
+  if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
+
+  fetch('/.netlify/functions/get-events?zip=' + encodeURIComponent(zip) + '&vertical=all')
+    .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+    .then(function(data) {
+      var evs = data.events || [];
+      console.log('[HL] 46 proxy →', evs.length, 'events for', zip, '| sources:', data.errors || 'ok');
+
+      // Merge into ALL_EVENTS pool
+      if (typeof ALL_EVENTS !== 'undefined') {
+        if (!ALL_EVENTS[zip]) ALL_EVENTS[zip] = [];
+        evs.forEach(function(ev) {
+          if (!ALL_EVENTS[zip].find(function(e) { return e.id === ev.id; })) {
+            ALL_EVENTS[zip].push(ev);
+          }
+        });
+      }
+
+      var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
+      if (map) {
+        if (clearFirst) clearAllMarkers();
+        var withCoords = evs.filter(function(e) { return e.lat && e.lng; });
+        var needGeo    = evs.filter(function(e) { return !e.lat && !e.lng && (e.addr || e.venue); }).slice(0, 8);
+
+        withCoords.forEach(function(ev) { placeEventPin(map, ev); });
+
+        if (needGeo.length && typeof geocodeAddress === 'function') {
+          if (typeof setMapDataStatus === 'function') setMapDataStatus('geocoding');
+          var done = 0;
+          needGeo.forEach(function(ev) {
+            geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || 'DC'), function(coords) {
+              if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; placeEventPin(map, ev); }
+              if (++done === needGeo.length) {
+                if (typeof setMapDataStatus === 'function') setMapDataStatus('live');
+                updateAllCounters();
+              }
+            });
+          });
+        }
+
+        if (typeof setMapDataStatus === 'function') {
+          setMapDataStatus(evs.length > 0 ? 'live' : 'offline', evs.length);
+        }
+        updateAllCounters();
+      } else {
+        // Map not ready yet — store events; they'll be placed on map init
+        console.warn('[HL] 46 map not ready, events stored for', zip);
+        if (typeof setMapDataStatus === 'function') setMapDataStatus(evs.length > 0 ? 'live' : 'offline');
+      }
+    })
+    .catch(function(err) {
+      console.warn('[HL] 46 proxy failed:', err.message);
+      if (typeof setMapDataStatus === 'function') setMapDataStatus('offline');
+    });
+}
+
+// ── 46-I: Patch _createGmapInstance — boot to DC, use renderAllPins ──
+var _s46_origCreate = typeof _createGmapInstance === 'function' ? _createGmapInstance : null;
+_createGmapInstance = function(container) {
+  if (_s46_origCreate) _s46_origCreate(container);
+  setTimeout(function() {
+    var map = container._gmapInstance;
+    if (!map) return;
+
+    // Boot zip: respect user's choice, default DC not NYC
+    var bootZip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
+      ? currentZip : '20001';
+
+    console.log('[HL] 46 map init → booting zip', bootZip);
+
+    // Apply Material dark style
+    if (typeof MATERIAL_MAP_STYLES !== 'undefined') {
+      map.setOptions({ styles: MATERIAL_MAP_STYLES });
+    }
+
+    // Center on DC/Bowie
+    var DC_CENTER = { lat: 38.9072, lng: -77.0369 };
+    var BOWIE_CENTER = { lat: 38.9534, lng: -76.7341 };
+    var center = (bootZip === '20716' || bootZip === '20715') ? BOWIE_CENTER : DC_CENTER;
+    map.setCenter(center);
+
+    // Render whatever is in the static pool first (instant)
+    renderAllPins(map, bootZip);
+
+    // Then fetch live from proxy (fills in real events)
+    fetchAndPlace(bootZip, false);
+
+    // Bounds idle → "Search this area" button
+    if (typeof _gmapBoundsListener === 'undefined' || !_gmapBoundsListener) {
+      if (typeof onMapIdle === 'function') map.addListener('idle', onMapIdle);
+    }
+  }, 400);
+};
+
+// ── 46-J: mapSearchSubmit override — zip/city/geocode all use fetchAndPlace ──
+mapSearchSubmit = function(val) {
+  if (!val || val.trim().length < 2) return;
+  var q = val.trim();
+  var input = document.getElementById('map-search-input');
+  if (input) input.blur();
+
+  // ZIP
+  if (/^\d{5}$/.test(q)) {
+    if (typeof handleZip === 'function') handleZip(q);
+    fetchAndPlace(q, true);
+    return;
+  }
+
+  // City name → ZIP
+  var cityMap = {
+    'bowie':'20716','dc':'20001','washington':'20001','washington dc':'20001',
+    'new york':'10001','nyc':'10001','chicago':'60601','miami':'33101',
+    'los angeles':'90210','la':'90210','atlanta':'30301','norfolk':'23510',
+    'national harbor':'20745','waldorf':'20601',
+  };
+  var mapped = (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q.toLowerCase()])
+    || cityMap[q.toLowerCase()];
+  if (mapped) {
+    if (typeof handleZip === 'function') handleZip(mapped);
+    fetchAndPlace(mapped, true);
+    return;
+  }
+
+  // Free-text → geocode → lat/lng proxy fetch
+  var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
+  if (!map) return;
+  if (typeof showGeocodingToast === 'function') showGeocodingToast('Searching ' + q + '…');
+  if (typeof geocodeAddress === 'function') {
+    geocodeAddress(q + ', USA', function(coords) {
+      if (typeof hideGeocodingToast === 'function') hideGeocodingToast();
+      if (!coords) { if (typeof showToast === 'function') showToast('Location not found: ' + q); return; }
+      map.panTo(coords);
+      map.setZoom(13);
+      if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
+      fetch('/.netlify/functions/get-events?lat=' + coords.lat + '&lng=' + coords.lng + '&vertical=all')
+        .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+        .then(function(data) {
+          var evs = data.events || [];
+          clearAllMarkers();
+          evs.forEach(function(ev) { if (ev.lat && ev.lng) placeEventPin(map, ev); });
+          updateAllCounters();
+          if (typeof setMapDataStatus === 'function') setMapDataStatus(evs.length > 0 ? 'live' : 'offline', evs.length);
+          console.log('[HL] 46 geocode search', q, ':', evs.length, 'events');
+        })
+        .catch(function() { if (typeof setMapDataStatus === 'function') setMapDataStatus('offline'); });
+    });
+  }
+};
+
+// ── 46-K: bnavGo patch — also calls fetchAndPlace on map tab open ──
+var _s46_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
+bnavGo = function(dest, btn) {
+  if (_s46_origBnavGo) _s46_origBnavGo(dest, btn);
+  if (dest === 'map') {
+    setTimeout(function() {
+      var zip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
+        ? currentZip : '20001';
+      fetchAndPlace(zip, true);
+    }, 500);
+  }
+};
+
+// ── 46-L: Inject persistent M3 search bar into desktop map view ──
+// The desktop map tab (#tab-mapview) had filter pills but no search input.
+// We inject one above the filter bar, anchored to the map container.
+(function injectMapSearchBar() {
+  function doInject() {
+    if (document.getElementById('hl-map-search-bar')) return; // already injected
+    var mapTab = document.getElementById('tab-mapview');
+    if (!mapTab) return;
+    var filterBar = mapTab.querySelector('.map-filter-bar, #desktop-map-filter-bar');
+    if (!filterBar) return;
+
+    var bar = document.createElement('div');
+    bar.id = 'hl-map-search-bar';
+    bar.style.cssText = [
+      'display:flex', 'align-items:center', 'gap:8px',
+      'padding:8px 12px', 'background:var(--bg0)',
+      'border-bottom:1px solid var(--border)',
+      'flex-shrink:0', 'z-index:25', 'position:relative',
+    ].join(';');
+
+    bar.innerHTML = ''
+      + '<div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--bg2);'
+      +   'border:1px solid var(--border-blue);border-radius:var(--md-r-pill);padding:6px 14px;">'
+      +   '<span style="color:var(--text-muted);font-size:14px">&#9906;</span>'
+      +   '<input id="hl-map-search-input" type="text" placeholder="ZIP, city, vibe — e.g. 20001, Bowie, DC…" '
+      +     'style="flex:1;background:transparent;border:none;outline:none;color:var(--text);'
+      +     'font-family:var(--mono);font-size:12px;caret-color:var(--blue)" '
+      +     'onkeydown="if(event.key===\'Enter\')mapSearchSubmit(this.value)" />'
+      +   '<button onclick="mapSearchSubmit(document.getElementById(\'hl-map-search-input\').value)" '
+      +     'style="background:var(--blue);color:#fff;border:none;border-radius:var(--md-r-sm);'
+      +     'padding:4px 12px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;'
+      +     'letter-spacing:.05em">GO</button>'
+      + '</div>'
+      + '<button onclick="mapSearchThisArea&&mapSearchThisArea()" '
+      +   'style="background:rgba(168,255,62,.1);border:1px solid rgba(168,255,62,.3);'
+      +   'color:#A8FF3E;border-radius:var(--md-r-sm);padding:4px 10px;font-size:10px;'
+      +   'font-family:var(--mono);font-weight:700;cursor:pointer;white-space:nowrap">&#9673; AREA</button>';
+
+    // Insert before the filter pill bar
+    filterBar.parentNode.insertBefore(bar, filterBar);
+    console.log('[HL] 46 M3 search bar injected into desktop map view');
+  }
+
+  // Try immediately, then retry after DOM settle
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', doInject);
+  } else {
+    doInject();
+    setTimeout(doInject, 800);
+  }
+})();
+
+// ── 46-M: Boot — DC fetch 2s after load (gives map API time to init) ──
 setTimeout(function() {
+  var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
   var bootZip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
     ? currentZip : '20001';
-  // Only pre-fetch if map is already showing (avoids wasted calls on other tabs)
-  if (typeof currentTab !== 'undefined' && currentTab === 'map') {
-    fetchAndRenderEvents(bootZip, 'all', false, function() {});
-  }
-}, 2500);
 
+  // Update all ZIP display labels to DC
+  ['map-page-zip', 'desktop-map-zip'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.textContent === '10001') el.textContent = bootZip;
+  });
+
+  // Sync search placeholder
+  ['map-search-input', 'hl-map-search-input'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.placeholder = 'ZIP, city, vibe — e.g. 20001, Bowie, DC…';
+  });
+
+  if (map) {
+    // Map already initialized (e.g., user was on map tab on load)
+    renderAllPins(map, bootZip);
+    fetchAndPlace(bootZip, false);
+  } else {
+    // Map not yet init — prime the proxy cache so events are ready when it opens
+    fetchAndPlace(bootZip, false);
+  }
+
+  console.log('[HL] 46 boot complete — zip:', bootZip);
+}, 2000);
 
 </script>
 </body>
