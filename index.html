@@ -10486,32 +10486,63 @@ setTimeout(function() {
   var savedLocShare = localStorage.getItem('hl_loc_share') === '1';
   if (savedLocShare) toggleLocationSharing(true);
   setMapDataStatus('offline');
-  console.log('[HL] Sprints 45-48 active ✓');
+  console.log('[HL] Sprints 45-48 active');
 }, 1500);
 
 // ══════════════════════════════════════════════════════════════════
-// SPRINT 48.1 — TWO-BUG FIX
-// Fix A: GPS-anchor friend pins to the Google Map (not CSS %)
-// Fix B: Vertical tab map panels (SOCIAL/FOOD/GIGS) — dot map
-//         driven by live ALL_EVENTS data, clicking a dot opens
-//         the event detail, NOT the full map tab
+// SPRINT 48.1 — LAYOUT + FRIEND PINS
+// Fix A: Vertical tab layout — event list was 300px squished while
+//        the dot-map took 80%+ width. Cap map panel to 380px,
+//        give event list flex:1 so it fills the rest.
+// Fix B: GPS-anchor friend pins to Google Map, not CSS % floats.
 // ══════════════════════════════════════════════════════════════════
 
-// ── FIX A: GPS Friend Pins ────────────────────────────────────────
-//
-// Problem: renderFriendPins() injects CSS divs with left/top %
-//   into #friend-pins-mobile / #friend-pins-desktop overlaid on
-//   the map div. They float regardless of pan/zoom.
-//
-// Fix: override renderFriendPins to place real google.maps.Marker
-//   instances when the map is live. Fall back to the old CSS render
-//   only when the map API hasn't loaded yet.
-//
-// Real Supabase friends (from loadFriendLocations / _friendLocations)
-//   are used when available. Demo friends use the GPS coords below.
-// ─────────────────────────────────────────────────────────────────
+// ── FIX A: inject CSS override ───────────────────────────────────
+(function() {
+  var s = document.createElement('style');
+  s.id = 'hl-481-layout';
+  s.textContent = [
+    '#tab-afterdark .center-stage,',
+    '#tab-themenu .center-stage,',
+    '#tab-theladder .center-stage,',
+    '#tab-professional .center-stage,',
+    '#tab-worship .center-stage {',
+    '  flex: 0 0 380px !important;',
+    '  max-width: 380px !important;',
+    '  min-width: 180px !important;',
+    '}',
+    '#tab-afterdark .sidebar,',
+    '#tab-themenu .sidebar,',
+    '#tab-theladder .sidebar,',
+    '#tab-professional .sidebar,',
+    '#tab-worship .sidebar {',
+    '  flex: 1 1 0% !important;',
+    '  width: auto !important;',
+    '  max-width: none !important;',
+    '  min-width: 260px !important;',
+    '  border-left: 1px solid var(--border) !important;',
+    '}',
+    '#tab-afterdark .map-panel,',
+    '#tab-themenu .map-panel,',
+    '#tab-theladder .map-panel,',
+    '#tab-professional .map-panel,',
+    '#tab-worship .map-panel {',
+    '  flex: 1 !important; width: 100% !important;',
+    '}',
+    '@media (max-width:767px) {',
+    '  #tab-afterdark .center-stage,#tab-themenu .center-stage,',
+    '  #tab-theladder .center-stage,#tab-professional .center-stage,',
+    '  #tab-worship .center-stage { flex: 0 0 auto !important; max-width:none !important; }',
+    '  #tab-afterdark .sidebar,#tab-themenu .sidebar,',
+    '  #tab-theladder .sidebar,#tab-professional .sidebar,',
+    '  #tab-worship .sidebar { flex:1 !important; width:100% !important; }',
+    '}',
+  ].join('\n');
+  document.head.appendChild(s);
+  console.log('[HL] 48.1 layout injected');
+})();
 
-// Demo friend GPS positions (replace x%/y% with real coords)
+// ── FIX B: GPS Friend Pins ───────────────────────────────────────
 var HL_DEMO_FRIENDS = {
   nyc: [
     { name:'Alex',   emoji:'🏃', lat:40.7282, lng:-74.0776, live:true  },
@@ -10527,316 +10558,94 @@ var HL_DEMO_FRIENDS = {
     { name:'Taylor', emoji:'🎸', lat:41.8827, lng:-87.6233, live:true  },
     { name:'Quinn',  emoji:'🍕', lat:41.8955, lng:-87.6244, live:false },
   ],
-  la:    [{ name:'Blake', emoji:'🌴', lat:34.0195, lng:-118.4912, live:true  }],
-  miami: [{ name:'Drew',  emoji:'🌊', lat:25.7907, lng:-80.1300,  live:true  }],
+  la:    [{ name:'Blake', emoji:'🌴', lat:34.0195, lng:-118.4912, live:true }],
+  miami: [{ name:'Drew',  emoji:'🌊', lat:25.7907, lng:-80.1300,  live:true }],
 };
 
-// Track friend markers so we can clear them on re-render
 var _hlFriendMarkers = [];
-
 function _clearFriendMarkers() {
-  _hlFriendMarkers.forEach(function(m) { try { m.setMap(null); } catch(e) {} });
+  _hlFriendMarkers.forEach(function(m){ try { m.setMap(null); } catch(e){} });
   _hlFriendMarkers = [];
 }
 
-function _placeFriendGPSMarker(map, friend) {
+function _placeFriendGPSMarker(map, f) {
   if (!map || !window.google) return;
-  // Jitter ±~75 m for privacy
-  var jitter = function(v) { return v + (Math.random() - 0.5) * 0.0013; };
-  var lat = jitter(friend.lat);
-  var lng = jitter(friend.lng);
-  var color = friend.live ? '#4F8EF7' : '#4A5270';
-
-  // Glow ring for live friends
-  if (friend.live) {
+  var jitter = function(v){ return v + (Math.random()-0.5)*0.0013; };
+  var pos = { lat: jitter(f.lat), lng: jitter(f.lng) };
+  var color = f.live ? '#4F8EF7' : '#4A5270';
+  if (f.live) {
     var ring = new google.maps.Marker({
-      position: { lat: lat, lng: lng },
-      map: map, clickable: false, zIndex: 19,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 18, fillColor: color, fillOpacity: 0.1,
-        strokeColor: color, strokeWeight: 1, strokeOpacity: 0.35,
-      },
+      position: pos, map: map, clickable: false, zIndex: 19,
+      icon: { path: google.maps.SymbolPath.CIRCLE, scale: 18,
+              fillColor: color, fillOpacity: 0.1,
+              strokeColor: color, strokeWeight: 1, strokeOpacity: 0.35 },
     });
     _hlFriendMarkers.push(ring);
   }
-
-  // Avatar pin — distinct circle, larger than event pins
   var pin = new google.maps.Marker({
-    position: { lat: lat, lng: lng },
-    map: map, zIndex: 25,
-    title: friend.name + (friend.live ? ' · Live' : ''),
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 11, fillColor: color, fillOpacity: 1,
-      strokeColor: '#ffffff', strokeWeight: 2.5,
-    },
+    position: pos, map: map, zIndex: 25,
+    title: f.name + (f.live ? ' · Live' : ''),
+    icon: { path: google.maps.SymbolPath.CIRCLE, scale: 11,
+            fillColor: color, fillOpacity: 1,
+            strokeColor: '#fff', strokeWeight: 2.5 },
   });
-
-  // Info window on click
   var iw = new google.maps.InfoWindow({
     content: '<div style="background:#0F1620;color:#E3E8F5;font-family:Roboto,sans-serif;'
-      + 'padding:10px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.1);'
-      + 'min-width:130px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.7)">'
-      + friend.emoji + ' <b style="color:' + color + '">' + friend.name + '</b>'
-      + (friend.live
-        ? ' <span style="color:#4DB6AC;font-size:10px">● LIVE</span>'
-        : ' <span style="color:#4A5270;font-size:10px">offline</span>')
+      + 'padding:10px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.1);font-size:12px">'
+      + f.emoji + ' <b style="color:' + color + '">' + f.name + '</b>'
+      + (f.live ? ' <span style="color:#4DB6AC;font-size:10px">● LIVE</span>'
+               : ' <span style="color:#4A5270;font-size:10px">offline</span>')
       + '</div>',
     pixelOffset: new google.maps.Size(0, -14),
   });
-  pin.addListener('click', function() { iw.open(map, pin); });
-
+  pin.addListener('click', function(){ iw.open(map, pin); });
   _hlFriendMarkers.push(pin);
-
-  // Also hide the old CSS overlay pin for this friend (if it exists)
-  ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(cid) {
-    var container = document.getElementById(cid);
-    if (!container) return;
-    Array.from(container.querySelectorAll('.friend-map-pin')).forEach(function(el) {
-      if ((el.title || el.querySelector('.friend-pin-label')?.textContent || '').includes(friend.name)) {
-        el.style.display = 'none';
-      }
-    });
-  });
 }
 
-// Override renderFriendPins — runs the original CSS version first,
-// then replaces each pin with a GPS marker when the map is ready.
-var _s481_origRenderFriendPins = typeof renderFriendPins === 'function' ? renderFriendPins : null;
-renderFriendPins = function() {
-  // Run original CSS renderer first (so pins show even before map loads)
-  if (_s481_origRenderFriendPins) _s481_origRenderFriendPins();
-
+function _renderFriendGPSPins() {
   var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
-  if (!map || !window.google) return; // map not ready — CSS fallback is fine
-
+  if (!map || !window.google) return false;
   _clearFriendMarkers();
-
-  // Prefer real Supabase friend locations if available
   if (typeof _friendLocations !== 'undefined' && Object.keys(_friendLocations).length > 0) {
     Object.values(_friendLocations).forEach(function(loc) {
       if (!loc.lat || !loc.lng) return;
-      var stale = (new Date() - new Date(loc.last_updated || 0)) > 300000;
-      _placeFriendGPSMarker(map, {
-        name: loc.username || 'Friend',
-        emoji: '👤',
-        lat: loc.lat,
-        lng: loc.lng,
-        live: !stale,
-      });
+      var stale = (new Date() - new Date(loc.last_updated||0)) > 300000;
+      _placeFriendGPSMarker(map, { name:loc.username||'Friend', emoji:'👤',
+                                    lat:loc.lat, lng:loc.lng, live:!stale });
     });
-    // Clear CSS overlays entirely since real data exists
-    ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.innerHTML = '';
+  } else {
+    var metro = typeof _currentMetro !== 'undefined' ? _currentMetro : 'nyc';
+    (HL_DEMO_FRIENDS[metro] || HL_DEMO_FRIENDS.nyc).forEach(function(f){
+      _placeFriendGPSMarker(map, f);
     });
-    return;
   }
-
-  // Fall back to demo friends for the current metro
-  var metro = typeof _currentMetro !== 'undefined' ? _currentMetro : 'nyc';
-  var friends = HL_DEMO_FRIENDS[metro] || HL_DEMO_FRIENDS.nyc;
-  friends.forEach(function(f) { _placeFriendGPSMarker(map, f); });
-
-  // Hide the CSS overlays so only map pins show
-  ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(id) {
+  ['friend-pins-mobile','friend-pins-desktop'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
+  console.log('[HL] 48.1 GPS friend pins placed');
+  return true;
+}
 
-  console.log('[HL] 48.1 friend pins → GPS markers placed:', friends.length);
+var _s481_origRenderFriendPins = typeof renderFriendPins === 'function' ? renderFriendPins : null;
+renderFriendPins = function() {
+  if (!_renderFriendGPSPins()) {
+    if (_s481_origRenderFriendPins) _s481_origRenderFriendPins();
+  }
 };
 
-// Re-run when map initializes (it may not be ready on first renderFriendPins call)
 var _s481_origCreateGmap = typeof _createGmapInstance === 'function' ? _createGmapInstance : null;
 _createGmapInstance = function(container) {
   if (_s481_origCreateGmap) _s481_origCreateGmap(container);
-  setTimeout(function() {
-    if (container._gmapInstance) renderFriendPins();
-  }, 600);
+  setTimeout(function(){
+    if (container._gmapInstance) _renderFriendGPSPins();
+  }, 700);
 };
 
-
-// ── FIX B: Vertical Tab Mini-Maps ────────────────────────────────
-//
-// Problem 1 — Dots are hardcoded fake NYC venues in MAP_DOTS.
-// Problem 2 — Clicking the center-stage map panel triggers
-//   bnavGo('map') via its onclick, ejecting you from the tab.
-//
-// Fix: Override renderMapDots so it builds dots from ALL_EVENTS
-//   live data (converted from GPS to % using the metro center).
-//   Remove the onclick="bnavGo('map',...)" from center-stage so
-//   clicking a dot opens the event detail, not the full map tab.
-//   The "TAP TO OPEN FULL MAP" hint text is kept on ALL/terminal.
-// ─────────────────────────────────────────────────────────────────
-
-// Color map matching the existing VERT_COLOR palette
-var _s481_VERT_COLORS = {
-  afterdark:    '#C084FC',
-  themenu:      '#FF8C00',
-  theladder:    '#4DB6AC',
-  professional: '#60A5FA',
-  worship:      '#FFD60A',
-  terminal:     '#4F8EF7',
-};
-
-// Convert GPS lat/lng → % position within the mini-map panel
-// using an affine projection centred on the metro
-function _gpsToPercent(lat, lng, metroLat, metroLng) {
-  // Scale factors: 1 degree lat ≈ 111 km, lng varies by latitude
-  // These magic numbers give a ~10-mile radius spanning the panel
-  var latScale = 600;   // degrees lat per 100% height
-  var lngScale = 500;   // degrees lng per 100% width
-  var x = 50 + (lng - metroLng) * lngScale;
-  var y = 50 - (lat - metroLat) * latScale;
-  return {
-    x: Math.max(5, Math.min(93, x)).toFixed(1) + '%',
-    y: Math.max(5, Math.min(93, y)).toFixed(1) + '%',
-  };
-}
-
-// Override renderMapDots — replaces hardcoded MAP_DOTS with live data
-var _s481_origRenderMapDots = typeof renderMapDots === 'function' ? renderMapDots : null;
-renderMapDots = function(tab, pulse) {
-  // Get the metro center for projection
-  var metroLat = 40.7128, metroLng = -74.006; // NYC default
-  if (typeof METRO_CONFIG !== 'undefined' && typeof _currentMetro !== 'undefined') {
-    var mc = METRO_CONFIG[_currentMetro];
-    if (mc) { metroLat = mc.lat || metroLat; metroLng = mc.lng || metroLng; }
-  }
-
-  // Build live dots from ALL_EVENTS for the current zip
-  var zip = typeof currentZip !== 'undefined' ? currentZip : '10001';
-  var pool = [];
-  if (typeof ALL_EVENTS !== 'undefined') {
-    pool = ALL_EVENTS[zip] || ALL_EVENTS['20001'] || ALL_EVENTS['10001'] || [];
-  }
-
-  // If pool is empty use hardcoded fallback so panel isn't blank
-  if (!pool.length) {
-    if (_s481_origRenderMapDots) _s481_origRenderMapDots(tab, pulse);
-    return;
-  }
-
-  // Filter by vertical for the current tab
-  var vertFilter = (tab === 'terminal') ? null : tab;
-  var filtered = vertFilter
-    ? pool.filter(function(ev) { return ev.vertical === vertFilter; })
-    : pool;
-
-  // Only keep events with GPS coords for the dot projection;
-  // fall back to all events for tabs that have none with coords
-  var withCoords = filtered.filter(function(ev) { return ev.lat && ev.lng; });
-  var source = withCoords.length ? withCoords : filtered;
-  var dotEvents = source.slice(0, 15);
-
-  // Build dot objects
-  var dots = dotEvents.map(function(ev) {
-    var color = _s481_VERT_COLORS[ev.vertical] || _s481_VERT_COLORS.terminal;
-    var pos = (ev.lat && ev.lng)
-      ? _gpsToPercent(ev.lat, ev.lng, metroLat, metroLng)
-      : { x: (20 + Math.random() * 60).toFixed(1) + '%', y: (20 + Math.random() * 60).toFixed(1) + '%' };
-    return {
-      id:    ev.id,
-      x:     pos.x,
-      y:     pos.y,
-      r:     ev.trending ? 9 : (ev.avail < 20 ? 8 : 6),
-      color: color,
-      label: ev.venue || ev.name,
-    };
-  });
-
-  // Render into the correct map-dots-layer
-  var TABS_MAP = ['terminal', 'afterdark', 'themenu', 'theladder', 'professional', 'worship'];
-  TABS_MAP.forEach(function(t) {
-    var el = document.getElementById('map-dots-' + t);
-    if (!el) return;
-    if (t !== tab) { el.innerHTML = ''; return; }
-
-    el.innerHTML = dots.map(function(d) {
-      var s = d.r * 2;
-      return '<div class="map-dot" style="left:' + d.x + ';top:' + d.y
-        + ';width:' + s + 'px;height:' + s + 'px;background:' + d.color
-        + ';transform:translate(-50%,-50%);box-shadow:0 0 8px ' + d.color
-        + ';cursor:pointer;position:absolute" '
-        + 'onclick="event.stopPropagation();openEvDetailById(' + d.id + ')" '
-        + 'title="' + (d.label || '').replace(/"/g, '') + '"></div>'
-        + '<div class="map-dot-label" style="left:calc(' + d.x + ' + ' + (d.r + 4)
-        + 'px);top:' + d.y + ';transform:translateY(-50%)">'
-        + (d.label || '').slice(0, 18) + '</div>';
-    }).join('');
-
-    // Update the panel-hdr badge count
-    var countBadge = el.closest('.map-panel')?.querySelector('.panel-hdr-badge');
-    if (countBadge && !countBadge.textContent.includes('SOCIAL')
-        && !countBadge.textContent.includes('FOOD')
-        && !countBadge.textContent.includes('HIRING')) {
-      countBadge.textContent = dots.length + ' ACTIVE';
-    }
-  });
-
-  // Also update the old map-count badge (used by terminal tab)
-  var mc = document.getElementById('map-count');
-  if (mc) mc.textContent = dots.length + ' ACTIVE';
-  var mz = document.getElementById('map-zip');
-  if (mz) mz.textContent = zip;
-};
-
-// Remove onclick="bnavGo('map',...)" from center-stage panels in
-// vertical tabs — dots now call openEvDetailById directly.
-// Keep the onclick only on the terminal/home tab panel (it's intentional there).
-(function removeVerticalTabMapOnclick() {
-  function doRemove() {
-    ['tab-afterdark', 'tab-themenu', 'tab-theladder', 'tab-professional', 'tab-worship'].forEach(function(tabId) {
-      var tabEl = document.getElementById(tabId);
-      if (!tabEl) return;
-      var cs = tabEl.querySelector('.center-stage');
-      if (cs && cs.getAttribute('onclick') && cs.getAttribute('onclick').includes('bnavGo')) {
-        cs.removeAttribute('onclick');
-        cs.removeAttribute('title');
-        cs.style.cursor = 'default';
-        // Replace the "TAP TO OPEN FULL MAP" hint with a category label
-        var hint = cs.querySelector('[style*="TAP TO OPEN"]');
-        if (hint) hint.remove();
-      }
-      // Also remove onclick from the map-panel itself if it has one
-      var mp = tabEl.querySelector('.map-panel');
-      if (mp && mp.getAttribute('onclick')) mp.removeAttribute('onclick');
-    });
-    console.log('[HL] 48.1 vertical tab map onclick removed — dots open event detail');
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', doRemove);
-  else { doRemove(); setTimeout(doRemove, 500); }
-})();
-
-// Re-render dots when proxy returns live events
-var _s481_origFetchProxy = typeof fetchEventsFromProxy === 'function' ? fetchEventsFromProxy : null;
-fetchEventsFromProxy = function(zip, vertical, callback) {
-  if (_s481_origFetchProxy) {
-    _s481_origFetchProxy(zip, vertical, function(evs) {
-      // Refresh the current tab's dot map with live data
-      if (evs && evs.length && typeof currentTab !== 'undefined') {
-        setTimeout(function() { renderMapDots(currentTab, typeof pulseOn !== 'undefined' ? pulseOn : false); }, 100);
-      }
-      callback(evs);
-    });
-  }
-};
-
-// ── Boot 48.1 ─────────────────────────────────────────────────────
-setTimeout(function() {
-  // Place GPS friend pins if map is already loaded
-  var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
-  if (map && window.google) renderFriendPins();
-
-  // Re-render dots with whatever data we have now
-  if (typeof currentTab !== 'undefined' && typeof renderMapDots === 'function') {
-    renderMapDots(currentTab, typeof pulseOn !== 'undefined' ? pulseOn : false);
-  }
-
-  console.log('[HL] Sprint 48.1 active — GPS friend pins + live dot maps ✓');
-}, 1800);
+setTimeout(function(){
+  _renderFriendGPSPins();
+  console.log('[HL] Sprint 48.1 active — layout + GPS friend pins');
+}, 2000);
 
 
 </script>
