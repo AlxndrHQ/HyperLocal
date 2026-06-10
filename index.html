@@ -10480,11 +10480,9 @@ placeEventMarker = function(map, ev) {
 
 // ── Boot 45-48 ──
 setTimeout(function() {
-  // Load passes if Supabase active
   if (typeof _supabase !== 'undefined' && _supabase && typeof _currentUser !== 'undefined' && _currentUser) {
     loadUserPasses();
   }
-  // Restore location sharing pref
   var savedLocShare = localStorage.getItem('hl_loc_share') === '1';
   if (savedLocShare) toggleLocationSharing(true);
   setMapDataStatus('offline');
@@ -10492,60 +10490,98 @@ setTimeout(function() {
 }, 1500);
 
 // ══════════════════════════════════════════════════════════════════
-// SPRINT 46 — UNIFIED GEOSPATIAL LAYER
-// Single marker array · DC boot · GPS friend pins · Search bar
+// SPRINT 47 — LIVE DATA PIPELINE & GEOSPATIAL PRECISION
+// ── P1: Clear demo data, strict proxy, empty-state UI
+// ── P2: Unified marker array, GPS pins, marker.setMap(null) cleanup
+// ── P3: Persistent search bar, M3 polish, Supabase friend pins
 // ══════════════════════════════════════════════════════════════════
 
-// ── 46-A: Category colors (single source of truth) ──
-var HL_COLORS = {
-  afterdark:    '#C084FC',
-  themenu:      '#FF8C00',
-  theladder:    '#00E676',
-  professional: '#60A5FA',
-  worship:      '#E879F9',
-  terminal:     '#A8FF3E',
-  default:      '#4F8EF7',
-};
+// ─────────────────────────────────────────────────────────────────
+// P1-A: CLEAR DEMO DATA — empty the static '10001' pool on boot
+// ALL_EVENTS is const so we can't reassign; we empty the array.
+// Every fallback `|| ALL_EVENTS['10001']` will now return [] not
+// the 30 fake NYC events.
+// ─────────────────────────────────────────────────────────────────
+(function clearDemoPool() {
+  // Run immediately (synchronous) so nothing renders stale data
+  if (typeof ALL_EVENTS !== 'undefined' && ALL_EVENTS['10001']) {
+    ALL_EVENTS['10001'] = [];
+    console.log('[HL] S47 demo pool cleared — live data only');
+  }
+})();
 
-// ── 46-B: THE ONE TRUE MARKER ARRAY ──
-// All previous sprints used either map._hlMarkers or _gmapMarkers.
-// Sprint 46 consolidates everything into window.HL_MARKERS.
-// clearAllMarkers() is the single clear path going forward.
-window.HL_MARKERS = [];
+// ─────────────────────────────────────────────────────────────────
+// P1-B: THE ONE TRUE MARKER ARRAY
+// All previous sprints used map._hlMarkers OR _gmapMarkers.
+// Sprint 47 consolidates into window.HL_MARKERS.
+// clearAllMarkers() is the only allowed clear path.
+// ─────────────────────────────────────────────────────────────────
+window.HL_MARKERS = window.HL_MARKERS || [];
 
 function clearAllMarkers() {
   window.HL_MARKERS.forEach(function(m) {
     try { m.setMap(null); } catch(e) {}
   });
   window.HL_MARKERS = [];
-  // Also drain the old arrays so nothing double-renders
-  if (typeof _gmapMarkers !== 'undefined') { _gmapMarkers = []; }
-  var mapEl = document.getElementById('gmap-mobile') || document.getElementById('gmap-desktop');
-  if (mapEl && mapEl._gmapInstance && mapEl._gmapInstance._hlMarkers) {
-    mapEl._gmapInstance._hlMarkers = [];
+  // Drain legacy arrays so nothing double-renders
+  if (typeof _gmapMarkers !== 'undefined') {
+    _gmapMarkers.forEach(function(m) { try { m.setMap(null); } catch(e) {} });
+    _gmapMarkers = [];
   }
+  ['gmap-mobile', 'gmap-desktop'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el._gmapInstance && el._gmapInstance._hlMarkers) {
+      el._gmapInstance._hlMarkers.forEach(function(m) { try { m.setMap(null); } catch(e) {} });
+      el._gmapInstance._hlMarkers = [];
+    }
+  });
 }
 
-// ── 46-C: placePin — the only function that creates markers ──
-// All callers (events + friends) go through here.
-function placePin(map, opts) {
-  // opts: { lat, lng, color, scale, zIndex, clickable, title, infoHTML, glowScale, onClickEvId }
-  if (!map || opts.lat == null || opts.lng == null) return null;
-  var pos = { lat: parseFloat(opts.lat), lng: parseFloat(opts.lng) };
-  var color = opts.color || HL_COLORS.default;
+// ─────────────────────────────────────────────────────────────────
+// P1-C: CATEGORY COLOR PALETTE (single source of truth)
+// ─────────────────────────────────────────────────────────────────
+var HL_PIN_COLORS = {
+  afterdark:    '#9C72F0',   // Purple   — Social/Nightlife
+  social:       '#9C72F0',
+  themenu:      '#E87040',   // Terracotta — Food
+  food:         '#E87040',
+  theladder:    '#4DB6AC',   // Teal     — Gigs
+  gigs:         '#4DB6AC',
+  professional: '#60A5FA',   // Blue     — Networking
+  worship:      '#FFD60A',   // Gold     — Faith
+  faith:        '#FFD60A',
+  terminal:     '#A8FF3E',   // Lime     — Default
+  friend:       '#4F8EF7',   // Sky Blue — Friend pins
+  friend_stale: '#4A5270',   // Dim Blue — Stale friend
+};
 
-  // Outer glow (decorative, not clickable)
+// ─────────────────────────────────────────────────────────────────
+// P2-A: placePin — the only function that creates map markers
+// Replaces placeEventMarker, placeFriendMarkersOnGmap, and all
+// other ad-hoc `new google.maps.Marker` calls.
+// ─────────────────────────────────────────────────────────────────
+function placePin(map, opts) {
+  if (!map || opts.lat == null || opts.lng == null) return null;
+  if (!window.google || !google.maps) return null;
+
+  var pos   = { lat: parseFloat(opts.lat), lng: parseFloat(opts.lng) };
+  var color = opts.color || HL_PIN_COLORS.terminal;
+  var scale = opts.scale || 8;
+
+  // Glow ring (decorative, non-clickable)
   if (opts.glowScale) {
     var glow = new google.maps.Marker({
-      position: pos, map: map, clickable: false, zIndex: (opts.zIndex || 10) - 1,
+      position: pos, map: map, clickable: false,
+      zIndex: (opts.zIndex || 10) - 1,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
         scale: opts.glowScale,
-        fillColor: color, fillOpacity: 0.14,
-        strokeColor: color, strokeWeight: 1, strokeOpacity: 0.3,
+        fillColor: color, fillOpacity: 0.13,
+        strokeColor: color, strokeWeight: 1, strokeOpacity: 0.28,
       },
     });
     window.HL_MARKERS.push(glow);
+    if (typeof _gmapMarkers !== 'undefined') _gmapMarkers.push(glow);
   }
 
   // Core pin
@@ -10556,14 +10592,17 @@ function placePin(map, opts) {
     clickable: opts.clickable !== false,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
-      scale: opts.scale || 8,
+      scale: scale,
       fillColor: color, fillOpacity: 1,
-      strokeColor: '#fff', strokeWeight: 2,
+      strokeColor: '#ffffff', strokeWeight: 2,
     },
   });
   window.HL_MARKERS.push(marker);
+  if (typeof _gmapMarkers !== 'undefined' && (opts.zIndex == null || opts.zIndex >= 10)) {
+    _gmapMarkers.push(marker);
+  }
 
-  // Info window
+  // InfoWindow
   if (opts.infoHTML) {
     var iw = new google.maps.InfoWindow({
       content: opts.infoHTML,
@@ -10577,397 +10616,520 @@ function placePin(map, opts) {
     });
   }
 
-  // Also push to _gmapMarkers so legacy updateVenueCount still works
-  if (typeof _gmapMarkers !== 'undefined' && opts.zIndex >= 10) {
-    _gmapMarkers.push(marker);
-  }
-
   return marker;
 }
 
-// ── 46-D: placeEventPin — maps an event object → placePin ──
+// ─────────────────────────────────────────────────────────────────
+// P2-B: placeEventPin — event object → placePin
+// ─────────────────────────────────────────────────────────────────
 function placeEventPin(map, ev) {
   if (!map || !ev || !ev.lat || !ev.lng) return null;
-  var color = HL_COLORS[ev.vertical] || HL_COLORS.default;
+
+  var color = HL_PIN_COLORS[ev.vertical] || HL_PIN_COLORS.terminal;
   var scale = ev.trending ? 11 : (ev.avail < 20 ? 10 : 8);
 
-  var infoHTML = '<div style="background:#141922;color:#E3E8F5;font-family:\'Roboto\',sans-serif;'
-    + 'padding:12px 14px;border-radius:12px;min-width:170px;max-width:240px;'
-    + 'border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 16px rgba(0,0,0,.6);">'
-    + '<div style="font-weight:700;font-size:13px;margin-bottom:3px">' + (ev.name || 'Event') + '</div>'
-    + '<div style="color:#8B93A8;font-size:11px;margin-bottom:8px">' + (ev.venue || '') + ' · ' + (ev.time || '') + '</div>'
-    + '<div style="display:flex;gap:8px;align-items:center">'
-    + '<span style="font-weight:700;font-size:14px;color:' + color + '">' + (ev.price || '') + '</span>'
-    + (ev.avail < 20 ? '<span style="background:rgba(244,67,54,.15);color:#F44336;font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px">Few left</span>' : '')
-    + (ev.source ? '<span style="color:#4A5270;font-size:9px;margin-left:auto">' + ev.source.toUpperCase() + '</span>' : '')
+  var srcColor = { eventbrite:'#F05537', posh:'#8B5CF6', luma:'#22D3EE' };
+  var srcBadge = ev.source
+    ? '<span style="color:' + (srcColor[ev.source]||'#8B93A8') + ';font-size:9px;font-weight:700">'
+      + ev.source.toUpperCase() + '</span>'
+    : '';
+
+  var infoHTML =
+    '<div style="background:#0F1620;color:#E3E8F5;font-family:\'Roboto\',sans-serif;'
+    + 'padding:12px 14px;border-radius:12px;min-width:180px;max-width:240px;'
+    + 'border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 20px rgba(0,0,0,.7);">'
+    + '<div style="font-weight:700;font-size:13px;margin-bottom:2px;line-height:1.3">' + (ev.name||'Event') + '</div>'
+    + '<div style="color:#8B93A8;font-size:11px;margin-bottom:8px">' + (ev.venue||'') + ' · ' + (ev.time||'') + '</div>'
+    + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+    + '<span style="font-weight:700;font-size:14px;color:' + color + '">' + (ev.price||'') + '</span>'
+    + (ev.avail < 20 ? '<span style="background:rgba(244,67,54,.15);color:#F44336;font-size:10px;'
+      + 'font-weight:600;padding:2px 8px;border-radius:999px">Few left</span>' : '')
+    + '<span style="margin-left:auto">' + srcBadge + '</span>'
     + '</div>'
-    + (ev.ticketUrl ? '<a href="' + ev.ticketUrl + '" target="_blank" style="display:block;margin-top:8px;background:'
-      + color + ';color:#000;text-align:center;padding:5px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">GET TICKET</a>' : '')
+    + (ev.ticketUrl
+      ? '<a href="' + ev.ticketUrl + '" target="_blank" style="display:block;background:' + color
+        + ';color:#000;text-align:center;padding:5px 0;border-radius:6px;'
+        + 'font-size:11px;font-weight:700;text-decoration:none">GET TICKET →</a>'
+      : '')
     + '</div>';
 
   return placePin(map, {
     lat: ev.lat, lng: ev.lng,
     color: color, scale: scale,
-    glowScale: scale + 5,
+    glowScale: scale + 6,
     zIndex: 10,
-    title: (ev.name || '') + ' @ ' + (ev.venue || ''),
+    title: (ev.name||'') + ' · ' + (ev.venue||''),
     infoHTML: infoHTML,
     onClickEvId: ev.id,
   });
 }
 
-// ── 46-E: placeFriendPin — GPS-anchored friend avatar on the map ──
-// If friend has real coords → real marker. Otherwise falls back to CSS overlay.
-var HL_FRIEND_POSITIONS = {
-  nyc: [
-    { name:'Alex',   emoji:'🏃', lat: 40.7282, lng: -74.0776, live: true  },
-    { name:'Jordan', emoji:'🎵', lat: 40.6892, lng: -73.9442, live: false },
-    { name:'Sam',    emoji:'🌙', lat: 40.6501, lng: -73.9496, live: true  },
-    { name:'Casey',  emoji:'🎉', lat: 40.7614, lng: -73.9776, live: false },
-  ],
-  dc: [
-    { name:'Morgan', emoji:'🏛', lat: 38.8977, lng: -77.0366, live: true  },
-    { name:'Riley',  emoji:'🎷', lat: 38.9072, lng: -77.0323, live: false },
-  ],
-  chi: [
-    { name:'Taylor', emoji:'🎸', lat: 41.8827, lng: -87.6233, live: true  },
-    { name:'Quinn',  emoji:'🍕', lat: 41.8955, lng: -87.6244, live: false },
-  ],
-  la:          [{ name:'Blake', emoji:'🌴', lat: 34.0195, lng: -118.4912, live: true }],
-  miami:       [{ name:'Drew',  emoji:'🌊', lat: 25.7907, lng: -80.1300, live: true }],
-  hampton_roads: [{ name:'Avery', emoji:'🤠', lat: 36.8508, lng: -76.2859, live: false }],
-};
+// ─────────────────────────────────────────────────────────────────
+// P2-C: geocodeAndPlace — address string → coords → placeEventPin
+// Rate-limited to avoid Maps API quota hits.
+// ─────────────────────────────────────────────────────────────────
+var _s47GeoCache = {};
+var _s47GeoQueue = [];
+var _s47GeoBusy  = false;
 
-function placeFriendPin(map, friend) {
-  // Jitter ±~75m for privacy
-  var jitter = function(v) { return v + (Math.random() - 0.5) * 0.0014; };
-  return placePin(map, {
-    lat: jitter(friend.lat), lng: jitter(friend.lng),
-    color: friend.live ? '#4F8EF7' : '#4A5270',
-    scale: 10, glowScale: friend.live ? 16 : 0,
-    zIndex: 20,
-    infoHTML: '<div style="background:#141922;color:#E3E8F5;font-family:Roboto,sans-serif;'
-      + 'padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);font-size:12px">'
-      + friend.emoji + ' <b>' + friend.name + '</b>'
-      + (friend.live ? ' &nbsp;<span style="color:#4DB6AC;font-size:10px">● LIVE</span>' : '')
-      + '</div>',
-  });
-}
-
-// ── 46-F: renderAllPins(map, zip) — clears and redraws everything ──
-function renderAllPins(map, zip) {
-  if (!map || !window.google) return;
-  clearAllMarkers();
-
-  var pool = (typeof ALL_EVENTS !== 'undefined')
-    ? (ALL_EVENTS[zip] || ALL_EVENTS['20001'] || ALL_EVENTS['10001'] || [])
-    : [];
-
-  var withCoords  = pool.filter(function(e) { return e.lat && e.lng; });
-  var needGeocode = pool.filter(function(e) { return !e.lat && !e.lng && (e.addr || e.venue); }).slice(0, 8);
-
-  // Place events with coordinates immediately
-  withCoords.forEach(function(ev) { placeEventPin(map, ev); });
-
-  // Geocode the rest (rate-limited)
-  if (needGeocode.length) {
-    needGeocode.forEach(function(ev) {
-      if (typeof geocodeAddress !== 'function') return;
-      geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || 'DC'), function(coords) {
-        if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; placeEventPin(map, ev); updateAllCounters(); }
-      });
-    });
+function geocodeAndPlace(map, ev) {
+  var key = (ev.addr || ev.venue || '') + '|' + (ev.hood || '');
+  if (_s47GeoCache[key]) {
+    ev.lat = _s47GeoCache[key].lat;
+    ev.lng = _s47GeoCache[key].lng;
+    placeEventPin(map, ev);
+    s47UpdateCounters();
+    return;
   }
-
-  // Place friend pins on top
-  var metro = (typeof _currentMetro !== 'undefined') ? _currentMetro : 'nyc';
-  var friends = HL_FRIEND_POSITIONS[metro] || HL_FRIEND_POSITIONS.nyc;
-  friends.forEach(function(f) { placeFriendPin(map, f); });
-
-  // Hide old CSS friend-pin overlays — real pins are on the map now
-  ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.innerHTML = '';
-  });
-
-  updateAllCounters();
+  _s47GeoQueue.push({ map: map, ev: ev, key: key });
+  if (!_s47GeoBusy) drainGeoQueue();
 }
 
-// ── 46-G: updateAllCounters — single function, all three elements ──
-function updateAllCounters() {
-  // Count only core event markers (zIndex 10), not glows or friend pins
-  var eventCount = window.HL_MARKERS.filter(function(m) {
+function drainGeoQueue() {
+  if (!_s47GeoQueue.length) { _s47GeoBusy = false; return; }
+  _s47GeoBusy = true;
+  var item = _s47GeoQueue.shift();
+  var query = (item.ev.addr || item.ev.venue || '') + ', ' + (item.ev.hood || '') + ', USA';
+  if (!window.google || !google.maps.Geocoder) { drainGeoQueue(); return; }
+  new google.maps.Geocoder().geocode({ address: query }, function(results, status) {
+    if (status === 'OK' && results[0]) {
+      var loc = results[0].geometry.location;
+      var coords = { lat: loc.lat(), lng: loc.lng() };
+      _s47GeoCache[item.key] = coords;
+      item.ev.lat = coords.lat;
+      item.ev.lng = coords.lng;
+      placeEventPin(item.map, item.ev);
+      s47UpdateCounters();
+    }
+    // 200ms delay between geocode calls to respect rate limit
+    setTimeout(drainGeoQueue, 200);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// P2-D: s47UpdateCounters — all 3 counter elements, single call
+// ─────────────────────────────────────────────────────────────────
+function s47UpdateCounters() {
+  var count = window.HL_MARKERS.filter(function(m) {
     try { return m.getZIndex() === 10; } catch(e) { return false; }
   }).length;
 
-  var text = eventCount + ' VENUES';
-  var sText = eventCount + ' venue' + (eventCount !== 1 ? 's' : '');
-
-  var ids = ['desktop-map-count', 'map-page-count'];
-  ids.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
+  // 1. Mobile map-page header badge
+  var mobileEl = document.getElementById('map-page-count');
+  if (mobileEl) mobileEl.textContent = count + ' VENUES';
+  // 2. Desktop map overlay badge
+  var desktopEl = document.getElementById('desktop-map-count');
+  if (desktopEl) desktopEl.textContent = count + ' VENUES';
+  // 3. Data status bar count
   var dataEl = document.getElementById('map-data-count');
-  if (dataEl) dataEl.textContent = sText;
+  if (dataEl) dataEl.textContent = count + ' venue' + (count !== 1 ? 's' : '');
 
-  if (eventCount > 0) console.log('[HL] 46 counters synced:', eventCount, 'venues');
+  if (count > 0) console.log('[HL] S47 counters:', count, 'venue pins');
 }
 
-// ── 46-H: fetchAndPlace(zip) — proxy → geocode fallback → renderAllPins ──
-var _s46_fetching = {};
-function fetchAndPlace(zip, clearFirst) {
+// ─────────────────────────────────────────────────────────────────
+// P1-D / P2-E: fetchAndPlace — THE single fetch→render pipeline
+//
+// Flow: bust cache → fetch proxy → log full response →
+//       place GPS pins → geocode remaining → update counters →
+//       show "no events" toast if 0 results
+// ─────────────────────────────────────────────────────────────────
+function fetchAndPlace(zip, opts) {
+  opts = opts || {};
   if (!zip) zip = '20001';
-  // Always force re-fetch (clear cache for this zip)
+
+  // Always bust cache so re-searches work
   if (typeof _netlifyEvFetched !== 'undefined') {
-    delete _netlifyEvFetched[zip + '_all'];
-    delete _netlifyEvFetched[zip + '_afterdark'];
-    delete _netlifyEvFetched[zip + '_professional'];
+    ['all','afterdark','professional','themenu','theladder','worship','terminal'].forEach(function(v) {
+      delete _netlifyEvFetched[zip + '_' + v];
+    });
   }
 
   if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
 
-  fetch('/.netlify/functions/get-events?zip=' + encodeURIComponent(zip) + '&vertical=all')
-    .then(function(r) { return r.ok ? r.json() : { events: [] }; })
-    .then(function(data) {
-      var evs = data.events || [];
-      console.log('[HL] 46 proxy →', evs.length, 'events for', zip, '| sources:', data.errors || 'ok');
+  var url = '/.netlify/functions/get-events?zip=' + encodeURIComponent(zip) + '&vertical=all';
+  console.log('[HL] S47 → proxy fetch:', url);
 
-      // Merge into ALL_EVENTS pool
+  fetch(url)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      // ── P1: Rich console logging of the full proxy response ──
+      console.log('[HL] S47 proxy response — zip:', data.zip,
+        '| metro:', data.metro,
+        '| total:', data.total,
+        '| events:', data.events ? data.events.length : 0,
+        '| errors:', data.errors || 'none');
+
+      if (data.events && data.events.length > 0) {
+        // Log first event so we can verify field shapes
+        console.log('[HL] S47 sample event:', JSON.stringify(data.events[0]));
+      }
+
+      var evs = data.events || [];
+
+      // Merge into ALL_EVENTS under the returned zip key
+      var storeKey = data.zip || zip;
       if (typeof ALL_EVENTS !== 'undefined') {
-        if (!ALL_EVENTS[zip]) ALL_EVENTS[zip] = [];
+        if (!ALL_EVENTS[storeKey]) ALL_EVENTS[storeKey] = [];
         evs.forEach(function(ev) {
-          if (!ALL_EVENTS[zip].find(function(e) { return e.id === ev.id; })) {
-            ALL_EVENTS[zip].push(ev);
+          if (!ALL_EVENTS[storeKey].find(function(e) { return e.id === ev.id; })) {
+            ALL_EVENTS[storeKey].push(ev);
           }
         });
       }
 
-      var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
-      if (map) {
-        if (clearFirst) clearAllMarkers();
-        var withCoords = evs.filter(function(e) { return e.lat && e.lng; });
-        var needGeo    = evs.filter(function(e) { return !e.lat && !e.lng && (e.addr || e.venue); }).slice(0, 8);
+      var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
 
-        withCoords.forEach(function(ev) { placeEventPin(map, ev); });
-
-        if (needGeo.length && typeof geocodeAddress === 'function') {
-          if (typeof setMapDataStatus === 'function') setMapDataStatus('geocoding');
-          var done = 0;
-          needGeo.forEach(function(ev) {
-            geocodeAddress((ev.addr || ev.venue) + ', ' + (ev.hood || 'DC'), function(coords) {
-              if (coords) { ev.lat = coords.lat; ev.lng = coords.lng; placeEventPin(map, ev); }
-              if (++done === needGeo.length) {
-                if (typeof setMapDataStatus === 'function') setMapDataStatus('live');
-                updateAllCounters();
-              }
-            });
-          });
+      if (evs.length === 0) {
+        // P1: "No events found" empty state — no silent fallback to demo data
+        if (typeof setMapDataStatus === 'function') setMapDataStatus('offline');
+        if (typeof showToast === 'function') {
+          showToast('No events found near ' + (data.metro || zip) + ' right now.');
         }
-
-        if (typeof setMapDataStatus === 'function') {
-          setMapDataStatus(evs.length > 0 ? 'live' : 'offline', evs.length);
-        }
-        updateAllCounters();
-      } else {
-        // Map not ready yet — store events; they'll be placed on map init
-        console.warn('[HL] 46 map not ready, events stored for', zip);
-        if (typeof setMapDataStatus === 'function') setMapDataStatus(evs.length > 0 ? 'live' : 'offline');
+        console.log('[HL] S47 0 events — check EVENTBRITE_TOKEN in Netlify env vars');
+        if (opts.callback) opts.callback([]);
+        return;
       }
+
+      if (typeof setMapDataStatus === 'function') setMapDataStatus('live', evs.length);
+
+      if (!map) {
+        console.warn('[HL] S47 map not ready — events stored, will render on map init');
+        if (opts.callback) opts.callback(evs);
+        return;
+      }
+
+      // P2: Clear old pins before placing new ones
+      if (opts.clearFirst !== false) clearAllMarkers();
+
+      // Place events with GPS coords directly
+      var withCoords  = evs.filter(function(e) { return e.lat && e.lng; });
+      // Geocode events with address but no GPS (capped to 8 to respect quota)
+      var needGeocode = evs.filter(function(e) {
+        return (!e.lat || !e.lng) && (e.addr || e.venue);
+      }).slice(0, 8);
+
+      console.log('[HL] S47 placing:', withCoords.length, 'GPS pins,',
+        needGeocode.length, 'to geocode,',
+        (evs.length - withCoords.length - needGeocode.length), 'skipped (no addr)');
+
+      withCoords.forEach(function(ev) { placeEventPin(map, ev); });
+      needGeocode.forEach(function(ev) { geocodeAndPlace(map, ev); });
+
+      s47UpdateCounters();
+
+      // Pan map to the returned center if we have it
+      if (data.lat && data.lng) {
+        map.panTo({ lat: data.lat, lng: data.lng });
+        if (map.getZoom() < 12) map.setZoom(13);
+      }
+
+      if (opts.callback) opts.callback(evs);
     })
     .catch(function(err) {
-      console.warn('[HL] 46 proxy failed:', err.message);
+      console.warn('[HL] S47 proxy failed:', err.message);
       if (typeof setMapDataStatus === 'function') setMapDataStatus('offline');
+      if (typeof showToast === 'function') showToast('Connection error — check Netlify function logs.');
+      if (opts.callback) opts.callback([]);
     });
 }
 
-// ── 46-I: Patch _createGmapInstance — boot to DC, use renderAllPins ──
-var _s46_origCreate = typeof _createGmapInstance === 'function' ? _createGmapInstance : null;
+// ─────────────────────────────────────────────────────────────────
+// P2-F: Patch _createGmapInstance — boot to DC, one-time render
+// ─────────────────────────────────────────────────────────────────
+var _s47_origCreate = typeof _createGmapInstance === 'function' ? _createGmapInstance : null;
 _createGmapInstance = function(container) {
-  if (_s46_origCreate) _s46_origCreate(container);
+  if (_s47_origCreate) _s47_origCreate(container);
+
   setTimeout(function() {
     var map = container._gmapInstance;
     if (!map) return;
 
-    // Boot zip: respect user's choice, default DC not NYC
     var bootZip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
       ? currentZip : '20001';
 
-    console.log('[HL] 46 map init → booting zip', bootZip);
-
-    // Apply Material dark style
+    // Apply Material dark styles
     if (typeof MATERIAL_MAP_STYLES !== 'undefined') {
       map.setOptions({ styles: MATERIAL_MAP_STYLES });
     }
 
-    // Center on DC/Bowie
-    var DC_CENTER = { lat: 38.9072, lng: -77.0369 };
-    var BOWIE_CENTER = { lat: 38.9534, lng: -76.7341 };
-    var center = (bootZip === '20716' || bootZip === '20715') ? BOWIE_CENTER : DC_CENTER;
+    // Center map on DC or Bowie depending on zip
+    var CENTERS = {
+      '20001': { lat: 38.9072, lng: -77.0369 },
+      '20715': { lat: 38.9534, lng: -76.7341 },
+      '20716': { lat: 38.9357, lng: -76.7141 },
+    };
+    var center = CENTERS[bootZip] || CENTERS['20001'];
     map.setCenter(center);
+    if (map.getZoom() < 11) map.setZoom(12);
 
-    // Render whatever is in the static pool first (instant)
-    renderAllPins(map, bootZip);
+    console.log('[HL] S47 map init — boot zip:', bootZip);
+    fetchAndPlace(bootZip, { clearFirst: true });
 
-    // Then fetch live from proxy (fills in real events)
-    fetchAndPlace(bootZip, false);
-
-    // Bounds idle → "Search this area" button
-    if (typeof _gmapBoundsListener === 'undefined' || !_gmapBoundsListener) {
-      if (typeof onMapIdle === 'function') map.addListener('idle', onMapIdle);
+    // Idle listener for "search this area"
+    if (typeof onMapIdle === 'function' && !map._s47IdleAttached) {
+      map.addListener('idle', onMapIdle);
+      map._s47IdleAttached = true;
     }
   }, 400);
 };
 
-// ── 46-J: mapSearchSubmit override — zip/city/geocode all use fetchAndPlace ──
+// ─────────────────────────────────────────────────────────────────
+// P3-A: mapSearchSubmit override — all paths → fetchAndPlace
+// ─────────────────────────────────────────────────────────────────
+var CITY_ZIP_S47 = {
+  'bowie':'20716','dc':'20001','washington dc':'20001','washington':'20001',
+  'national harbor':'20745','waldorf':'20601','prince george':'20715',
+  'new york':'10001','nyc':'10001','new york city':'10001',
+  'chicago':'60601','miami':'33101','los angeles':'90210','la':'90210',
+  'atlanta':'30301','norfolk':'23510',
+};
+
 mapSearchSubmit = function(val) {
   if (!val || val.trim().length < 2) return;
   var q = val.trim();
-  var input = document.getElementById('map-search-input');
+  var input = document.getElementById('map-search-input')
+    || document.getElementById('hl-map-search-input');
   if (input) input.blur();
 
-  // ZIP
+  // ZIP code
   if (/^\d{5}$/.test(q)) {
     if (typeof handleZip === 'function') handleZip(q);
-    fetchAndPlace(q, true);
+    fetchAndPlace(q, { clearFirst: true });
     return;
   }
 
-  // City name → ZIP
-  var cityMap = {
-    'bowie':'20716','dc':'20001','washington':'20001','washington dc':'20001',
-    'new york':'10001','nyc':'10001','chicago':'60601','miami':'33101',
-    'los angeles':'90210','la':'90210','atlanta':'30301','norfolk':'23510',
-    'national harbor':'20745','waldorf':'20601',
-  };
-  var mapped = (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q.toLowerCase()])
-    || cityMap[q.toLowerCase()];
-  if (mapped) {
-    if (typeof handleZip === 'function') handleZip(mapped);
-    fetchAndPlace(mapped, true);
+  // City name lookup
+  var lookupZip = (typeof CITY_TO_ZIP !== 'undefined' && CITY_TO_ZIP[q.toLowerCase()])
+    || CITY_ZIP_S47[q.toLowerCase()];
+  if (lookupZip) {
+    if (typeof handleZip === 'function') handleZip(lookupZip);
+    fetchAndPlace(lookupZip, { clearFirst: true });
     return;
   }
 
-  // Free-text → geocode → lat/lng proxy fetch
-  var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
+  // Free-text → geocode → lat/lng proxy
+  var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
   if (!map) return;
   if (typeof showGeocodingToast === 'function') showGeocodingToast('Searching ' + q + '…');
-  if (typeof geocodeAddress === 'function') {
-    geocodeAddress(q + ', USA', function(coords) {
-      if (typeof hideGeocodingToast === 'function') hideGeocodingToast();
-      if (!coords) { if (typeof showToast === 'function') showToast('Location not found: ' + q); return; }
-      map.panTo(coords);
-      map.setZoom(13);
-      if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
-      fetch('/.netlify/functions/get-events?lat=' + coords.lat + '&lng=' + coords.lng + '&vertical=all')
-        .then(function(r) { return r.ok ? r.json() : { events: [] }; })
-        .then(function(data) {
-          var evs = data.events || [];
-          clearAllMarkers();
-          evs.forEach(function(ev) { if (ev.lat && ev.lng) placeEventPin(map, ev); });
-          updateAllCounters();
-          if (typeof setMapDataStatus === 'function') setMapDataStatus(evs.length > 0 ? 'live' : 'offline', evs.length);
-          console.log('[HL] 46 geocode search', q, ':', evs.length, 'events');
-        })
-        .catch(function() { if (typeof setMapDataStatus === 'function') setMapDataStatus('offline'); });
-    });
-  }
+  if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
+
+  new google.maps.Geocoder().geocode({ address: q + ', USA' }, function(results, status) {
+    if (typeof hideGeocodingToast === 'function') hideGeocodingToast();
+    if (status !== 'OK' || !results[0]) {
+      if (typeof showToast === 'function') showToast('Location not found: ' + q);
+      if (typeof setMapDataStatus === 'function') setMapDataStatus('offline');
+      return;
+    }
+    var loc = results[0].geometry.location;
+    var lat = loc.lat(), lng = loc.lng();
+    map.panTo({ lat: lat, lng: lng });
+    map.setZoom(13);
+
+    // Fetch events for the geocoded location via lat/lng
+    var url = '/.netlify/functions/get-events?lat=' + lat + '&lng=' + lng + '&vertical=all';
+    console.log('[HL] S47 geocode search:', q, '→', url);
+    if (typeof setMapDataStatus === 'function') setMapDataStatus('loading');
+
+    fetch(url)
+      .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+      .then(function(data) {
+        var evs = data.events || [];
+        console.log('[HL] S47 geocode results for', q, ':', evs.length, 'events');
+        clearAllMarkers();
+        evs.forEach(function(ev) {
+          if (ev.lat && ev.lng) placeEventPin(map, ev);
+          else geocodeAndPlace(map, ev);
+        });
+        s47UpdateCounters();
+        if (typeof setMapDataStatus === 'function') {
+          setMapDataStatus(evs.length > 0 ? 'live' : 'offline', evs.length);
+        }
+        if (evs.length === 0 && typeof showToast === 'function') {
+          showToast('No events found near ' + q);
+        }
+      })
+      .catch(function() {
+        if (typeof setMapDataStatus === 'function') setMapDataStatus('offline');
+      });
+  });
 };
 
-// ── 46-K: bnavGo patch — also calls fetchAndPlace on map tab open ──
-var _s46_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
+// ─────────────────────────────────────────────────────────────────
+// P3-B: bnavGo patch — map tab open → fetchAndPlace DC by default
+// ─────────────────────────────────────────────────────────────────
+var _s47_origBnavGo = typeof bnavGo === 'function' ? bnavGo : null;
 bnavGo = function(dest, btn) {
-  if (_s46_origBnavGo) _s46_origBnavGo(dest, btn);
+  if (_s47_origBnavGo) _s47_origBnavGo(dest, btn);
   if (dest === 'map') {
     setTimeout(function() {
       var zip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
         ? currentZip : '20001';
-      fetchAndPlace(zip, true);
+      fetchAndPlace(zip, { clearFirst: true });
     }, 500);
   }
 };
 
-// ── 46-L: Inject persistent M3 search bar into desktop map view ──
-// The desktop map tab (#tab-mapview) had filter pills but no search input.
-// We inject one above the filter bar, anchored to the map container.
-(function injectMapSearchBar() {
+// ─────────────────────────────────────────────────────────────────
+// P3-C: GPS friend pins from Supabase — suppress CSS overlays
+// when real data exists; fall back to decorative pins otherwise
+// ─────────────────────────────────────────────────────────────────
+var _s47_origLoadFriends = typeof loadFriendLocations === 'function'
+  ? loadFriendLocations : null;
+
+// Patch placeFriendMarkersOnGmap to use HL_MARKERS + distinct style
+placeFriendMarkersOnGmap = function() {
+  var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
+  if (!map || typeof _friendLocations === 'undefined') return;
+
+  Object.values(_friendLocations).forEach(function(loc) {
+    if (!loc.lat || !loc.lng) return; // only place if real GPS coords exist
+    var stale = (new Date() - new Date(loc.last_updated || 0)) > 300000;
+    var color = stale ? HL_PIN_COLORS.friend_stale : HL_PIN_COLORS.friend;
+
+    placePin(map, {
+      lat: loc.lat, lng: loc.lng,
+      color: color,
+      scale: 11,          // slightly larger than event pins
+      glowScale: stale ? 0 : 18,
+      zIndex: 25,         // renders above event pins
+      clickable: true,
+      title: (loc.username || 'Friend') + (stale ? ' (was here)' : ' · Live'),
+      infoHTML:
+        '<div style="background:#0F1620;color:#E3E8F5;font-family:Roboto,sans-serif;'
+        + 'padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);'
+        + 'min-width:130px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.6)">'
+        + '<b style="color:' + color + '">'
+        + (loc.username || 'Friend') + '</b>'
+        + (stale
+          ? '<span style="color:#4A5270;font-size:10px;margin-left:6px">was here</span>'
+          : '<span style="color:#4DB6AC;font-size:10px;margin-left:6px">● LIVE</span>')
+        + '</div>',
+    });
+  });
+
+  // Once real Supabase pins are placed, clear the CSS overlay divs
+  if (Object.keys(_friendLocations).length > 0) {
+    ['friend-pins-mobile', 'friend-pins-desktop'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────
+// P3-D: Inject persistent M3 search bar into desktop map tab
+// #tab-mapview has filter pills but no search input in the HTML
+// ─────────────────────────────────────────────────────────────────
+(function injectDesktopMapSearch() {
   function doInject() {
-    if (document.getElementById('hl-map-search-bar')) return; // already injected
+    if (document.getElementById('hl-s47-search')) return;
     var mapTab = document.getElementById('tab-mapview');
     if (!mapTab) return;
-    var filterBar = mapTab.querySelector('.map-filter-bar, #desktop-map-filter-bar');
+    var filterBar = mapTab.querySelector('#desktop-map-filter-bar, .map-filter-bar');
     if (!filterBar) return;
 
     var bar = document.createElement('div');
-    bar.id = 'hl-map-search-bar';
+    bar.id = 'hl-s47-search';
     bar.style.cssText = [
       'display:flex', 'align-items:center', 'gap:8px',
-      'padding:8px 12px', 'background:var(--bg0)',
-      'border-bottom:1px solid var(--border)',
+      'padding:8px 12px',
+      'background:var(--bg0,#0a0e17)',
+      'border-bottom:1px solid var(--border,rgba(255,255,255,.08))',
       'flex-shrink:0', 'z-index:25', 'position:relative',
     ].join(';');
 
     bar.innerHTML = ''
-      + '<div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--bg2);'
-      +   'border:1px solid var(--border-blue);border-radius:var(--md-r-pill);padding:6px 14px;">'
-      +   '<span style="color:var(--text-muted);font-size:14px">&#9906;</span>'
-      +   '<input id="hl-map-search-input" type="text" placeholder="ZIP, city, vibe — e.g. 20001, Bowie, DC…" '
-      +     'style="flex:1;background:transparent;border:none;outline:none;color:var(--text);'
-      +     'font-family:var(--mono);font-size:12px;caret-color:var(--blue)" '
+      + '<div style="flex:1;display:flex;align-items:center;gap:8px;'
+      +   'background:var(--bg2,#141922);'
+      +   'border:1px solid var(--md-outline,rgba(79,142,247,.4));'
+      +   'border-radius:24px;padding:6px 14px;">'
+      +   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
+      +     'stroke="rgba(139,147,168,.7)" stroke-width="2" stroke-linecap="round">'
+      +     '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>'
+      +   '</svg>'
+      +   '<input id="hl-s47-input" type="text" autocomplete="off" '
+      +     'placeholder="ZIP, city, or neighborhood — e.g. Bowie, 20001, DC…" '
+      +     'style="flex:1;background:transparent;border:none;outline:none;'
+      +     'color:var(--text,#E3E8F5);font-family:var(--mono,monospace);'
+      +     'font-size:12px;caret-color:var(--blue,#4F8EF7)" '
       +     'onkeydown="if(event.key===\'Enter\')mapSearchSubmit(this.value)" />'
-      +   '<button onclick="mapSearchSubmit(document.getElementById(\'hl-map-search-input\').value)" '
-      +     'style="background:var(--blue);color:#fff;border:none;border-radius:var(--md-r-sm);'
-      +     'padding:4px 12px;font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;'
-      +     'letter-spacing:.05em">GO</button>'
+      +   '<button onclick="mapSearchSubmit(document.getElementById(\'hl-s47-input\').value)" '
+      +     'style="background:var(--blue,#4F8EF7);color:#fff;border:none;'
+      +     'border-radius:16px;padding:4px 14px;font-family:var(--mono,monospace);'
+      +     'font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.06em;'
+      +     'transition:opacity .15s" '
+      +     'onmouseover="this.style.opacity=\'.8\'" onmouseout="this.style.opacity=\'1\'">GO</button>'
       + '</div>'
-      + '<button onclick="mapSearchThisArea&&mapSearchThisArea()" '
-      +   'style="background:rgba(168,255,62,.1);border:1px solid rgba(168,255,62,.3);'
-      +   'color:#A8FF3E;border-radius:var(--md-r-sm);padding:4px 10px;font-size:10px;'
-      +   'font-family:var(--mono);font-weight:700;cursor:pointer;white-space:nowrap">&#9673; AREA</button>';
+      + '<button onclick="typeof mapSearchThisArea===\'function\'&&mapSearchThisArea()" '
+      +   'title="Search visible map area" '
+      +   'style="background:rgba(168,255,62,.08);border:1px solid rgba(168,255,62,.25);'
+      +   'color:#A8FF3E;border-radius:16px;padding:5px 12px;font-size:10px;'
+      +   'font-family:var(--mono,monospace);font-weight:700;cursor:pointer;'
+      +   'white-space:nowrap;flex-shrink:0">⊕ AREA</button>';
 
-    // Insert before the filter pill bar
     filterBar.parentNode.insertBefore(bar, filterBar);
-    console.log('[HL] 46 M3 search bar injected into desktop map view');
+    console.log('[HL] S47 desktop search bar injected');
   }
 
-  // Try immediately, then retry after DOM settle
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', doInject);
   } else {
     doInject();
-    setTimeout(doInject, 800);
+    setTimeout(doInject, 600);   // retry in case tab renders later
+    setTimeout(doInject, 1400);  // final safety net
   }
 })();
 
-// ── 46-M: Boot — DC fetch 2s after load (gives map API time to init) ──
+// ─────────────────────────────────────────────────────────────────
+// Sprint 47 Boot
+// ─────────────────────────────────────────────────────────────────
 setTimeout(function() {
-  var map = (typeof getActiveGmapInstance === 'function') ? getActiveGmapInstance() : null;
+  // Load passes if Supabase active
+  if (typeof _supabase !== 'undefined' && _supabase
+      && typeof _currentUser !== 'undefined' && _currentUser) {
+    if (typeof loadUserPasses === 'function') loadUserPasses();
+  }
+
+  // Restore location sharing pref
+  var savedLocShare = localStorage.getItem('hl_loc_share') === '1';
+  if (savedLocShare && typeof toggleLocationSharing === 'function') {
+    toggleLocationSharing(true);
+  }
+
+  // Boot zip: DC default, not NYC
   var bootZip = (typeof currentZip !== 'undefined' && currentZip && currentZip !== '10001')
     ? currentZip : '20001';
 
-  // Update all ZIP display labels to DC
+  // Update all zip display labels away from 10001
   ['map-page-zip', 'desktop-map-zip'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el && el.textContent === '10001') el.textContent = bootZip;
+    if (el && (el.textContent === '10001' || el.textContent.trim() === '10001')) {
+      el.textContent = bootZip;
+    }
   });
 
-  // Sync search placeholder
-  ['map-search-input', 'hl-map-search-input'].forEach(function(id) {
+  // Sync search input placeholders
+  ['map-search-input', 'hl-s47-input'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) el.placeholder = 'ZIP, city, vibe — e.g. 20001, Bowie, DC…';
+    if (el) el.placeholder = 'ZIP, city, neighborhood — e.g. Bowie, 20001, DC…';
   });
 
+  // If map is already active on load, fetch immediately
+  var map = typeof getActiveGmapInstance === 'function' ? getActiveGmapInstance() : null;
   if (map) {
-    // Map already initialized (e.g., user was on map tab on load)
-    renderAllPins(map, bootZip);
-    fetchAndPlace(bootZip, false);
+    fetchAndPlace(bootZip, { clearFirst: true });
   } else {
-    // Map not yet init — prime the proxy cache so events are ready when it opens
-    fetchAndPlace(bootZip, false);
+    // Pre-warm proxy cache — events will render when map initialises
+    fetchAndPlace(bootZip, { clearFirst: false });
   }
 
-  console.log('[HL] 46 boot complete — zip:', bootZip);
-}, 2000);
+  setMapDataStatus('loading');
+  console.log('[HL] Sprint 47 boot — zip:', bootZip);
+}, 1800);
 
 </script>
 </body>
